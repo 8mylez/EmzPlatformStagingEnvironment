@@ -1,0 +1,11 @@
+{
+    "emz-staging-environment": {
+        "general": {
+            "mainMenuItemGeneral": "Staging",
+            "mainMenuItemEnvironments": "Environments",
+            "mainMenuItemLogs": "Logs",
+            "mainMenuItemProfiles": "Profiles",
+            "descriptionTextModule": "Manage your staging environments here"
+        }
+    }
+}

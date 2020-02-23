@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace EmzPlatformStagingEnvironment;
+namespace Emz\StagingEnvironment;
 
 use Shopware\Core\Framework\Plugin;
 
