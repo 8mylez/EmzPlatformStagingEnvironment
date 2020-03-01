@@ -11,6 +11,18 @@
             "columnProfileName": "name",
             "columnComment": "Comment",
             "addButtonText": "Create profile"
+        },
+        "detail": {
+            "errorTitle": "Error saving the profile",
+            "cancelButtonText": "Cancel",
+            "saveButtonText": "Save",
+            "profileCardTitle": "Profile",
+            "databaseCardTitle": "Database",
+            "settingsCardTitle": "Settings",
+            "profileNameLabel": "Profile name",
+            "folderNameLabel": "Directory name",
+            "excludedFoldersLabel": "Excluded directories",
+            "databaseHostLabel": "Database host"
         }
     }
 }

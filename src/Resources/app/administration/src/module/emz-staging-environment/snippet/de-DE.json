@@ -11,6 +11,18 @@
             "columnProfileName": "Name",
             "columnComment": "Kommentar",
             "addButtonText": "Profil erstellen"
+        },
+        "detail": {
+            "errorTitle": "Fehler beim Speichern des Profils",
+            "cancelButtonText": "Abbrechen",
+            "saveButtonText": "Speichern",
+            "profileCardTitle": "Profil",
+            "databaseCardTitle": "Datenbank",
+            "settingsCardTitle": "Einstellungen",
+            "profileNameLabel": "Profil Name",
+            "folderNameLabel": "Verzeichnis Name",
+            "excludedFoldersLabel": "Ausgeschlossene Verzeichnisse",
+            "databaseHostLabel": "Datenbank Host"
         }
     }
 }
