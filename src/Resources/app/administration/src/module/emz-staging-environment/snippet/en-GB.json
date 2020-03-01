@@ -6,6 +6,11 @@
             "mainMenuItemLogs": "Logs",
             "mainMenuItemProfiles": "Profiles",
             "descriptionTextModule": "Manage your staging environments here"
+        },
+        "list": {
+            "columnProfileName": "name",
+            "columnComment": "Comment",
+            "addButtonText": "Create profile"
         }
     }
 }

@@ -6,6 +6,11 @@
             "mainMenuItemLogs": "Protokoll",
             "mainMenuItemProfiles": "Profile",
             "descriptionTextModule": "Verwalte deine Staging Umgebungen hier"
+        },
+        "list": {
+            "columnProfileName": "Name",
+            "columnComment": "Kommentar",
+            "addButtonText": "Profil erstellen"
         }
     }
 }
