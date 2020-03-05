@@ -8,7 +8,7 @@
             "descriptionTextModule": "Manage your staging environments here"
         },
         "list": {
-            "columnProfileName": "name",
+            "columnProfileName": "Name",
             "columnComment": "Comment",
             "addButtonText": "Create profile"
         },
@@ -22,7 +22,11 @@
             "profileNameLabel": "Profile name",
             "folderNameLabel": "Directory name",
             "excludedFoldersLabel": "Excluded directories",
-            "databaseHostLabel": "Database host"
+            "commentLabel": "Comment",
+            "databaseHostLabel": "Database host",
+            "databaseUserLabel": "Database user",
+            "databaseNameLabel": "Database name",
+            "databasePasswordLabel": "Database password"
         }
     }
 }

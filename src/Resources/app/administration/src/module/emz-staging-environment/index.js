@@ -1,7 +1,7 @@
 import './page/emz-staging-environment-index';
 import './page/emz-staging-environment-profile-index';
-import './page/emz-staging-environment-profile-create';
 import './page/emz-staging-environment-profile-detail';
+import './page/emz-staging-environment-profile-create';
 import './page/emz-staging-environment-log-index';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
@@ -30,18 +30,18 @@ Module.register('emz-staging-environment', {
             component: 'emz-staging-environment-profile-index',
             path: 'profile/index'
         },
-        profile_create: {
-            component: 'emz-staging-environment-profile-create',
-            path: 'profile/create',
-            meta: {
-                parentParth: 'emz.staging.environment.profile_index'
-            }
-        },
         profile_detail: {
             component: 'emz-staging-environment-profile-detail',
             path: 'profile/detail/:id',
             meta: {
                 parentPath: 'emz.staging.environment.profile_index'
+            }
+        },
+        profile_create: {
+            component: 'emz-staging-environment-profile-create',
+            path: 'profile/create',
+            meta: {
+                parentParth: 'emz.staging.environment.profile_index'
             }
         },
         log_index: {

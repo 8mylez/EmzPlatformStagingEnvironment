@@ -22,7 +22,11 @@
             "profileNameLabel": "Profil Name",
             "folderNameLabel": "Verzeichnis Name",
             "excludedFoldersLabel": "Ausgeschlossene Verzeichnisse",
-            "databaseHostLabel": "Datenbank Host"
+            "commentLabel": "Kommentar",
+            "databaseHostLabel": "Datenbank Host",
+            "databaseUserLabel": "Datenbank Benutzer",
+            "databaseNameLabel": "Datenbank Name",
+            "databasePasswordLabel": "Datenbank Passwort"
         }
     }
 }

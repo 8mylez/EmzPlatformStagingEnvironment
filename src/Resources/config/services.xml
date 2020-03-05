@@ -5,6 +5,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-
+        <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileDefinition">
+            <tag name="shopware.entity.definition" entity="emz_pse_profile" />
+        </service>
     </services>
 </container>

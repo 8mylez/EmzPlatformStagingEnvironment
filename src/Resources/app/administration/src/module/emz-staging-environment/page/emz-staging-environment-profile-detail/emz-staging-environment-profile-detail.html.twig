@@ -6,16 +6,16 @@
             >
                 {{ $t('emz-staging-environment.detail.cancelButtonText') }}
             </sw-button>
+            <sw-button-process
+                variant="primary"
+                @click="onClickSave"
+                :isLoading="isLoading"
+                :processSuccess="processSuccess"
+                @process-finish="saveFinish"
+            >
+                {{ $t('emz-staging-environment.detail.saveButtonText') }}
+            </sw-button-process>
         </template>
-        <sw-button-process
-            variant="primary"
-            @click="onClickSave"
-            :isLoading="isLoading"
-            :processSuccess="processSuccess"
-            @process-finish="saveFinish"
-        >
-            {{ $t('emz-staging-environment.detail.saveButtonText') }}
-        </sw-button-process>
         <template slot="content">
             <sw-card-view>
                 <sw-card
@@ -23,7 +23,7 @@
                     :isLoading="isLoading"
                     :title="$t('emz-staging-environment.detail.profileCardTitle')"
                 >
-                    <sw-container columns="1fr 1fr">
+                    <sw-container columns="1fr 1fr" gap="32px">
                         <sw-text-field
                             :label="$t('emz-staging-environment.detail.profileNameLabel')"
                             :placeholder="$t('emz-staging-environment.detail.profileNameLabel')"
@@ -44,12 +44,14 @@
                     <sw-text-field
                         :label="$t('emz-staging-environment.detail.excludedFoldersLabel')"
                         :placeholder="$t('emz-staging-environment.detail.excludedFoldersLabel')"
+                        v-model="profile.excludedFolders"
                     >
                     </sw-text-field>
 
                     <sw-textarea-field
                         :label="$t('emz-staging-environment.detail.commentLabel')"
                         :placeholder="$t('emz-staging-environment.detail.commentLabel')"
+                        v-model="profile.comment"
                     >
                     </sw-textarea-field>
                 </sw-card>
@@ -60,12 +62,36 @@
                     :title="$t('emz-staging-environment.detail.databaseCardTitle')"
                 >
                     <sw-text-field
-                            :label="$t('emz-staging-environment.detail.databaseHostLabel')"
-                            :placeholder="$t('emz-staging-environment.detail.databaseHostLabel')"
-                            v-model="profile.databaseHost"
-                            validation="required"
-                        >
-                        </sw-text-field>
+                        :label="$t('emz-staging-environment.detail.databaseHostLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databaseHostLabel')"
+                        v-model="profile.databaseHost"
+                        validation="required"
+                    >
+                    </sw-text-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databaseUserLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databaseUserLabel')"
+                        v-model="profile.databaseUser"
+                        validation="required"
+                    >
+                    </sw-text-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databaseNameLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databaseNameLabel')"
+                        v-model="profile.databaseName"
+                        validation="required"
+                    >
+                    </sw-text-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databasePasswordLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databasePasswordLabel')"
+                        v-model="profile.databasePassword"
+                        validation="required"
+                    >
+                    </sw-text-field>
                 </sw-card>
 
                 <sw-card

@@ -30,6 +30,8 @@ class Migration1582484958Profile extends MigrationStep
                 `anonymize_data` TINYINT(1) NOT NULL DEFAULT 0,
                 `deactivate_scheduled_tasks` TINYINT(1) NOT NULL DEFAULT 0,
                 `set_in_maintenance` TINYINT(1) NOT NULL DEFAULT 0,
+                `created_at` DATETIME(3) NOT NULL,
+                `updated_at` DATETIME(3) NULL,
                 PRIMARY KEY(`id`),
                 CONSTRAINT `json.emz_pse_profile.excluded_folders` CHECK (JSON_VALID(`excluded_folders`))
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
