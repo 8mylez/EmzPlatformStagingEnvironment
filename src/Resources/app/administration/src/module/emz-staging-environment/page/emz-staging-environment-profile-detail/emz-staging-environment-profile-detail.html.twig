@@ -92,6 +92,14 @@
                         validation="required"
                     >
                     </sw-text-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databasePortLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databasePortLabel')"
+                        v-model="profile.databasePort"
+                        validation="required"
+                    >
+                    </sw-text-field>
                 </sw-card>
 
                 <sw-card
@@ -99,13 +107,24 @@
                     :isLoading="isLoading"
                     :title="$t('emz-staging-environment.detail.settingsCardTitle')"
                 >
-                    <sw-text-field
-                            :label="$t('emz-staging-environment.detail.profileNameLabel')"
-                            :placeholder="$t('emz-staging-environment.detail.profileNameLabel')"
-                            v-model="profile.settings"
-                            validation="required"
-                        >
-                        </sw-text-field>
+                    <sw-checkbox-field
+                        :label="$t('emz-staging-environment.detail.anonymizeDataLabel')"
+                        v-model="profile.anonymizeData"
+                    >
+                    </sw-checkbox-field>
+
+                    <sw-checkbox-field
+                        :label="$t('emz-staging-environment.detail.deactivateScheduledTasksLabel')"
+                        v-model="profile.deactivateScheduledTasks"
+                    >
+                    </sw-checkbox-field>
+
+                    <sw-checkbox-field
+                        :label="$t('emz-staging-environment.detail.setInMaintenanceLabel')"
+                        v-model="profile.setInMaintenance"
+                    >
+                    </sw-checkbox-field>
+
                 </sw-card>
             </sw-card-view>
         </template>

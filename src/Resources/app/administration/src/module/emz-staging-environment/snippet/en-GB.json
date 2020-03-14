@@ -26,7 +26,11 @@
             "databaseHostLabel": "Database host",
             "databaseUserLabel": "Database user",
             "databaseNameLabel": "Database name",
-            "databasePasswordLabel": "Database password"
+            "databasePasswordLabel": "Database password",
+            "databasePortLabel": "Database port",
+            "anonymizeDataLabel": "Anonymize data",
+            "deactivateScheduledTasksLabel": "Deactivate scheduled tasks",
+            "setInMaintenanceLabel": "Set in maintenance"
         }
     }
 }

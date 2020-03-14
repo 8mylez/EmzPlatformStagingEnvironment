@@ -26,7 +26,11 @@
             "databaseHostLabel": "Datenbank Host",
             "databaseUserLabel": "Datenbank Benutzer",
             "databaseNameLabel": "Datenbank Name",
-            "databasePasswordLabel": "Datenbank Passwort"
+            "databasePasswordLabel": "Datenbank Passwort",
+            "databasePortLabel": "Datenbank Port",
+            "anonymizeDataLabel": "Daten anonymisieren",
+            "deactivateScheduledTasksLabel": "Geplante Aufgaben deaktivieren",
+            "setInMaintenanceLabel": "In Wartungsmodus setzen"
         }
     }
 }
