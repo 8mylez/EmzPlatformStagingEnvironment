@@ -19,5 +19,6 @@ class EmzPlatformStagingEnvironment extends Plugin
         $connection = $this->container->get(Connection::class);
 
         $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_profile`');
+        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_environment`');
     }
 }
