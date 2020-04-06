@@ -16,8 +16,22 @@
 
         <service id="Emz\StagingEnvironment\Command\SyncCommand">
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
-
             <tag name="console.command" />
+        </service>
+
+        <service id="Emz\StagingEnvironment\Services\Database\DatabaseService">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument>%kernel.project_dir%</argument>
+        </service>
+
+        <service id="Emz\StagingEnvironment\Commands\DatabaseExportCommand">
+            <tag name="console.command"/>
+            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseService"/>
+        </service>
+        
+        <service id="Emz\StagingEnvironment\Commands\DatabaseImportCommand">
+            <tag name="console.command"/>
+            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseService"/>
         </service>
     </services>
 </container>
