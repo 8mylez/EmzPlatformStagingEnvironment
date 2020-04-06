@@ -9,9 +9,6 @@
       "name": "8mylez GmbH"
     }
   ],
-  "require": {
-    "shopware/core": "~6"
-  },
   "autoload": {
     "psr-4": {
       "Emz\\StagingEnvironment\\": "src/"
