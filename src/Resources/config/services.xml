@@ -10,7 +10,7 @@
         </service>
 
         <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentDefinition">
-            <tag name="shopware.entity.definition" entity="emz_pse_environemtn" />
+            <tag name="shopware.entity.definition" entity="emz_pse_environment" />
         </service>
 
         <service id="Emz\StagingEnvironment\Services\Sync\SyncService">

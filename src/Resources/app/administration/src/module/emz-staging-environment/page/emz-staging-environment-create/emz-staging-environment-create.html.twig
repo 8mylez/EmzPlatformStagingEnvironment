@@ -1,0 +1,18 @@
+{% block emz_staging_environment_create %}
+    <sw-page class="emz-staging-environment-create">
+        <template #content>
+            <sw-card-view>
+                <sw-card
+                    :title="$t('emz-staging-environment.create.title')"    
+                >
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.create.name')"
+                        :placeholder="$t('emz-staging-environment.create.name')"
+                        v-model="environment.name"
+                    >
+                    </sw-text-field>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    </sw-page>
+{% endblock %}

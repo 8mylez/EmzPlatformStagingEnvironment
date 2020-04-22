@@ -2,13 +2,20 @@
 
 namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment;
 
-use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentCollection;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
-use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\JsonField;
+use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\PasswordField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextWithHtmlField;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentCollection;
 
 class StagingEnvironmentDefinition extends EntityDefinition
 {
@@ -33,6 +40,7 @@ class StagingEnvironmentDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->setFlags(new PrimaryKey(), new Required()),
+            (new StringField('environment_name', 'environmentName'))->setFlags(new Required()),
             (new StringField('profile_name', 'profileName'))->setFlags(new Required()),
             (new StringField('folder_name', 'folderName'))->setFlags(new Required()),
             new JsonField('excluded_folders', 'excludedFolders'),

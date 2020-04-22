@@ -12,6 +12,11 @@ class StagingEnvironmentEntity extends Entity
     /**
      * @var string
      */
+    protected $environmentName;
+
+    /**
+     * @var string
+     */
     protected $profileName;
 
     /**

@@ -1,4 +1,5 @@
 import './page/emz-staging-environment-index';
+import './page/emz-staging-environment-create';
 import './page/emz-staging-environment-profile-index';
 import './page/emz-staging-environment-profile-detail';
 import './page/emz-staging-environment-profile-create';
@@ -25,6 +26,13 @@ Module.register('emz-staging-environment', {
         index: {
             component: 'emz-staging-environment-index',
             path: 'index'
+        },
+        create: {
+            component: 'emz-staging-environment-create',
+            path: 'create',
+            meta: {
+                parentPath: 'emz.staging.environment.index'
+            }
         },
         profile_index: {
             component: 'emz-staging-environment-profile-index',
