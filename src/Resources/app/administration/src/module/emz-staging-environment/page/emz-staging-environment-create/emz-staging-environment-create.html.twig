@@ -9,8 +9,17 @@
                         :label="$t('emz-staging-environment.create.name')"
                         :placeholder="$t('emz-staging-environment.create.name')"
                         v-model="environment.name"
+                        required
                     >
                     </sw-text-field>
+
+                    <sw-entity-single-select
+                        required
+                        entity="emz_pse_profile"
+                        :label="Profile"
+                        labelProperty="profileName"
+                        v-model="selectedProfile">
+                    </sw-entity-single-select>
                 </sw-card>
             </sw-card-view>
         </template>

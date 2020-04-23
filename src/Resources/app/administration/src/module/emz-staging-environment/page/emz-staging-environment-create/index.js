@@ -1,6 +1,7 @@
 import template from './emz-staging-environment-create.html.twig';
 
-const { Component, Context } = Shopware;
+const { Component, Context, Data } = Shopware;
+const { Criteria } = Data;
 
 Component.register('emz-staging-environment-create', {
     template,
@@ -18,14 +19,24 @@ Component.register('emz-staging-environment-create', {
     data() {
         return {
             environment: null,
-            repository: null
+            repositoryEnvironment: null,
+            repositoryProfile: null,
+            profiles: null,
+            selectedProfile: null
         }
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('emz_pse_environment');
-        this.environment = this.repository.create(Context.api);
-    }, 
+        this.repositoryEnvironment = this.repositoryFactory.create('emz_pse_environment');
+        this.environment = this.repositoryEnvironment.create(Context.api);
+
+        // this.repositoryProfile = this.repositoryFactory.create('emz_pse_profile');
+        // this.repositoryProfile
+        //     .search(new Criteria(), Shopware.Context.api)
+        //     .then(result => {
+        //         this.profiles = result;
+        //     });
+    },
 
     methods: {
         
