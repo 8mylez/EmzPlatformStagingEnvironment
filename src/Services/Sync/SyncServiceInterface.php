@@ -4,5 +4,5 @@ namespace Emz\StagingEnvironment\Services\Sync;
 
 interface SyncServiceInterface
 {
-    public function syncCore(): bool;
+    public function syncCore(string $folderName): bool;
 }

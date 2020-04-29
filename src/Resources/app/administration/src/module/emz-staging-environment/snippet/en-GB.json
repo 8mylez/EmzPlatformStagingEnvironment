@@ -35,7 +35,11 @@
         },
         "create": {
             "title": "New staging environment",
-            "name": "Name"
+            "name": "Name",
+            "start": "Start",
+            "processStarted": "Process started!",
+            "success": "Environment created successfully!",
+            "error": "Error occured. Environment was not created!"
         }
     }
 }

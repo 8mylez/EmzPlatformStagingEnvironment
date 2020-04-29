@@ -35,7 +35,11 @@
         },
         "create": {
             "title": "Neue Staging Umgebung",
-            "name": "Name"
+            "name": "Name",
+            "start": "Start",
+            "processStarted": "Erstellung gestartet!",
+            "success": "Umgebung erfolgreich erstellt!",
+            "error": "Es ist ein Fehler aufgetreten!"
         }
     }
 }

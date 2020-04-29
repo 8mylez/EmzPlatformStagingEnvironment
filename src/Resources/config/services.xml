@@ -23,5 +23,9 @@
 
             <tag name="console.command" />
         </service>
+
+        <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">
+            <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
+        </service>
     </services>
 </container>

@@ -21,12 +21,11 @@ class SyncService implements SyncServiceInterface
         $this->fileSystem = $fileSystem;
     }
 
-    public function syncCore(): bool
+    public function syncCore($folderName = 'emzstaging'): bool
     {
         //should be coming from the profile configuration
         $config = [
-            'folderName' => 'emzstaging',
-
+            'folderName' => $folderName,
         ];
 
         $foldersToCopy = [

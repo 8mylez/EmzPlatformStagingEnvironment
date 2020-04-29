@@ -6,8 +6,9 @@ import './page/emz-staging-environment-profile-create';
 import './page/emz-staging-environment-log-index';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
+import StagingEnvironmentApiService from './service/emz-pse-environment.api.service';
 
-const { Module } = Shopware;
+const { Module, Application } = Shopware;
 
 Module.register('emz-staging-environment', {
     type: 'plugin',
@@ -78,4 +79,10 @@ Module.register('emz-staging-environment', {
         label: 'emz-staging-environment.general.mainMenuItemLogs',
         parent: 'emz-staging-environment'
     }]
+});
+
+Application.addServiceProvider('stagingEnvironmentApiService', container => {
+    const initContainer = Application.getContainer('init');
+
+    return new StagingEnvironmentApiService(initContainer.httpClient, container.loginService);
 });

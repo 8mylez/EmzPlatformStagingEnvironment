@@ -1,13 +1,18 @@
 import template from './emz-staging-environment-create.html.twig';
 
-const { Component, Context, Data } = Shopware;
+const { Component, Context, Data, Mixin } = Shopware;
 const { Criteria } = Data;
 
 Component.register('emz-staging-environment-create', {
     template,
 
+    mixins: [
+        Mixin.getByName('notification')
+    ],
+
     inject: [
-        'repositoryFactory'
+        'repositoryFactory',
+        'stagingEnvironmentApiService'
     ],
 
     metaInfo() {
@@ -22,7 +27,14 @@ Component.register('emz-staging-environment-create', {
             repositoryEnvironment: null,
             repositoryProfile: null,
             profiles: null,
-            selectedProfile: null
+            selectedProfile: null,
+            isLoading: false,
+            processes: {
+                createNewStagingEnvironment: false,
+            },
+            processSuccess: {
+                createNewStagingEnvironment: false
+            }
         }
     },
 
@@ -39,6 +51,40 @@ Component.register('emz-staging-environment-create', {
     },
 
     methods: {
-        
+        createNewStatingEnvironment() {
+            this.createNotificationInfo({
+                title: this.$t('global.default.info'),
+                message: this.$t('emz-staging-environment.create.processStarted')
+            });
+
+            this.processes.createNewStagingEnvironment = true;
+
+            return this.stagingEnvironmentApiService.create()
+                .then(() => {
+                    this.processSuccess.createNewStagingEnvironment = true;
+
+                    this.createNotificationSuccess({
+                        title: this.$t('global.default.error'),
+                        message: this.$t('emz-staging-environment.create.success')
+                    });
+                })
+                .catch(() => {
+                    this.processSuccess.createNewStagingEnvironment = false;
+
+                    this.createNotificationError({
+                        title: this.$t('global.default.error'),
+                        message: this.$t('emz-staging-environment.create.error')
+                    });
+                })
+                .finally(() => {
+                    this.processes.createNewStagingEnvironment = false;
+                });
+
+        },
+        resetButton() {
+            this.processSuccess = {
+                createNewStagingEnvironment: false
+            };
+        }
     }
 });
