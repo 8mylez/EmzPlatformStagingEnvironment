@@ -10,7 +10,8 @@
         "list": {
             "columnProfileName": "Name",
             "columnComment": "Kommentar",
-            "addButtonText": "Profil erstellen"
+            "addButtonText": "Profil erstellen",
+            "addEnvironmentButton": "Staging Umgebung erstellen"
         },
         "detail": {
             "errorTitle": "Fehler beim Speichern des Profils",
@@ -31,6 +32,14 @@
             "anonymizeDataLabel": "Daten anonymisieren",
             "deactivateScheduledTasksLabel": "Geplante Aufgaben deaktivieren",
             "setInMaintenanceLabel": "In Wartungsmodus setzen"
+        },
+        "create": {
+            "title": "Neue Staging Umgebung",
+            "name": "Name",
+            "start": "Start",
+            "processStarted": "Erstellung gestartet!",
+            "success": "Umgebung erfolgreich erstellt!",
+            "error": "Es ist ein Fehler aufgetreten!"
         }
     }
 }

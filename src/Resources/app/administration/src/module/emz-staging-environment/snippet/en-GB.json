@@ -10,7 +10,8 @@
         "list": {
             "columnProfileName": "Name",
             "columnComment": "Comment",
-            "addButtonText": "Create profile"
+            "addButtonText": "Create profile",
+            "addEnvironmentButton": "Create new staging environment"
         },
         "detail": {
             "errorTitle": "Error saving the profile",
@@ -31,6 +32,14 @@
             "anonymizeDataLabel": "Anonymize data",
             "deactivateScheduledTasksLabel": "Deactivate scheduled tasks",
             "setInMaintenanceLabel": "Set in maintenance"
+        },
+        "create": {
+            "title": "New staging environment",
+            "name": "Name",
+            "start": "Start",
+            "processStarted": "Process started!",
+            "success": "Environment created successfully!",
+            "error": "Error occured. Environment was not created!"
         }
     }
 }

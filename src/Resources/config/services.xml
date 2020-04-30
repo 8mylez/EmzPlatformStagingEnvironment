@@ -9,6 +9,10 @@
             <tag name="shopware.entity.definition" entity="emz_pse_profile" />
         </service>
 
+        <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentDefinition">
+            <tag name="shopware.entity.definition" entity="emz_pse_environment" />
+        </service>
+
         <service id="Emz\StagingEnvironment\Services\Sync\SyncService">
             <argument>%kernel.project_dir%</argument>
             <argument type="service" id="Symfony\Component\Filesystem\Filesystem" />
@@ -18,6 +22,10 @@
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
 
             <tag name="console.command" />
+        </service>
+
+        <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">
+            <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
         </service>
     </services>
 </container>

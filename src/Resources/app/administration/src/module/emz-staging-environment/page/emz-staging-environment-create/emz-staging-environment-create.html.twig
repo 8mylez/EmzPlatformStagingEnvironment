@@ -1,0 +1,44 @@
+{% block emz_staging_environment_create %}
+    <sw-page class="emz-staging-environment-create">
+        <template slot="smart-bar-header">
+            <h2>
+                {{ $t('emz-staging-environment.general.mainMenuItemGeneral') }}
+                    <sw-icon name="small-arrow-medium-right" small></sw-icon>
+                {{ $t('emz-staging-environment.create.title') }}
+            </h2>
+        </template>
+        
+        <template #content>
+            <sw-card-view>
+                <sw-card
+                    :title="$t('emz-staging-environment.create.title')"    
+                >
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.create.name')"
+                        :placeholder="$t('emz-staging-environment.create.name')"
+                        v-model="environment.name"
+                        required
+                    >
+                    </sw-text-field>
+
+                    <sw-entity-single-select
+                        required
+                        entity="emz_pse_profile"
+                        label="Profile"
+                        labelProperty="profileName"
+                        v-model="selectedProfile">
+                    </sw-entity-single-select>
+
+                    <sw-button-process variant="ghost"
+                        :isLoading="processes.createNewStagingEnvironment"
+                        :processSuccess="processSuccess.createNewStagingEnvironment"
+                        @process-finish="resetButton"
+                        @click="createNewStatingEnvironment"
+                    >
+                        {{ $t('emz-staging-environment.create.start') }}
+                    </sw-button-process>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    </sw-page>
+{% endblock %}
