@@ -6,9 +6,9 @@ class StagingEnvironmentApiService extends ApiService {
         this.name = 'stagingEnvironmentApiService';
     }
 
-    create() {
+    create(payload = {}) {
         const headers = this.getBasicHeaders({});
-        return this.httpClient.post('/_action/emz_pse/environment/create', {}, { headers });
+        return this.httpClient.post('/_action/emz_pse/environment/create', payload, { headers });
     }
 }
 

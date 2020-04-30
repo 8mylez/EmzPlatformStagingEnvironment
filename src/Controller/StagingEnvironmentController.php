@@ -2,6 +2,7 @@
 
 namespace Emz\StagingEnvironment\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
@@ -28,9 +29,11 @@ class StagingEnvironmentController extends AbstractController
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/create", name="api.action.emz_pse.environment.create", methods={"POST"})
      */
-    public function create(): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        if ($this->syncService->syncCore('stagingfromcontroller')) {
+        $environmentName = $request->get('name');
+
+        if ($this->syncService->syncCore($environmentName)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Core successfully synced!"

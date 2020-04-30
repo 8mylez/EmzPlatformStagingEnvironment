@@ -59,26 +59,26 @@ Component.register('emz-staging-environment-create', {
 
             this.processes.createNewStagingEnvironment = true;
 
-            return this.stagingEnvironmentApiService.create()
-                .then(() => {
-                    this.processSuccess.createNewStagingEnvironment = true;
+            return this.stagingEnvironmentApiService.create({
+                name: this.environment.name,
+                selectedProfile: this.selectedProfile
+            }).then(() => {
+                this.processSuccess.createNewStagingEnvironment = true;
 
-                    this.createNotificationSuccess({
-                        title: this.$t('global.default.error'),
-                        message: this.$t('emz-staging-environment.create.success')
-                    });
-                })
-                .catch(() => {
-                    this.processSuccess.createNewStagingEnvironment = false;
-
-                    this.createNotificationError({
-                        title: this.$t('global.default.error'),
-                        message: this.$t('emz-staging-environment.create.error')
-                    });
-                })
-                .finally(() => {
-                    this.processes.createNewStagingEnvironment = false;
+                this.createNotificationSuccess({
+                    title: this.$t('global.default.success'),
+                    message: this.$t('emz-staging-environment.create.success')
                 });
+            }).catch(() => {
+                this.processSuccess.createNewStagingEnvironment = false;
+
+                this.createNotificationError({
+                    title: this.$t('global.default.error'),
+                    message: this.$t('emz-staging-environment.create.error')
+                });
+            }).finally(() => {
+                this.processes.createNewStagingEnvironment = false;
+            });
 
         },
         resetButton() {
