@@ -44,54 +44,52 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
         ];
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
-        // $stmt = $stagingConnection->executeQuery("CREATE TABLE cms_page (
-        //     preview_media_id BINARY(16) DEFAULT NULL, 
-        //     id BINARY(16) NOT NULL, 
-        //     type VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`, 
-        //     entity VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, 
-        //     locked TINYINT(1) DEFAULT '0' NOT NULL, 
-        //     config JSON DEFAULT NULL, 
-        //     created_at DATETIME NOT NULL, 
-        //     updated_at DATETIME DEFAULT NULL, 
-        //     INDEX IDX_D39C1B5D2DD3AFD5 (preview_media_id)
-        // ) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB COMMENT = ''");
-
-        $stmt = $stagingConnection->executeQuery("select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'shopware_staging' order by create_time asc");
-        $tables = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-
-        echo "<pre>";
-        print_r($tables);
-        die();
-
         
-
-        // "$stmt = $this->connection->executeQuery("select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = 'shopware6' order by create_time asc");
-        // $tables = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-
-
-         
-        $schemaManager = $this->connection->getSchemaManager();
-        $currentSchema = $schemaManager->createSchema();
-        $newSchema = new Schema();
-
-        $sqlQueries = $newSchema->getMigrateToSql($currentSchema, $this->connection->getDatabasePlatform());
-
         echo "<pre>";
 
-        foreach($sqlQueries as $sqlQuery) {
+        $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
 
+        foreach($tables as $table) {
+            $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table['Tables_in_shopware'] . '`')->fetch();
+
+            print_r($create);
+
+            $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table['Tables_in_shopware'] . '`;SET FOREIGN_KEY_CHECKS=1;');
+
+            echo "Table was dropped: " . $create['Table'] . "\n";
+
+            $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;' . $create['Create Table'] . ';SET FOREIGN_KEY_CHECKS=1;');
+
+            echo "Table was created: " . $create['Table'] . "\n";
+
+            $data = [];
+            $data = $this->connection->executeQuery('SELECT * FROM `' . $table['Tables_in_shopware'] . '`')->fetchAll();
+
+            if (!empty($data)) {
+
+                foreach($data as $d) {
+                    $columns = [];
+                    $values = [];
+                    $set = [];
+
+                    foreach($d as $columnName => $value) {
+                        $columns[] = '`' . $columnName . '`';
+                        $values[] = $value;
+                        $set[] = '?';
+                    }
+
+                    $sqlInsert = 'SET FOREIGN_KEY_CHECKS=0;INSERT INTO `' . $table['Tables_in_shopware'] . '` (' . implode(", ", $columns) . ') VALUES ( ' . implode(', ', $set) . ' );SET FOREIGN_KEY_CHECKS=1;';
+
+                    $stagingConnection->executeUpdate($sqlInsert, $values);
+                }
+
+                echo "Imported Data for: " . $table['Tables_in_shopware'] . "\n";
+                
+            }
+
+            echo "\n\n";
         }
 
-        // foreach($schemaManager->listTables() as $table) {
-        //     echo $table->getName() . "\n"; 
-
-        //     if ($table->getName() == 'cart') {
-        //         foreach($schemaManager->listTableIndexes('cart') as $index) {
-        //             echo "Index: " . $index->getName() . "\n";
-        //             print_r($index->getColumns());
-        //         }
-        //     }
-        // }
 
     }
 
