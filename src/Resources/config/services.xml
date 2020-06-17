@@ -22,6 +22,11 @@
             <argument type="service" id="Symfony\Component\Filesystem\Filesystem" />
         </service>
 
+        <service id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService">
+            <argument>%kernel.project_dir%</argument>
+            <argument type="service" id="Doctrine\DBAL\Connection" />
+        </service>
+
         <service id="Emz\StagingEnvironment\Command\DatabaseSyncCommand">
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
             <tag name="console.command" />
@@ -32,19 +37,9 @@
             <tag name="console.command" />
         </service>
 
-        <service id="Emz\StagingEnvironment\Services\Database\DatabaseService">
-            <argument type="service" id="Doctrine\DBAL\Connection" />
-            <argument>%kernel.project_dir%</argument>
-        </service>
-
-        <service id="Emz\StagingEnvironment\Commands\DatabaseExportCommand">
-            <tag name="console.command"/>
-            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseService"/>
-        </service>
-        
-        <service id="Emz\StagingEnvironment\Commands\DatabaseImportCommand">
-            <tag name="console.command"/>
-            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseService"/>
+        <service id="Emz\StagingEnvironment\Command\ConfigUpdaterCommand">
+            <argument type="service" id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService" />
+            <tag name="console.command" />
         </service>
 
         <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">

@@ -5,8 +5,6 @@ namespace Emz\StagingEnvironment\Services\Database;
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServcieInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer;
 
 class DatabaseSyncService implements DatabaseSyncServiceInterface
 {
