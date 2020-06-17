@@ -23,18 +23,7 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
     public function syncDatabase()
     {
 
-        
-        /**
-         * How it should work
-         * 
-         * 1. Establish connection to staging database
-         * 2. Copy Scheme
-         * 3. Copy Data, but in badges?
-         * 4. Update settings for staging environment --> saleschannel url, maintenance mode, etc.
-         */
-
-        //self::$connection = DriverManager::getConnection($parameters, new Configuration());
-        //put here configuration of plugin
+        //TODO: put here configuration of plugin
         $stagingConnectionParams = [
             'dbname' => 'shopware_staging',
             'user' => 'app',
@@ -45,14 +34,10 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
-        echo "<pre>";
-
         $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
 
         foreach($tables as $table) {
             $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table['Tables_in_shopware'] . '`')->fetch();
-
-            print_r($create);
 
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table['Tables_in_shopware'] . '`;SET FOREIGN_KEY_CHECKS=1;');
 
@@ -87,10 +72,8 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
                 
             }
 
-            echo "\n\n";
+            echo "\n";
         }
-
-
     }
 
 }
