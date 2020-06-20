@@ -56,7 +56,26 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     
     public function setSalesChannelsInMaintenance()
     {
+        //TODO: put here configuration of plugin
+        $stagingConnectionParams = [
+            'dbname' => 'shopware_staging',
+            'user' => 'app',
+            'password' => 'app',
+            'host' => 'localhost',
+            'driver' => 'pdo_mysql',
+        ];
+        
+        $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
+        $salesChannels = $stagingConnection->executeQuery('SELECT id as id, maintenance FROM sales_channel')->fetchAll();
+
+        foreach ($salesChannels as $salesChannel) {
+            $stagingConnection->executeUpdate('UPDATE sales_channel SET maintenance = :maintenance WHERE id = :id', 
+                ['maintenance' => true, 'id' => $salesChannel['id']]
+            );
+        }
+
+        return true;
     }
 
     public function setRobotsMetaTag()
