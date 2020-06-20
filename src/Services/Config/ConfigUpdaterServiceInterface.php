@@ -8,7 +8,5 @@ interface ConfigUpdaterServiceInterface
 
     public function setSalesChannelsInMaintenance();
 
-    public function setRobotsMetaTag();
-
-    public function updateEnvData();
+    public function createEnvFile();
 }

@@ -25,6 +25,7 @@ class ConfigUpdaterCommand extends Command
         $done = true;
         $done = $this->configUpdaterService->setSalesChannelDomains();
         $done = $this->configUpdaterService->setSalesChannelsInMaintenance();
+        $done = $this->configUpdaterService->createEnvFile();
 
         if ($done) {
             $output->writeln('Config updated!');
