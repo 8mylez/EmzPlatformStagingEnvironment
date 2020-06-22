@@ -4,6 +4,7 @@ namespace Emz\StagingEnvironment\Services\Config;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Symfony\Component\Dotenv\Dotenv;
 
 class ConfigUpdaterService implements ConfigUpdaterServiceInterface
 {
@@ -56,16 +57,70 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     
     public function setSalesChannelsInMaintenance()
     {
+        //TODO: put here configuration of plugin
+        $stagingConnectionParams = [
+            'dbname' => 'shopware_staging',
+            'user' => 'app',
+            'password' => 'app',
+            'host' => 'localhost',
+            'driver' => 'pdo_mysql',
+        ];
+        
+        $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
+        $salesChannels = $stagingConnection->executeQuery('SELECT id as id, maintenance FROM sales_channel')->fetchAll();
+
+        foreach ($salesChannels as $salesChannel) {
+            $stagingConnection->executeUpdate('UPDATE sales_channel SET maintenance = :maintenance WHERE id = :id', 
+                ['maintenance' => true, 'id' => $salesChannel['id']]
+            );
+        }
+
+        return true;
     }
 
-    public function setRobotsMetaTag()
+    public function createEnvFile()
     {
+        //TODO: put here configuration of plugin
+        $stagingConnectionParams = [
+            'dbname' => 'shopware_staging',
+            'user' => 'app',
+            'password' => 'app',
+            'host' => 'localhost',
+            'driver' => 'pdo_mysql',
+            'port' => 3306
+        ];
 
-    }
+        //should be coming from the profile
+        $config = [
+            'folderName' => 'emzstaging'
+        ];
 
-    public function updateEnvData()
-    {
+        $currentConfiguration = $_ENV;
 
+        unset($currentConfiguration['SYMFONY_DOTENV_VARS']);
+        unset($currentConfiguration['SHELL_VERBOSITY']);
+
+        $databaseUrl = sprintf(
+            'mysql://%s:%s@%s:%s/%s',
+            rawurlencode($stagingConnectionParams['user']),
+            rawurlencode($stagingConnectionParams['password']),
+            rawurlencode($stagingConnectionParams['host']),
+            rawurlencode((string) $stagingConnectionParams['port']),
+            rawurlencode($stagingConnectionParams['dbname'])
+        );
+
+        $currentConfiguration['DATABASE_URL'] = $databaseUrl;
+        $currentConfiguration['APP_URL'] = rtrim($currentConfiguration['APP_URL'], '/') . '/' . $config['folderName'];
+
+        $targetConfiguration = [];
+
+        foreach($currentConfiguration as $key => $value) {
+            $targetConfiguration[] = "{$key}={$value}";
+        }
+
+        file_put_contents($this->projectDir . '/' . $config['folderName'] . '/.env', implode("\n", $targetConfiguration));
+
+        return true;
     }
 }

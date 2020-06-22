@@ -22,9 +22,12 @@ class ConfigUpdaterCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = $this->configUpdaterService->setSalesChannelDomains();
+        $done = true;
+        $done = $this->configUpdaterService->setSalesChannelDomains();
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance();
+        $done = $this->configUpdaterService->createEnvFile();
 
-        if ($result) {
+        if ($done) {
             $output->writeln('Config updated!');
         } else {
             $output->writeln('3RR3R');
