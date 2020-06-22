@@ -46,7 +46,8 @@ class SyncService implements SyncServiceInterface
         ];
 
         $filesToCopy = [
-            'index.htm',
+            'index.html',
+            'install.lock',
             'license.txt',
             'Dockerfile',
             'phpunit.xml.dist',
