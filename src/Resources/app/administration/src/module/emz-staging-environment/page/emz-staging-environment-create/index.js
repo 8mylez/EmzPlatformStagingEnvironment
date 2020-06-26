@@ -73,16 +73,41 @@ Component.register('emz-staging-environment-create', {
 
             this.processes.createNewStagingEnvironment = true;
 
-            return this.stagingEnvironmentApiService.create({
+            return this.stagingEnvironmentApiService.syncFiles({
                 name: this.environment.name,
                 selectedProfile: this.selectedProfile
             }).then(() => {
-                this.processSuccess.createNewStagingEnvironment = true;
-
                 this.createNotificationSuccess({
                     title: this.$t('global.default.success'),
-                    message: this.$t('emz-staging-environment.create.success')
+                    message: 'Sync files finished'
                 });
+
+                this.stagingEnvironmentApiService.cloneDatabase({
+                    name: this.environment.name,
+                    selectedProfile: this.selectedProfile
+                }).then(() => {
+
+                    this.createNotificationSuccess({
+                        title: this.$t('global.default.success'),
+                        message: 'clone database finished'
+                    });
+
+                    this.stagingEnvironmentApiService.updateSettings({
+                        name: this.environment.name,
+                        selectedProfile: this.selectedProfile
+                    }).then(() => {
+                        this.processes.createNewStagingEnvironment = false;
+
+                        this.createNotificationSuccess({
+                            title: this.$t('global.default.success'),
+                            message: 'update settings finished'
+                        });
+
+                    }).finally(() => {
+                        this.processes.createNewStagingEnvironment = false;
+                    });
+                });
+
             }).catch(() => {
                 this.processSuccess.createNewStagingEnvironment = false;
 
@@ -90,8 +115,6 @@ Component.register('emz-staging-environment-create', {
                     title: this.$t('global.default.error'),
                     message: this.$t('emz-staging-environment.create.error')
                 });
-            }).finally(() => {
-                this.processes.createNewStagingEnvironment = false;
             });
 
         },

@@ -48,8 +48,41 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
 
-        prin_r($environmentName);
-        die();
+        sleep(10);
         
+        return new JsonResponse([
+            "status" => true,
+            "message" => "SYNC FILES complete!"
+        ]);
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clone_database", name="api.action.emz_pse.environment.clone_database", methods={"POST"})
+     */
+    public function cloneDatabase(Request $request): JsonResponse
+    {
+        $environmentName = $request->get('name');
+        
+        sleep(10);
+
+        return new JsonResponse([
+            "status" => true,
+            "message" => "CLONE DATABASE complete!"
+        ]);
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/update_settings", name="api.action.emz_pse.environment.update_settings", methods={"POST"})
+     */
+    public function updateSettings(Request $request): JsonResponse
+    {
+        $environmentName = $request->get('name');
+
+        sleep(10);
+
+        return new JsonResponse([
+            "status" => true,
+            "message" => "UPDATE SETTINGS complete!"
+        ]);
     }
 }
