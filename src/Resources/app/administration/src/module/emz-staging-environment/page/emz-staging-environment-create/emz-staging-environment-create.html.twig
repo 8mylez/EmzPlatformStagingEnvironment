@@ -28,7 +28,10 @@
                         labelProperty="profileName"
                         v-model="selectedProfile">
                     </sw-entity-single-select>
-
+                </sw-card>
+                <sw-card
+                    :title="$t('emz-staging-environment.create.stepsTitle)"
+                >
                     <sw-button-process variant="ghost"
                         :isLoading="processes.createNewStagingEnvironment"
                         :processSuccess="processSuccess.createNewStagingEnvironment"
@@ -37,6 +40,19 @@
                     >
                         {{ $t('emz-staging-environment.create.start') }}
                     </sw-button-process>
+                    <sw-step-display :itemIndex="stepIndex"
+                        :itemVariant="stepVariant"
+                        :initialItemVariants="stepInitialItemVariants">
+                        <sw-step-item>
+                            {{ $t('emz-staging-environment.create.syncFiles') }}
+                        </sw-step-item>
+                        <sw-step-item>
+                            {{ $t('emz-staging-environment.create.syncDatabase') }}
+                        </sw-step-item>
+                        <sw-step-item>
+                            {{ $t('emz-staging-environment.create.updateEnv') }}
+                        </sw-step-item>
+                    </sw-step-display>
                 </sw-card>
             </sw-card-view>
         </template>

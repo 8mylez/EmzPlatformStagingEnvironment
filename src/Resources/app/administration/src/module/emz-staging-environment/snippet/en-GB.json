@@ -39,7 +39,11 @@
             "start": "Start",
             "processStarted": "Process started!",
             "success": "Environment created successfully!",
-            "error": "Error occured. Environment was not created!"
+            "error": "Error occured. Environment was not created!",
+            "stepsTitle": "Detailed steps",
+            "syncFiles": "Copy files",
+            "syncDatabase": "Clone database",
+            "updateEnv": "Update settings"
         }
     }
 }

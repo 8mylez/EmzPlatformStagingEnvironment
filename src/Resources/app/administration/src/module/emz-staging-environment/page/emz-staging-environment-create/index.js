@@ -34,7 +34,21 @@ Component.register('emz-staging-environment-create', {
             },
             processSuccess: {
                 createNewStagingEnvironment: false
-            }
+            },
+            stepIndex: 0,
+            stepVariant: "success"
+        }
+    },
+
+    computed: {
+        stepInitialItemVariants() {
+            const steps = [
+                ['info', 'disabled', 'disabled'],
+                ['success', 'info', 'disabled'],
+                ['success', 'success', 'info'],
+            ];
+
+            return steps[0];
         }
     },
 
