@@ -43,7 +43,8 @@
             "stepsTitle": "Einzelne Schritte",
             "syncFiles": "Dateien kopieren",
             "syncDatabase": "Datenbank klonen",
-            "updateEnv": "Einstellungen vornehmen"
+            "updateEnv": "Einstellungen vornehmen",
+            "prepare": "Vorbereitung"
         }
     }
 }

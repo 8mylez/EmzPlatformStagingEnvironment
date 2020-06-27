@@ -35,33 +35,32 @@ Component.register('emz-staging-environment-create', {
             processSuccess: {
                 createNewStagingEnvironment: false
             },
-            stepIndex: 0,
-            stepVariant: "success"
+            stepVariant: "info",
+            currentStep: 1
         }
     },
 
     computed: {
+        stepIndex() {
+            return this.currentStep < 1 ? 0 : this.currentStep -1;
+        },
         stepInitialItemVariants() {
             const steps = [
-                ['info', 'disabled', 'disabled'],
-                ['success', 'info', 'disabled'],
-                ['success', 'success', 'info'],
+                ['disabled', 'disabled', 'disabled', 'disabled'],
+                ['success', 'disabled', 'disabled', 'disabled'],
+                ['success', 'info', 'disabled', 'disabled'],
+                ['success', 'success', 'info', 'disabled'],
+                ['success', 'success', 'success', 'info'],
+                ['success', 'success', 'success', 'success'],
             ];
 
-            return steps[0];
+            return steps[this.currentStep];
         }
     },
 
     created() {
         this.repositoryEnvironment = this.repositoryFactory.create('emz_pse_environment');
         this.environment = this.repositoryEnvironment.create(Context.api);
-
-        // this.repositoryProfile = this.repositoryFactory.create('emz_pse_profile');
-        // this.repositoryProfile
-        //     .search(new Criteria(), Shopware.Context.api)
-        //     .then(result => {
-        //         this.profiles = result;
-        //     });
     },
 
     methods: {
@@ -72,6 +71,7 @@ Component.register('emz-staging-environment-create', {
             });
 
             this.processes.createNewStagingEnvironment = true;
+            this.currentStep++;
 
             return this.stagingEnvironmentApiService.syncFiles({
                 name: this.environment.name,
@@ -82,6 +82,8 @@ Component.register('emz-staging-environment-create', {
                     message: 'Sync files finished'
                 });
 
+                this.currentStep++;
+
                 this.stagingEnvironmentApiService.cloneDatabase({
                     name: this.environment.name,
                     selectedProfile: this.selectedProfile
@@ -91,6 +93,8 @@ Component.register('emz-staging-environment-create', {
                         title: this.$t('global.default.success'),
                         message: 'clone database finished'
                     });
+
+                    this.currentStep++;
 
                     this.stagingEnvironmentApiService.updateSettings({
                         name: this.environment.name,
@@ -103,8 +107,11 @@ Component.register('emz-staging-environment-create', {
                             message: 'update settings finished'
                         });
 
+                        this.currentStep++;
+
                     }).finally(() => {
                         this.processes.createNewStagingEnvironment = false;
+                        this.currentStep = 5;
                     });
                 });
 

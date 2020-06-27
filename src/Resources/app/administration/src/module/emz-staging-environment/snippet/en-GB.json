@@ -43,7 +43,8 @@
             "stepsTitle": "Detailed steps",
             "syncFiles": "Copy files",
             "syncDatabase": "Clone database",
-            "updateEnv": "Update settings"
+            "updateEnv": "Update settings",
+            "prepare": "Preparation"
         }
     }
 }
