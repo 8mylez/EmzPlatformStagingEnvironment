@@ -23,9 +23,9 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
 
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'shopware_staging',
-            'user' => 'app',
-            'password' => 'app',
+            'dbname' => 'stagingtest',
+            'user' => 'root',
+            'password' => 'root',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
         ];

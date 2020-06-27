@@ -39,7 +39,19 @@
             "start": "Start",
             "processStarted": "Process started!",
             "success": "Environment created successfully!",
-            "error": "Error occured. Environment was not created!"
+            "error": "Error occured. Environment was not created!",
+            "stepsTitle": "Detailed steps",
+            "syncFiles": "Copy files",
+            "syncDatabase": "Clone database",
+            "updateEnv": "Update settings",
+            "prepare": "Preparation",
+            "stepsContent": {
+                "preparation": "In the preparation step the system proves if everything is correct to create a new staging environment.",
+                "syncFiles": "In this step all files will be copied in the appropriate sub folder, so that Shopware 6 has everything it needs to run smoothly.",
+                "cloneDatabase": "The database is a crucial part of a running system. All tables will be cloned and filled with the content of the main system.",
+                "updateSettings": "At the end some settings needs to be updated on the lately created staging database.",
+                "finished": "Congratulations! Your staging environemnt is up and running!"
+            }
         }
     }
 }

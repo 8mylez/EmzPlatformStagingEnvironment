@@ -39,7 +39,19 @@
             "start": "Start",
             "processStarted": "Erstellung gestartet!",
             "success": "Umgebung erfolgreich erstellt!",
-            "error": "Es ist ein Fehler aufgetreten!"
+            "error": "Es ist ein Fehler aufgetreten!",
+            "stepsTitle": "Einzelne Schritte",
+            "syncFiles": "Dateien kopieren",
+            "syncDatabase": "Datenbank klonen",
+            "updateEnv": "Einstellungen vornehmen",
+            "prepare": "Vorbereitung",
+            "stepsContent": {
+                "preparation": "In der Vorbereitung wird geprüft ob das System bereit für die Anlage einer Staging Umgebung ist.",
+                "syncFiles": "In diesem Schritt werden alle wichtigen Dateien in den entsprechenden Unterordner kopiert, sodass Shopware 6 alles hat was es braucht.",
+                "cloneDatabase": "Die Datenbank ist ein wichtiger Bestandteil eines lauffähigen Shops. Alle Tabellen und Inhalte werden geklont und bereitgestellt.",
+                "updateSettings": "Zum Schluss müssen diverse Einstellungen auf die Staging Umgebung angepasst werden, sodass diese auch zurecht kommt.",
+                "finished": "Herzlichen Glückwunsch! Die Staging Umgebung wurde erfolgreich angelegt und steht bereit!"
+            }
         }
     }
 }
