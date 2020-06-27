@@ -48,7 +48,7 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
 
-        sleep(10);
+        sleep(3);
         
         return new JsonResponse([
             "status" => true,
@@ -63,7 +63,7 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
         
-        sleep(10);
+        sleep(3);
 
         return new JsonResponse([
             "status" => true,
@@ -78,7 +78,7 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
 
-        sleep(10);
+        sleep(3);
 
         return new JsonResponse([
             "status" => true,

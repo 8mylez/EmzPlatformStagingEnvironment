@@ -55,6 +55,18 @@ Component.register('emz-staging-environment-create', {
             ];
 
             return steps[this.currentStep];
+        },
+        stepContent() {
+            const stepContent = [
+                '',
+                this.$t('emz-staging-environment.create.stepsContent.preparation'),
+                this.$t('emz-staging-environment.create.stepsContent.syncFiles'),
+                this.$t('emz-staging-environment.create.stepsContent.cloneDatabase'),
+                this.$t('emz-staging-environment.create.stepsContent.updateSettings'),
+                this.$t('emz-staging-environment.create.stepsContent.finished')
+            ];
+
+            return stepContent[this.currentStep];
         }
     },
 
@@ -71,7 +83,7 @@ Component.register('emz-staging-environment-create', {
             });
 
             this.processes.createNewStagingEnvironment = true;
-            this.currentStep++;
+            this.currentStep = 2;
 
             return this.stagingEnvironmentApiService.syncFiles({
                 name: this.environment.name,
