@@ -28,16 +28,16 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     {
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'shopware_staging',
-            'user' => 'app',
-            'password' => 'app',
+            'dbname' => 'stagingtest',
+            'user' => 'root',
+            'password' => 'root',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
         ];
 
         //should be coming from the profile
         $config = [
-            'folderName' => 'emzstaging'
+            'folderName' => 'updatestaging'
         ];
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
@@ -59,9 +59,9 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     {
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'shopware_staging',
-            'user' => 'app',
-            'password' => 'app',
+            'dbname' => 'stagingtest',
+            'user' => 'root',
+            'password' => 'root',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
         ];
@@ -83,9 +83,9 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     {
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'shopware_staging',
-            'user' => 'app',
-            'password' => 'app',
+            'dbname' => 'stagingtest',
+            'user' => 'root',
+            'password' => 'root',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
             'port' => 3306
@@ -93,7 +93,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
 
         //should be coming from the profile
         $config = [
-            'folderName' => 'emzstaging'
+            'folderName' => 'updatestaging'
         ];
 
         $currentConfiguration = $_ENV;

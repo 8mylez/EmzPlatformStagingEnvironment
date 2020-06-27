@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
+use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
+use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -19,26 +21,25 @@ class StagingEnvironmentController extends AbstractController
      */
     private $syncService;
 
+    /**
+     * @var DatabaseSyncServiceInterface
+     */
+    private $databaseSyncService;
+
+    /**
+     * @var ConfigUpdaterServiceInterface
+     */
+    private $configUpdaterService;
+
     public function __construct(
-        SyncServiceInterface $syncService
+        SyncServiceInterface $syncService,
+        DatabaseSyncServiceInterface $databaseSyncService,
+        ConfigUpdaterServiceInterface $configUpdaterService
     )
     {
         $this->syncService = $syncService;
-    }
-
-    /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/create", name="api.action.emz_pse.environment.create", methods={"POST"})
-     */
-    public function create(Request $request): JsonResponse
-    {
-        $environmentName = $request->get('name');
-
-        if ($this->syncService->syncCore($environmentName)) {
-            return new JsonResponse([
-                "status" => true,
-                "message" => "Core successfully synced!"
-            ]);
-        }
+        $this->databaseSyncService = $databaseSyncService;
+        $this->configUpdaterService = $configUpdaterService;
     }
 
     /**
@@ -48,12 +49,12 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
 
-        sleep(3);
-        
-        return new JsonResponse([
-            "status" => true,
-            "message" => "SYNC FILES complete!"
-        ]);
+        if ($this->syncService->syncCore($environmentName)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Synced all files!"
+            ]);
+        }
     }
 
     /**
@@ -63,12 +64,12 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
         
-        sleep(3);
-
-        return new JsonResponse([
-            "status" => true,
-            "message" => "CLONE DATABASE complete!"
-        ]);
+        if ($this->databaseSyncService->syncDatabase()) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Database cloned!"
+            ]);
+        }
     }
 
     /**
@@ -78,11 +79,16 @@ class StagingEnvironmentController extends AbstractController
     {
         $environmentName = $request->get('name');
 
-        sleep(3);
+        $done = true;
+        $done = $this->configUpdaterService->setSalesChannelDomains();
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance();
+        $done = $this->configUpdaterService->createEnvFile();
 
-        return new JsonResponse([
-            "status" => true,
-            "message" => "UPDATE SETTINGS complete!"
-        ]);
+        if ($done) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Updated settings!"
+            ]);
+        }
     }
 }

@@ -44,6 +44,8 @@
 
         <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService" />
         </service>
     </services>
 </container>
