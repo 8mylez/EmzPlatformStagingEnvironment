@@ -49,18 +49,7 @@ class StagingEnvironmentController extends AbstractController
     {
         $selectedProfileId = $request->get('selectedProfileId');
 
-        if (empty($selectedProfileId)) {
-            return new JsonResponse([
-                "status" => false,
-                "message" => "There is an error!"
-            ]);
-        }
-
-
-        echo "environmentName: " . $selectedProfileId;
-        die();
-
-        if ($this->syncService->syncCore($environmentName)) {
+        if ($this->syncService->syncCore($selectedProfileId)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Synced all files!"

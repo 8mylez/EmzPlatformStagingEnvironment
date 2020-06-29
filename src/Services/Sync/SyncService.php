@@ -4,6 +4,9 @@ namespace Emz\StagingEnvironment\Services\Sync;
 
 use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Context;
 
 class SyncService implements SyncServiceInterface
 {
@@ -13,20 +16,32 @@ class SyncService implements SyncServiceInterface
     /** @var Filesystem */
     private $fileSystem;
 
+    /** @var EntityRepositoryInterface */
+    private $profileRepository;
+
     public function __construct(
         string $projectDir,
-        Filesystem $fileSystem
+        Filesystem $fileSystem,
+        EntityRepositoryInterface $profileRepository
     ){
         $this->projectDir = $projectDir;
         $this->fileSystem = $fileSystem;
+        $this->profileRepository = $profileRepository;
     }
 
-    public function syncCore($folderName = 'emzstaging'): bool
+    public function syncCore($selectedProfileId): bool
     {
-        //should be coming from the profile configuration
         $config = [
-            'folderName' => $folderName,
+            'folderName' => 'emzstaging',
         ];
+
+        $selectedProfile = $this->profileRepository->search(
+            new Criteria([$selectedProfileId]), Context::createDefaultContext()
+        )->get($selectedProfileId);
+
+        if ($selectedProfile) {
+            $config['folderName'] = str_replace('/', '', $selectedProfile->get('folderName'));
+        }        
 
         $foldersToCopy = [
             'bin',
@@ -57,6 +72,10 @@ class SyncService implements SyncServiceInterface
             'composer.lock',
             'var/cache/plugins.json'
         ];
+
+        if (empty($config['folderName'])) {
+            return false;
+        }
 
         foreach($foldersToCopy as $folderToCopy) {
             if($this->fileSystem->exists($this->projectDir.'/'.$folderToCopy)) {
