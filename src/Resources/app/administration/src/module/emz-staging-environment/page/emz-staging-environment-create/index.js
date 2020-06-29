@@ -86,8 +86,7 @@ Component.register('emz-staging-environment-create', {
             this.currentStep = 2;
 
             return this.stagingEnvironmentApiService.syncFiles({
-                name: this.environment.name,
-                selectedProfile: this.selectedProfile
+                selectedProfileId: this.selectedProfile
             }).then(() => {
                 this.createNotificationSuccess({
                     title: this.$t('global.default.success'),
