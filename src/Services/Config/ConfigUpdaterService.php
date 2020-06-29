@@ -5,6 +5,9 @@ namespace Emz\StagingEnvironment\Services\Config;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Dotenv\Dotenv;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Context;
 
 class ConfigUpdaterService implements ConfigUpdaterServiceInterface
 {
@@ -16,15 +19,22 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
      */
     private $connection;
 
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $profileRepository;
+
     public function __construct(
         string $projectDir,
-        Connection $connection
+        Connection $connection,
+        EntityRepositoryInterface $profileRepository
     ) {
         $this->projectDir = $projectDir;
         $this->connection = $connection;
+        $this->profileRepository = $profileRepository;
     }
 
-    public function setSalesChannelDomains()
+    public function setSalesChannelDomains($selectedProfileId)
     {
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
@@ -39,6 +49,19 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         $config = [
             'folderName' => 'updatestaging'
         ];
+
+        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
+
+        if ($selectedProfile) {
+            $stagingConnectionParams = [
+                'dbname' => $selectedProfile->get('databaseName'),
+                'user' => $selectedProfile->get('databaseUser'),
+                'password' => $selectedProfile->get('databasePassword'),
+                'host' => $selectedProfile->get('databaseHost'),
+                'port' => $selectedProfile->get('databasePort'),
+                'driver' => 'pdo_mysql'
+            ];
+        }
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
@@ -55,7 +78,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         return true;
     }
     
-    public function setSalesChannelsInMaintenance()
+    public function setSalesChannelsInMaintenance($selectedProfileId)
     {
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
@@ -79,7 +102,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         return true;
     }
 
-    public function createEnvFile()
+    public function createEnvFile($selectedProfileId)
     {
         //TODO: put here configuration of plugin
         $stagingConnectionParams = [
@@ -122,5 +145,18 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         file_put_contents($this->projectDir . '/' . $config['folderName'] . '/.env', implode("\n", $targetConfiguration));
 
         return true;
+    }
+
+    private function getSelectedProfile($id)
+    {
+        $selectedProfile = $this->profileRepository->search(
+            new Criteria([$id]), Context::createDefaultContext()
+        )->get($id);
+
+        if ($selectedProfile) {
+            return $selectedProfile;
+        }
+
+        return false;
     }
 }

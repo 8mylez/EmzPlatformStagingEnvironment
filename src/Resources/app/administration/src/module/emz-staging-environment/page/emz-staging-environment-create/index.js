@@ -96,8 +96,7 @@ Component.register('emz-staging-environment-create', {
                 this.currentStep++;
 
                 this.stagingEnvironmentApiService.cloneDatabase({
-                    name: this.environment.name,
-                    selectedProfile: this.selectedProfile
+                    selectedProfileId: this.selectedProfile
                 }).then(() => {
 
                     this.createNotificationSuccess({
@@ -108,8 +107,7 @@ Component.register('emz-staging-environment-create', {
                     this.currentStep++;
 
                     this.stagingEnvironmentApiService.updateSettings({
-                        name: this.environment.name,
-                        selectedProfile: this.selectedProfile
+                        selectedProfileId: this.selectedProfile
                     }).then(() => {
                         this.processes.createNewStagingEnvironment = false;
 

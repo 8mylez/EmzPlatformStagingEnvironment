@@ -62,9 +62,9 @@ class StagingEnvironmentController extends AbstractController
      */
     public function cloneDatabase(Request $request): JsonResponse
     {
-        $environmentName = $request->get('name');
+        $selectedProfileId = $request->get('selectedProfileId');
         
-        if ($this->databaseSyncService->syncDatabase()) {
+        if ($this->databaseSyncService->syncDatabase($selectedProfileId)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Database cloned!"
@@ -77,12 +77,12 @@ class StagingEnvironmentController extends AbstractController
      */
     public function updateSettings(Request $request): JsonResponse
     {
-        $environmentName = $request->get('name');
+        $selectedProfileId = $request->get('selectedProfileId');
 
         $done = true;
-        $done = $this->configUpdaterService->setSalesChannelDomains();
-        $done = $this->configUpdaterService->setSalesChannelsInMaintenance();
-        $done = $this->configUpdaterService->createEnvFile();
+        $done = $this->configUpdaterService->setSalesChannelDomains($selectedProfileId);
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($selectedProfileId);
+        $done = $this->configUpdaterService->createEnvFile($selectedProfileId);
 
         if ($done) {
             return new JsonResponse([
