@@ -1,10 +1,35 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * Copyright (c) 8mylez GmbH. All rights reserved.
+ * This file is part of software that is released under a proprietary license.
+ * You must not copy, modify, distribute, make publicly available, or execute
+ * its contents or parts thereof without express permission by the copyright
+ * holder, unless otherwise permitted by law.
+ * 
+ *    ( __ )____ ___  __  __/ /__  ____
+ *   / __  / __ `__ \/ / / / / _ \/_  /
+ *  / /_/ / / / / / / /_/ / /  __/ / /_
+ *  \____/_/ /_/ /_/\__, /_/\___/ /___/
+ *              /____/              
+ * 
+ * Quote: 
+ * "Any fool can write code that a computer can understand. 
+ * Good programmers write code that humans can understand." 
+ * – Martin Fowler
+ */
+
+declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Services\Database;
 
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServcieInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Context;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
 
 class DatabaseSyncService implements DatabaseSyncServiceInterface
 {
@@ -13,22 +38,51 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
      */
     private $connection;
 
-    public function __construct(Connection $connection)
-    {
+    /** @var EntityRepositoryInterface */
+    private $profileRepository;
+
+    public function __construct(
+        Connection $connection,
+        EntityRepositoryInterface $profileRepository
+    ){
         $this->connection = $connection;
+        $this->profileRepository = $profileRepository;
     }
 
-    public function syncDatabase()
+    /**
+     * Clones the database with all table strucutes and values
+     * 
+     * @param string $selectedProfileId
+     * 
+     * @return bool
+     */
+    public function syncDatabase(string $selectedProfileId): bool
     {
-
-        //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'stagingtest',
-            'user' => 'root',
-            'password' => 'root',
+            'dbname' => 'staging',
+            'user' => 'user',
+            'password' => 'password',
             'host' => 'localhost',
-            'driver' => 'pdo_mysql',
+            'driver' => 'pdo_mysql'
         ];
+
+        /** @var StagingEnvironmentProfileEntity */
+        $selectedProfile = $this->profileRepository->search(
+            new Criteria([$selectedProfileId]), Context::createDefaultContext()
+        )->get($selectedProfileId);
+
+        if ($selectedProfile) {
+            $stagingConnectionParams = [
+                'dbname' => $selectedProfile->get('databaseName'),
+                'user' => $selectedProfile->get('databaseUser'),
+                'password' => $selectedProfile->get('databasePassword'),
+                'host' => $selectedProfile->get('databaseHost'),
+                'port' => $selectedProfile->get('databasePort'),
+                'driver' => 'pdo_mysql'
+            ];
+        } else {
+            return false;
+        }
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
@@ -39,11 +93,11 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
 
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table['Tables_in_shopware'] . '`;SET FOREIGN_KEY_CHECKS=1;');
 
-            echo "Table was dropped: " . $create['Table'] . "\n";
+            // echo "Table was dropped: " . $create['Table'] . "\n";
 
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;' . $create['Create Table'] . ';SET FOREIGN_KEY_CHECKS=1;');
 
-            echo "Table was created: " . $create['Table'] . "\n";
+            // echo "Table was created: " . $create['Table'] . "\n";
 
             $data = [];
             $data = $this->connection->executeQuery('SELECT * FROM `' . $table['Tables_in_shopware'] . '`')->fetchAll();
@@ -66,12 +120,14 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
                     $stagingConnection->executeUpdate($sqlInsert, $values);
                 }
 
-                echo "Imported Data for: " . $table['Tables_in_shopware'] . "\n";
+                // echo "Imported Data for: " . $table['Tables_in_shopware'] . "\n";
                 
             }
 
-            echo "\n";
+            // echo "\n";
         }
+
+        return true;
     }
 
 }

@@ -1,10 +1,35 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * Copyright (c) 8mylez GmbH. All rights reserved.
+ * This file is part of software that is released under a proprietary license.
+ * You must not copy, modify, distribute, make publicly available, or execute
+ * its contents or parts thereof without express permission by the copyright
+ * holder, unless otherwise permitted by law.
+ * 
+ *    ( __ )____ ___  __  __/ /__  ____
+ *   / __  / __ `__ \/ / / / / _ \/_  /
+ *  / /_/ / / / / / / /_/ / /  __/ / /_
+ *  \____/_/ /_/ /_/\__, /_/\___/ /___/
+ *              /____/              
+ * 
+ * Quote: 
+ * "Any fool can write code that a computer can understand. 
+ * Good programmers write code that humans can understand." 
+ * – Martin Fowler
+ */
+
+declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Services\Config;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Dotenv\Dotenv;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Context;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
 
 class ConfigUpdaterService implements ConfigUpdaterServiceInterface
 {
@@ -16,29 +41,49 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
      */
     private $connection;
 
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $profileRepository;
+
     public function __construct(
         string $projectDir,
-        Connection $connection
+        Connection $connection,
+        EntityRepositoryInterface $profileRepository
     ) {
         $this->projectDir = $projectDir;
         $this->connection = $connection;
+        $this->profileRepository = $profileRepository;
     }
 
-    public function setSalesChannelDomains()
+    /**
+     * Updates the domain of the staging environment and adds the subfolder
+     * 
+     * @param string $selectedProfile
+     * 
+     * @return bool
+     */
+    public function setSalesChannelDomains(string $selectedProfileId): bool
     {
-        //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'stagingtest',
-            'user' => 'root',
-            'password' => 'root',
+            'dbname' => 'staging',
+            'user' => 'user',
+            'password' => 'password',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
         ];
 
-        //should be coming from the profile
         $config = [
-            'folderName' => 'updatestaging'
+            'folderName' => 'emzstaging'
         ];
+
+        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
+        
+        if ($selectedProfile) {
+            $stagingConnectionParams = $this->getStagingConnectionParams($selectedProfile);
+            
+            $config['folderName'] = str_replace('/', '', $selectedProfile->get('folderName'));
+        }
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
@@ -55,16 +100,28 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         return true;
     }
     
-    public function setSalesChannelsInMaintenance()
+    /**
+     * Sets the salesChannel of the staging environment in maintenance
+     * 
+     * @param string $selectedProfileId
+     * 
+     * @return bool
+     */
+    public function setSalesChannelsInMaintenance(string $selectedProfileId): bool
     {
-        //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'stagingtest',
-            'user' => 'root',
-            'password' => 'root',
+            'dbname' => 'staging',
+            'user' => 'user',
+            'password' => 'password',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
         ];
+
+        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
+        
+        if ($selectedProfile) {
+            $stagingConnectionParams = $this->getStagingConnectionParams($selectedProfile);
+        }
         
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
@@ -79,22 +136,34 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         return true;
     }
 
-    public function createEnvFile()
+    /**
+     * Creates the .env file with all necessary data for the staging environment
+     * 
+     * @param string $selectedProfileId
+     * 
+     * @return bool 
+     */
+    public function createEnvFile(string $selectedProfileId): bool
     {
-        //TODO: put here configuration of plugin
         $stagingConnectionParams = [
-            'dbname' => 'stagingtest',
-            'user' => 'root',
-            'password' => 'root',
+            'dbname' => 'staging',
+            'user' => 'user',
+            'password' => 'password',
             'host' => 'localhost',
             'driver' => 'pdo_mysql',
-            'port' => 3306
         ];
 
-        //should be coming from the profile
         $config = [
-            'folderName' => 'updatestaging'
+            'folderName' => 'emzstaging'
         ];
+
+        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
+        
+        if ($selectedProfile) {
+            $stagingConnectionParams = $this->getStagingConnectionParams($selectedProfile);
+            
+            $config['folderName'] = str_replace('/', '', $selectedProfile->get('folderName'));
+        }
 
         $currentConfiguration = $_ENV;
 
@@ -122,5 +191,44 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         file_put_contents($this->projectDir . '/' . $config['folderName'] . '/.env', implode("\n", $targetConfiguration));
 
         return true;
+    }
+
+    /**
+     * Search by id for the selected profile
+     * 
+     * @param string $id
+     * 
+     * @return StagingEnvironmentProfileEntity|null
+     */
+    private function getSelectedProfile(string $id): ?StagingEnvironmentProfileEntity
+    {
+        $selectedProfile = $this->profileRepository->search(
+            new Criteria([$id]), Context::createDefaultContext()
+        )->get($id);
+
+        if ($selectedProfile) {
+            return $selectedProfile;
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates the array with the connection parameters for the staging environment
+     * 
+     * @param StagingEnvironmentProfileEntity $selectedProfile
+     * 
+     * @return array
+     */
+    private function getStagingConnectionParams(StagingEnvironmentProfileEntity $selectedProfile): array
+    {
+        return [
+            'dbname' => $selectedProfile->get('databaseName'),
+            'user' => $selectedProfile->get('databaseUser'),
+            'password' => $selectedProfile->get('databasePassword'),
+            'host' => $selectedProfile->get('databaseHost'),
+            'port' => $selectedProfile->get('databasePort'),
+            'driver' => 'pdo_mysql'
+        ];
     }
 }

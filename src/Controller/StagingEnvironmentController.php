@@ -1,4 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * Copyright (c) 8mylez GmbH. All rights reserved.
+ * This file is part of software that is released under a proprietary license.
+ * You must not copy, modify, distribute, make publicly available, or execute
+ * its contents or parts thereof without express permission by the copyright
+ * holder, unless otherwise permitted by law.
+ * 
+ *    ( __ )____ ___  __  __/ /__  ____
+ *   / __  / __ `__ \/ / / / / _ \/_  /
+ *  / /_/ / / / / / / /_/ / /  __/ / /_
+ *  \____/_/ /_/ /_/\__, /_/\___/ /___/
+ *              /____/              
+ * 
+ * Quote: 
+ * "Any fool can write code that a computer can understand. 
+ * Good programmers write code that humans can understand." 
+ * – Martin Fowler
+ */
+
+declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Controller;
 
@@ -47,9 +68,9 @@ class StagingEnvironmentController extends AbstractController
      */
     public function syncFiles(Request $request): JsonResponse
     {
-        $environmentName = $request->get('name');
+        $selectedProfileId = $request->get('selectedProfileId');
 
-        if ($this->syncService->syncCore($environmentName)) {
+        if ($this->syncService->syncCore($selectedProfileId)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Synced all files!"
@@ -62,9 +83,9 @@ class StagingEnvironmentController extends AbstractController
      */
     public function cloneDatabase(Request $request): JsonResponse
     {
-        $environmentName = $request->get('name');
+        $selectedProfileId = $request->get('selectedProfileId');
         
-        if ($this->databaseSyncService->syncDatabase()) {
+        if ($this->databaseSyncService->syncDatabase($selectedProfileId)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Database cloned!"
@@ -77,12 +98,12 @@ class StagingEnvironmentController extends AbstractController
      */
     public function updateSettings(Request $request): JsonResponse
     {
-        $environmentName = $request->get('name');
+        $selectedProfileId = $request->get('selectedProfileId');
 
         $done = true;
-        $done = $this->configUpdaterService->setSalesChannelDomains();
-        $done = $this->configUpdaterService->setSalesChannelsInMaintenance();
-        $done = $this->configUpdaterService->createEnvFile();
+        $done = $this->configUpdaterService->setSalesChannelDomains($selectedProfileId);
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($selectedProfileId);
+        $done = $this->configUpdaterService->createEnvFile($selectedProfileId);
 
         if ($done) {
             return new JsonResponse([

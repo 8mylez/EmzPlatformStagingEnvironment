@@ -1,4 +1,5 @@
 import template from './emz-staging-environment-create.html.twig';
+import './emz-staging-environment-create.scss';
 
 const { Component, Context, Data, Mixin } = Shopware;
 const { Criteria } = Data;
@@ -86,8 +87,7 @@ Component.register('emz-staging-environment-create', {
             this.currentStep = 2;
 
             return this.stagingEnvironmentApiService.syncFiles({
-                name: this.environment.name,
-                selectedProfile: this.selectedProfile
+                selectedProfileId: this.selectedProfile
             }).then(() => {
                 this.createNotificationSuccess({
                     title: this.$t('global.default.success'),
@@ -97,8 +97,7 @@ Component.register('emz-staging-environment-create', {
                 this.currentStep++;
 
                 this.stagingEnvironmentApiService.cloneDatabase({
-                    name: this.environment.name,
-                    selectedProfile: this.selectedProfile
+                    selectedProfileId: this.selectedProfile
                 }).then(() => {
 
                     this.createNotificationSuccess({
@@ -109,8 +108,7 @@ Component.register('emz-staging-environment-create', {
                     this.currentStep++;
 
                     this.stagingEnvironmentApiService.updateSettings({
-                        name: this.environment.name,
-                        selectedProfile: this.selectedProfile
+                        selectedProfileId: this.selectedProfile
                     }).then(() => {
                         this.processes.createNewStagingEnvironment = false;
 
@@ -128,7 +126,8 @@ Component.register('emz-staging-environment-create', {
                 });
 
             }).catch(() => {
-                this.processSuccess.createNewStagingEnvironment = false;
+                
+                this.reset();
 
                 this.createNotificationError({
                     title: this.$t('global.default.error'),
@@ -141,6 +140,10 @@ Component.register('emz-staging-environment-create', {
             this.processSuccess = {
                 createNewStagingEnvironment: false
             };
+        },
+        reset() {
+            this.processes.createNewStagingEnvironment = false;
+            this.currentStep = 1;
         }
     }
 });
