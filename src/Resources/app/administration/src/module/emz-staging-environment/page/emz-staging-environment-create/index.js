@@ -1,4 +1,5 @@
 import template from './emz-staging-environment-create.html.twig';
+import './emz-staging-environment-create.scss';
 
 const { Component, Context, Data, Mixin } = Shopware;
 const { Criteria } = Data;

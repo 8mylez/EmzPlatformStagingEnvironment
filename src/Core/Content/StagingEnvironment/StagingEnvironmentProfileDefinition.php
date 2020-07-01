@@ -1,4 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * Copyright (c) 8mylez GmbH. All rights reserved.
+ * This file is part of software that is released under a proprietary license.
+ * You must not copy, modify, distribute, make publicly available, or execute
+ * its contents or parts thereof without express permission by the copyright
+ * holder, unless otherwise permitted by law.
+ * 
+ *    ( __ )____ ___  __  __/ /__  ____
+ *   / __  / __ `__ \/ / / / / _ \/_  /
+ *  / /_/ / / / / / / /_/ / /  __/ / /_
+ *  \____/_/ /_/ /_/\__, /_/\___/ /___/
+ *              /____/              
+ * 
+ * Quote: 
+ * "Any fool can write code that a computer can understand. 
+ * Good programmers write code that humans can understand." 
+ * – Martin Fowler
+ */
+
+declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment;
 
@@ -12,7 +33,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\JsonField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextWithHtmlField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\PasswordField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
@@ -47,7 +67,7 @@ class StagingEnvironmentProfileDefinition extends EntityDefinition
             (new StringField('database_name', 'databaseName'))->setFlags(new Required()),
             (new StringField('database_user', 'databaseUser'))->setFlags(new Required()),
             (new StringField('database_host', 'databaseHost'))->setFlags(new Required()),
-            (new PasswordField('database_password', 'databasePassword'))->setFlags(new Required()),
+            (new StringField('database_password', 'databasePassword'))->setFlags(new Required()),
             new StringField('database_port', 'databasePort'),
             new BoolField('catch_emails', 'catchEmails'),
             new BoolField('anonymize_data', 'anonymizeData'),

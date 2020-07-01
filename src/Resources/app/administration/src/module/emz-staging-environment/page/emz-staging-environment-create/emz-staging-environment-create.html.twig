@@ -61,6 +61,12 @@
                             </sw-step-display>
                         </sw-card-section>
                         <sw-card-section>
+                            <div v-if="processes.createNewStagingEnvironment" class="emz-staging-environment-content-loader">
+                                <sw-loader 
+                                    size="50px"
+                                >
+                                </sw-loader>
+                            </div>
                             <p>{{stepContent}}</p>
                         </sw-card-section>
                     </sw-container>

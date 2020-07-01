@@ -13,14 +13,14 @@
             <tag name="shopware.entity.definition" entity="emz_pse_environment" />
         </service>
 
-        <service id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService">
-            <argument type="service" id="Doctrine\DBAL\Connection" />
-            <argument type="service" id="emz_pse_profile.repository" />
-        </service>
-
         <service id="Emz\StagingEnvironment\Services\Sync\SyncService">
             <argument>%kernel.project_dir%</argument>
             <argument type="service" id="Symfony\Component\Filesystem\Filesystem" />
+            <argument type="service" id="emz_pse_profile.repository" />
+        </service>
+
+        <service id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService">
+            <argument type="service" id="Doctrine\DBAL\Connection" />
             <argument type="service" id="emz_pse_profile.repository" />
         </service>
 
