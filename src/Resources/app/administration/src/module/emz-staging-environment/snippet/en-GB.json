@@ -9,11 +9,15 @@
         },
         "list": {
             "columnProfileName": "Name",
+            "columnEnvironmentName": "Name",
             "columnComment": "Comment",
             "addButtonText": "Create profile",
             "addEnvironmentButton": "Create new staging environment"
         },
         "detail": {
+            "title": "Staging environment",
+            "name": "Name",
+            "environmentCardTitle": "Environment",
             "errorTitle": "Error saving the profile",
             "cancelButtonText": "Cancel",
             "saveButtonText": "Save",

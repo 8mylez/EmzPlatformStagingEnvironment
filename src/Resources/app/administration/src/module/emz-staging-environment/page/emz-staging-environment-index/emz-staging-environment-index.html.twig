@@ -9,11 +9,17 @@
             </sw-button>
         </template>
         <template #content>
-            <sw-card-view>
-                <sw-card>
-                    Hallo Staging11
-                </sw-card>
-            </sw-card-view>
+            {% block emz_staging_environment_list_content %}
+                <sw-entity-listing
+                    v-if="environments"
+                    :items="environments"
+                    :repository="repository"
+                    :showSelection="false"
+                    :columns="columns"
+                    detailRoute="emz.staging.environment.detail"
+                >
+                </sw-entity-listing>
+            {% endblock %}
         </template>
     </sw-page>
 {% endblock %}

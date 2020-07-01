@@ -9,11 +9,15 @@
         },
         "list": {
             "columnProfileName": "Name",
+            "columnEnvironmentName": "Name",
             "columnComment": "Kommentar",
             "addButtonText": "Profil erstellen",
             "addEnvironmentButton": "Staging Umgebung erstellen"
         },
         "detail": {
+            "title": "Staging Umgebung",
+            "name": "Name",
+            "environmentCardTitle": "Umgebung",
             "errorTitle": "Fehler beim Speichern des Profils",
             "cancelButtonText": "Abbrechen",
             "saveButtonText": "Speichern",
