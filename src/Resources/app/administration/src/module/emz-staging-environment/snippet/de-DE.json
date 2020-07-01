@@ -44,7 +44,7 @@
             "processStarted": "Erstellung gestartet!",
             "success": "Umgebung erfolgreich erstellt!",
             "error": "Es ist ein Fehler aufgetreten!",
-            "stepsTitle": "Einzelne Schritte",
+            "stepsTitle": "Synchronisierung",
             "syncFiles": "Dateien kopieren",
             "syncDatabase": "Datenbank klonen",
             "updateEnv": "Einstellungen vornehmen",

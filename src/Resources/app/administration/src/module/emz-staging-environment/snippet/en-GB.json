@@ -44,7 +44,7 @@
             "processStarted": "Process started!",
             "success": "Environment created successfully!",
             "error": "Error occured. Environment was not created!",
-            "stepsTitle": "Detailed steps",
+            "stepsTitle": "Synchronization",
             "syncFiles": "Copy files",
             "syncDatabase": "Clone database",
             "updateEnv": "Update settings",
