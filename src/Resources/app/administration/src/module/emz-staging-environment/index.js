@@ -93,4 +93,4 @@ Application.addServiceProvider('stagingEnvironmentApiService', container => {
     const initContainer = Application.getContainer('init');
 
     return new StagingEnvironmentApiService(initContainer.httpClient, container.loginService);
-});
+}); 

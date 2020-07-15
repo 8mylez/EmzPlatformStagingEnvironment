@@ -25,9 +25,9 @@ namespace Emz\StagingEnvironment\Services\Config;
 
 interface ConfigUpdaterServiceInterface
 {
-    public function setSalesChannelDomains(string $selectedProfileId): bool;
+    public function setSalesChannelDomains(array $config): bool;
 
-    public function setSalesChannelsInMaintenance(string $selectedProfileId): bool;
+    public function setSalesChannelsInMaintenance(array $config): bool;
 
-    public function createEnvFile(string $selectedProfileId): bool;
+    public function createEnvFile(array $config): bool;
 }

@@ -25,7 +25,6 @@ namespace Emz\StagingEnvironment\Services\Sync;
 
 use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
@@ -38,41 +37,29 @@ class SyncService implements SyncServiceInterface
     /** @var Filesystem */
     private $fileSystem;
 
-    /** @var EntityRepositoryInterface */
-    private $profileRepository;
-
     public function __construct(
         string $projectDir,
-        Filesystem $fileSystem,
-        EntityRepositoryInterface $profileRepository
+        Filesystem $fileSystem
     ){
         $this->projectDir = $projectDir;
         $this->fileSystem = $fileSystem;
-        $this->profileRepository = $profileRepository;
     }
 
     /**
-     * Copies all folders related to shopware 6 to the provided profile
+     * Copies all folders related to shopware 6 in the provided subfolder
      * 
-     * @param string $selectedProfileId
+     * @param string $folderName
      * 
      * @return bool
      */
-    public function syncCore(string $selectedProfileId): bool
+    public function syncCore(string $folderName): bool
     {
         $config = [
             'folderName' => 'emzstaging',
         ];
-
-        /** @var StagingEnvironmentProfileEntity */
-        $selectedProfile = $this->profileRepository->search(
-            new Criteria([$selectedProfileId]), Context::createDefaultContext()
-        )->get($selectedProfileId);
-
-        if ($selectedProfile) {
-            $config['folderName'] = str_replace('/', '', $selectedProfile->get('folderName'));
-        }
-
+        
+        $config['folderName'] = str_replace('/', '', $folderName);
+        
         $foldersToCopy = [
             'bin',
             'custom',

@@ -30,7 +30,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\PasswordField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
@@ -69,7 +68,7 @@ class StagingEnvironmentDefinition extends EntityDefinition
             (new StringField('database_name', 'databaseName'))->setFlags(new Required()),
             (new StringField('database_user', 'databaseUser'))->setFlags(new Required()),
             (new StringField('database_host', 'databaseHost'))->setFlags(new Required()),
-            (new PasswordField('database_password', 'databasePassword'))->setFlags(new Required()),
+            (new StringField('database_password', 'databasePassword'))->setFlags(new Required()),
             new StringField('database_port', 'databasePort'),
             new BoolField('catch_emails', 'catchEmails'),
             new BoolField('anonymize_data', 'anonymizeData'),

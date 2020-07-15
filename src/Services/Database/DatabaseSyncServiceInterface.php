@@ -25,5 +25,11 @@ namespace Emz\StagingEnvironment\Services\Database;
 
 interface DatabaseSyncServiceInterface
 {
-    public function syncDatabase(string $selectedProfileId): bool;
+    public function syncDatabase(
+        string $databaseName,
+        string $databaseUser,
+        string $databasePassword,
+        string $databaseHost,
+        string $databasePort
+    ): bool;
 }

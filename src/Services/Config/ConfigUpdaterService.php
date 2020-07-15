@@ -26,8 +26,6 @@ namespace Emz\StagingEnvironment\Services\Config;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Dotenv\Dotenv;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
 
@@ -41,29 +39,22 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
      */
     private $connection;
 
-    /**
-     * @var EntityRepositoryInterface
-     */
-    private $profileRepository;
-
     public function __construct(
         string $projectDir,
-        Connection $connection,
-        EntityRepositoryInterface $profileRepository
+        Connection $connection
     ) {
         $this->projectDir = $projectDir;
         $this->connection = $connection;
-        $this->profileRepository = $profileRepository;
     }
 
     /**
      * Updates the domain of the staging environment and adds the subfolder
      * 
-     * @param string $selectedProfile
+     * @param array $config
      * 
      * @return bool
      */
-    public function setSalesChannelDomains(string $selectedProfileId): bool
+    public function setSalesChannelDomains(array $config): bool
     {
         $stagingConnectionParams = [
             'dbname' => 'staging',
@@ -73,17 +64,9 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
             'driver' => 'pdo_mysql',
         ];
 
-        $config = [
-            'folderName' => 'emzstaging'
-        ];
-
-        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
-        
-        if ($selectedProfile) {
-            $stagingConnectionParams = $this->getStagingConnectionParams($selectedProfile);
+        $stagingConnectionParams = $this->getStagingConnectionParams($config);
             
-            $config['folderName'] = str_replace('/', '', $selectedProfile->get('folderName'));
-        }
+        $config['folderName'] = str_replace('/', '', $config['folderName']);
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
@@ -103,11 +86,11 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     /**
      * Sets the salesChannel of the staging environment in maintenance
      * 
-     * @param string $selectedProfileId
+     * @param array $config
      * 
      * @return bool
      */
-    public function setSalesChannelsInMaintenance(string $selectedProfileId): bool
+    public function setSalesChannelsInMaintenance(array $config): bool
     {
         $stagingConnectionParams = [
             'dbname' => 'staging',
@@ -117,11 +100,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
             'driver' => 'pdo_mysql',
         ];
 
-        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
-        
-        if ($selectedProfile) {
-            $stagingConnectionParams = $this->getStagingConnectionParams($selectedProfile);
-        }
+        $stagingConnectionParams = $this->getStagingConnectionParams($config);        
         
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
@@ -139,11 +118,11 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     /**
      * Creates the .env file with all necessary data for the staging environment
      * 
-     * @param string $selectedProfileId
+     * @param array $selectedProfileId
      * 
      * @return bool 
      */
-    public function createEnvFile(string $selectedProfileId): bool
+    public function createEnvFile(array $config): bool
     {
         $stagingConnectionParams = [
             'dbname' => 'staging',
@@ -153,17 +132,9 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
             'driver' => 'pdo_mysql',
         ];
 
-        $config = [
-            'folderName' => 'emzstaging'
-        ];
-
-        $selectedProfile = $this->getSelectedProfile($selectedProfileId);
-        
-        if ($selectedProfile) {
-            $stagingConnectionParams = $this->getStagingConnectionParams($selectedProfile);
+        $stagingConnectionParams = $this->getStagingConnectionParams($config);
             
-            $config['folderName'] = str_replace('/', '', $selectedProfile->get('folderName'));
-        }
+        $config['folderName'] = str_replace('/', '', $config['folderName']);
 
         $currentConfiguration = $_ENV;
 
@@ -194,40 +165,20 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     }
 
     /**
-     * Search by id for the selected profile
-     * 
-     * @param string $id
-     * 
-     * @return StagingEnvironmentProfileEntity|null
-     */
-    private function getSelectedProfile(string $id): ?StagingEnvironmentProfileEntity
-    {
-        $selectedProfile = $this->profileRepository->search(
-            new Criteria([$id]), Context::createDefaultContext()
-        )->get($id);
-
-        if ($selectedProfile) {
-            return $selectedProfile;
-        }
-
-        return null;
-    }
-
-    /**
      * Creates the array with the connection parameters for the staging environment
      * 
-     * @param StagingEnvironmentProfileEntity $selectedProfile
+     * @param array $config
      * 
      * @return array
      */
-    private function getStagingConnectionParams(StagingEnvironmentProfileEntity $selectedProfile): array
+    private function getStagingConnectionParams(array $config): array
     {
         return [
-            'dbname' => $selectedProfile->get('databaseName'),
-            'user' => $selectedProfile->get('databaseUser'),
-            'password' => $selectedProfile->get('databasePassword'),
-            'host' => $selectedProfile->get('databaseHost'),
-            'port' => $selectedProfile->get('databasePort'),
+            'dbname' => $config['databaseName'],
+            'user' => $config['databaseUser'],
+            'password' => $config['databasePassword'],
+            'host' => $config['databaseHost'],
+            'port' => $config['databasePort'],
             'driver' => 'pdo_mysql'
         ];
     }

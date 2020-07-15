@@ -109,7 +109,7 @@ Component.register('emz-staging-environment-detail', {
             this.currentStep = 2;
 
             return this.stagingEnvironmentApiService.syncFiles({
-                selectedProfileId: this.selectedProfile
+                folderName: this.environment.folderName
             }).then(() => {
                 this.createNotificationSuccess({
                     title: this.$t('global.default.success'),
@@ -119,7 +119,11 @@ Component.register('emz-staging-environment-detail', {
                 this.currentStep++;
 
                 this.stagingEnvironmentApiService.cloneDatabase({
-                    selectedProfileId: this.selectedProfile
+                    databaseHost: this.environment.databaseHost,
+                    databaseUser: this.environment.databaseUser,
+                    databaseName: this.environment.databaseName,
+                    databasePassword: this.environment.databasePassword,
+                    databasePort: this.environment.databasePort
                 }).then(() => {
 
                     this.createNotificationSuccess({
@@ -130,7 +134,12 @@ Component.register('emz-staging-environment-detail', {
                     this.currentStep++;
 
                     this.stagingEnvironmentApiService.updateSettings({
-                        selectedProfileId: this.selectedProfile
+                        folderName: this.environment.folderName,
+                        databaseHost: this.environment.databaseHost,
+                        databaseUser: this.environment.databaseUser,
+                        databaseName: this.environment.databaseName,
+                        databasePassword: this.environment.databasePassword,
+                        databasePort: this.environment.databasePort
                     }).then(() => {
                         this.processes.createNewStagingEnvironment = false;
 
@@ -168,4 +177,4 @@ Component.register('emz-staging-environment-detail', {
             this.currentStep = 1;
         }
     }
-});
+}); 

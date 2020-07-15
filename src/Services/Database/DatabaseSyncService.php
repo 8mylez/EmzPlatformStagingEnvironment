@@ -26,7 +26,6 @@ namespace Emz\StagingEnvironment\Services\Database;
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServcieInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
@@ -38,25 +37,30 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
      */
     private $connection;
 
-    /** @var EntityRepositoryInterface */
-    private $profileRepository;
-
     public function __construct(
-        Connection $connection,
-        EntityRepositoryInterface $profileRepository
+        Connection $connection
     ){
         $this->connection = $connection;
-        $this->profileRepository = $profileRepository;
     }
 
     /**
      * Clones the database with all table strucutes and values
      * 
-     * @param string $selectedProfileId
+     * @param string $databaseName
+     * @param string $databaseUser
+     * @param string $databasePassword
+     * @param string $databaseHost
+     * @param string $databasePort
      * 
      * @return bool
      */
-    public function syncDatabase(string $selectedProfileId): bool
+    public function syncDatabase(
+        string $databaseName,
+        string $databaseUser,
+        string $databasePassword,
+        string $databaseHost,
+        string $databasePort
+    ): bool
     {
         $stagingConnectionParams = [
             'dbname' => 'staging',
@@ -65,24 +69,15 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
             'host' => 'localhost',
             'driver' => 'pdo_mysql'
         ];
-
-        /** @var StagingEnvironmentProfileEntity */
-        $selectedProfile = $this->profileRepository->search(
-            new Criteria([$selectedProfileId]), Context::createDefaultContext()
-        )->get($selectedProfileId);
-
-        if ($selectedProfile) {
-            $stagingConnectionParams = [
-                'dbname' => $selectedProfile->get('databaseName'),
-                'user' => $selectedProfile->get('databaseUser'),
-                'password' => $selectedProfile->get('databasePassword'),
-                'host' => $selectedProfile->get('databaseHost'),
-                'port' => $selectedProfile->get('databasePort'),
-                'driver' => 'pdo_mysql'
-            ];
-        } else {
-            return false;
-        }
+        
+        $stagingConnectionParams = [
+            'dbname' => $databaseName,
+            'user' => $databaseUser,
+            'password' => $databasePassword,
+            'host' => $databaseHost,
+            'port' => $databasePort,
+            'driver' => 'pdo_mysql'
+        ];
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
@@ -129,5 +124,4 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
 
         return true;
     }
-
 }
