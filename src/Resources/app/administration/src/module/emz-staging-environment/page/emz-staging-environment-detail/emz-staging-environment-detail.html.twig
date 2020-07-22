@@ -31,9 +31,6 @@
                     v-if="readyToSync"
                     :title="$t('emz-staging-environment.create.stepsTitle')"
                 >
-                    <sw-label variant="success" size="default" appearance="default" :caps="true">
-                        <strong>Last sync was:</strong> 01.01.1970 08:08
-                    </sw-label>
                     <sw-container columns="1fr 1fr">
                         <sw-card-section divider="right">
                             <sw-step-display :itemIndex="stepIndex"
@@ -63,14 +60,24 @@
                             <p>{{stepContent}}</p>
                         </sw-card-section>
                     </sw-container>
-                    <sw-button-process variant="ghost"
-                        :isLoading="processes.createNewStagingEnvironment"
-                        :processSuccess="processSuccess.createNewStagingEnvironment"
-                        @process-finish="resetButton"
-                        @click="createNewStatingEnvironment"
-                    >
-                        {{ $t('emz-staging-environment.create.start') }}
-                    </sw-button-process>
+
+                    <sw-container columns="1fr 1fr">
+                        <sw-card-section divider="right">
+                            <sw-label variant="success" size="default" appearance="default" :caps="true">
+                                <strong>Last sync was:</strong> 01.01.1970 08:08
+                            </sw-label>
+                        </sw-card-section>
+                        <sw-card-section class="text-right">
+                            <sw-button-process variant="ghost"
+                                :isLoading="processes.createNewStagingEnvironment"
+                                :processSuccess="processSuccess.createNewStagingEnvironment"
+                                @process-finish="resetButton"
+                                @click="createNewStatingEnvironment"
+                            >
+                                {{ $t('emz-staging-environment.create.start') }}
+                            </sw-button-process>
+                        </sw-card-section>
+                    </sw-container>
                 </sw-card>
                 
                 <sw-card
