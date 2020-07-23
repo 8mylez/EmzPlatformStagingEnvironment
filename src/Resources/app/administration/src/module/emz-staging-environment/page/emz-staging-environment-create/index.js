@@ -1,9 +1,14 @@
+import template from './emz-staging-environment-create.html.twig';
+import './emz-staging-environment-create.scss';
+
 const { Component } = Shopware;
 
-Component.extend('emz-staging-environment-create', 'emz-staging-environment-detail', {
-    methods: {
-        getEnvironment() {
-            this.environment = this.repositoryEnvironment.create(Shopware.Context.api);
+Component.register('emz-staging-environment-create', {
+    template,
+
+    data() {
+        return {
+            createSelection: 'fresh',
         }
     }
 });

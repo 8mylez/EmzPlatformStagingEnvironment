@@ -1,0 +1,46 @@
+{% block emz_staging_environment_create %}
+    <sw-page class="emz-staging-environment-create">
+        <template slot="content">
+            <sw-card-view>
+                <sw-card>
+                    <sw-container columns="1fr 1fr 1fr" gap="25px">
+                        <div>
+                            <sw-radio-panel value="fresh"
+                                v-model="createSelection"
+                                name="createSelection"
+                                title="Fresh"
+                                description="Neue Umgebung"
+                                icon="default-basic-plus-wide"
+                            ></sw-radio-panel>
+                        </div>
+                        <div>
+                            <sw-radio-panel value="template1"
+                                v-model="createSelection"
+                                name="createSelection"
+                                title="Template 1"
+                                description="Template comment here"
+                                icon="default-documentation-paper-pencil-signed"
+                            ></sw-radio-panel>
+                        </div>
+                    </sw-container>
+                </sw-card>
+                <sw-card>
+                    <div>
+                        <h2>Fresh</h2>
+                        <p>Neue Staging Umgebung komplett ohne vorkonfigurierte Einstellungen</p>
+                        {# <sw-description-list>
+                            <dt>Profile Name</dt>
+                            <dd>Staging Test 123</dd>
+                            <dt>Folder Name</dt>
+                            <dd>/updatestaging</dd>
+                            <dt>excludedFolders</dt>
+                            <dd>/folder1,/media,/files/documents</dd>
+                            <dt>comment</dt>
+                            <dd>This is a nice comment</dd>
+                        </sw-description-list> #}
+                    </div>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    </sw-page>
+{% endblock %}
