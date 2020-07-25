@@ -68,9 +68,9 @@ class StagingEnvironmentController extends AbstractController
      */
     public function syncFiles(Request $request): JsonResponse
     {
-        $selectedProfileId = $request->get('selectedProfileId');
+        $folderName = $request->get('folderName');
 
-        if ($this->syncService->syncCore($selectedProfileId)) {
+        if ($this->syncService->syncCore($folderName)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Synced all files!"
@@ -83,9 +83,13 @@ class StagingEnvironmentController extends AbstractController
      */
     public function cloneDatabase(Request $request): JsonResponse
     {
-        $selectedProfileId = $request->get('selectedProfileId');
+        $databaseName = $request->get('databaseName');
+        $databaseUser = $request->get('databaseUser');
+        $databasePassword = $request->get('databasePassword');
+        $databaseHost = $request->get('databaseHost');
+        $databasePort = $request->get('databasePort');
         
-        if ($this->databaseSyncService->syncDatabase($selectedProfileId)) {
+        if ($this->databaseSyncService->syncDatabase($databaseName, $databaseUser, $databasePassword, $databaseHost, $databasePort)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Database cloned!"
@@ -98,12 +102,18 @@ class StagingEnvironmentController extends AbstractController
      */
     public function updateSettings(Request $request): JsonResponse
     {
-        $selectedProfileId = $request->get('selectedProfileId');
+        $config = [];
+        $config['folderName'] = $request->get('folderName');
+        $config['databaseName'] = $request->get('databaseName');
+        $config['databaseUser'] = $request->get('databaseUser');
+        $config['databasePassword'] = $request->get('databasePassword');
+        $config['databaseHost'] = $request->get('databaseHost');
+        $config['databasePort'] = $request->get('databasePort');
 
         $done = true;
-        $done = $this->configUpdaterService->setSalesChannelDomains($selectedProfileId);
-        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($selectedProfileId);
-        $done = $this->configUpdaterService->createEnvFile($selectedProfileId);
+        $done = $this->configUpdaterService->setSalesChannelDomains($config);
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($config);
+        $done = $this->configUpdaterService->createEnvFile($config);
 
         if ($done) {
             return new JsonResponse([

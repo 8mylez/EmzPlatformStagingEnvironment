@@ -6,28 +6,58 @@ class StagingEnvironmentApiService extends ApiService {
         this.name = 'stagingEnvironmentApiService';
     }
 
-    syncFiles({ selectedProfileId }, additionalParams = {}, additionalHeaders = {}) {
+    syncFiles({ folderName }, additionalParams = {}, additionalHeaders = {}) {
         const headers = this.getBasicHeaders({});
         const payload = {
-            selectedProfileId
+            folderName
         };
         
         return this.httpClient.post('/_action/emz_pse/environment/sync_files', payload, { headers });
     }
 
-    cloneDatabase({ selectedProfileId }, additionalParams = {}, additionalHeaders = {}) {
+    cloneDatabase({ 
+            databaseHost, 
+            databaseUser,
+            databaseName,
+            databasePassword,
+            databasePort 
+        }, 
+        additionalParams = {}, 
+        additionalHeaders = {}
+    )
+    {
         const headers = this.getBasicHeaders();
         const payload = {
-            selectedProfileId
+            databaseHost,
+            databaseUser,
+            databaseName,
+            databasePassword,
+            databasePort
         };
 
         return this.httpClient.post('/_action/emz_pse/environment/clone_database', payload, { headers });
     }
 
-    updateSettings({ selectedProfileId }, additionalParams = {}, additionalHeaders = {}) {
+    updateSettings({
+            folderName,
+            databaseHost, 
+            databaseUser,
+            databaseName,
+            databasePassword,
+            databasePort 
+        }, 
+        additionalParams = {},
+        additionalHeaders = {}
+    ) 
+    {
         const headers = this.getBasicHeaders();
         const payload = {
-            selectedProfileId
+            folderName,
+            databaseHost, 
+            databaseUser,
+            databaseName,
+            databasePassword,
+            databasePort
         };
 
         return this.httpClient.post('/_action/emz_pse/environment/update_settings', payload, { headers });

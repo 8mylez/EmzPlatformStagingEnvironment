@@ -9,11 +9,15 @@
         },
         "list": {
             "columnProfileName": "Name",
+            "columnEnvironmentName": "Name",
             "columnComment": "Comment",
             "addButtonText": "Create profile",
             "addEnvironmentButton": "Create new staging environment"
         },
         "detail": {
+            "title": "Staging environment",
+            "name": "Name",
+            "environmentCardTitle": "Environment",
             "errorTitle": "Error saving the profile",
             "cancelButtonText": "Cancel",
             "saveButtonText": "Save",
@@ -40,7 +44,7 @@
             "processStarted": "Process started!",
             "success": "Environment created successfully!",
             "error": "Error occured. Environment was not created!",
-            "stepsTitle": "Detailed steps",
+            "stepsTitle": "Synchronization",
             "syncFiles": "Copy files",
             "syncDatabase": "Clone database",
             "updateEnv": "Update settings",

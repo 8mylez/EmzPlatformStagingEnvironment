@@ -25,5 +25,5 @@ namespace Emz\StagingEnvironment\Services\Sync;
 
 interface SyncServiceInterface
 {
-    public function syncCore(string $selectedProfileId): bool;
+    public function syncCore(string $folderName): bool;
 }

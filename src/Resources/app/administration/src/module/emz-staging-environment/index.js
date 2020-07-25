@@ -1,4 +1,5 @@
 import './page/emz-staging-environment-index';
+import './page/emz-staging-environment-detail';
 import './page/emz-staging-environment-create';
 import './page/emz-staging-environment-profile-index';
 import './page/emz-staging-environment-profile-detail';
@@ -27,6 +28,13 @@ Module.register('emz-staging-environment', {
         index: {
             component: 'emz-staging-environment-index',
             path: 'index'
+        },
+        detail: {
+            component: 'emz-staging-environment-detail',
+            path: 'detail/:id',
+            meta: {
+                parentPath: 'emz.staging.environment.index'
+            }
         },
         create: {
             component: 'emz-staging-environment-create',
@@ -85,4 +93,4 @@ Application.addServiceProvider('stagingEnvironmentApiService', container => {
     const initContainer = Application.getContainer('init');
 
     return new StagingEnvironmentApiService(initContainer.httpClient, container.loginService);
-});
+}); 
