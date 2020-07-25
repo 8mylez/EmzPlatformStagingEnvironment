@@ -41,7 +41,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
                 `environment_name` VARCHAR(255) NOT NULL,
                 `profile_name` VARCHAR(255) NOT NULL,
                 `folder_name` VARCHAR(255) NOT NULL,
-                `excluded_folders` JSON NULL,
+                `excluded_folders` LONGTEXT NULL,
                 `comment` LONGTEXT NULL,
                 `database_name` VARCHAR(255) NOT NULL,
                 `database_user` VARCHAR(255) NOT NULL,
@@ -54,8 +54,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
                 `set_in_maintenance` TINYINT(1) NOT NULL DEFAULT 0,
                 `created_at` DATETIME(3) NOT NULL,
                 `updated_at` DATETIME(3) NULL,
-                PRIMARY KEY (`id`),
-                CONSTRAINT `json.emz_pse_environment.excluded_folders` CHECK (JSON_VALID(`excluded_folders`))
+                PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
     }

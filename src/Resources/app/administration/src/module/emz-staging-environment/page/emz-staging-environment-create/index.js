@@ -7,7 +7,21 @@ Component.extend('emz-staging-environment-create', 'emz-staging-environment-deta
         },
         
         onClickSave() {
+            this.isLoading = true;
 
-        }
+            this.repositoryEnvironment
+                .save(this.environment, Context.api)
+                .then(() => {
+                    this.isLoading = false;
+                    this.$router.push({ name: 'emz.staging.environment.detail', params: { id: this.environment.id } });
+                }).catch(exception => {
+                    this.isLoading = false;
+
+                    this.createNotificationError({
+                        title: this.$t('emz-staging-environment.detail.errorTitle'),
+                        message: exception
+                    });
+                });
+        },
     }
 });
