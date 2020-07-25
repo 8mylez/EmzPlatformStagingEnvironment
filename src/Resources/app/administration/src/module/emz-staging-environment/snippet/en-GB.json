@@ -1,7 +1,7 @@
 {
     "emz-staging-environment": {
         "general": {
-            "mainMenuItemGeneral": "Staging",
+            "mainMenuItemGeneral": "Staging environments",
             "mainMenuItemEnvironments": "Environments",
             "mainMenuItemLogs": "Logs",
             "mainMenuItemProfiles": "Profiles",
@@ -28,6 +28,7 @@
             "profileNameLabel": "Profile name",
             "folderNameLabel": "Directory name",
             "excludedFoldersLabel": "Excluded directories",
+            "excludedFoldersHelpText": "Please add comma separated, e.g. media, documents/files, my/private/folder",
             "commentLabel": "Comment",
             "databaseHostLabel": "Database host",
             "databaseUserLabel": "Database user",
