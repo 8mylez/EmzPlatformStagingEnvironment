@@ -1,0 +1,26 @@
+{% block emz_staging_environment_profile_index %}
+    <sw-page class="emz-staging-environment-profile-index">
+        <template slot="smart-bar-actions">
+            <sw-button
+                variant="primary"
+                :routerLink="{ name: 'emz.staging.environment.profile_create' }"
+            >
+                {{ $t('emz-staging-environment.list.addButtonText') }}
+            </sw-button>
+        </template>
+
+        <template slot="content">
+            {% block emz_staging_environment_profile_list_content %}
+                <sw-entity-listing
+                    v-if="profiles"
+                    :items="profiles"
+                    :repository="repository"
+                    :showSelection="false"
+                    :columns="columns"
+                    detailRoute="emz.staging.environment.profile_detail"
+                >
+                </sw-entity-listing>
+            {% endblock %}
+        </template>
+    </sw-page>
+{% endblock %}

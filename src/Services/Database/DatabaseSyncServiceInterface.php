@@ -21,25 +21,15 @@
 
 declare(strict_types=1);
 
-namespace Emz\StagingEnvironment;
+namespace Emz\StagingEnvironment\Services\Database;
 
-use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Doctrine\DBAL\Connection;
-
-class EmzPlatformStagingEnvironment extends Plugin
+interface DatabaseSyncServiceInterface
 {
-    public function uninstall(UninstallContext $context): void
-    {
-        parent::uninstall($context);
-
-        if ($context->keepUserData()) {
-            return;
-        }
-
-        $connection = $this->container->get(Connection::class);
-
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_profile`');
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_environment`');
-    }
+    public function syncDatabase(
+        string $databaseName,
+        string $databaseUser,
+        string $databasePassword,
+        string $databaseHost,
+        string $databasePort
+    ): bool;
 }

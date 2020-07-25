@@ -1,0 +1,61 @@
+{
+    "emz-staging-environment": {
+        "general": {
+            "mainMenuItemGeneral": "Staging",
+            "mainMenuItemEnvironments": "Environments",
+            "mainMenuItemLogs": "Logs",
+            "mainMenuItemProfiles": "Profiles",
+            "descriptionTextModule": "Manage your staging environments here"
+        },
+        "list": {
+            "columnProfileName": "Name",
+            "columnEnvironmentName": "Name",
+            "columnComment": "Comment",
+            "addButtonText": "Create profile",
+            "addEnvironmentButton": "Create new staging environment"
+        },
+        "detail": {
+            "title": "Staging environment",
+            "name": "Name",
+            "environmentCardTitle": "Environment",
+            "errorTitle": "Error saving the profile",
+            "cancelButtonText": "Cancel",
+            "saveButtonText": "Save",
+            "profileCardTitle": "Profile",
+            "databaseCardTitle": "Database",
+            "settingsCardTitle": "Settings",
+            "profileNameLabel": "Profile name",
+            "folderNameLabel": "Directory name",
+            "excludedFoldersLabel": "Excluded directories",
+            "commentLabel": "Comment",
+            "databaseHostLabel": "Database host",
+            "databaseUserLabel": "Database user",
+            "databaseNameLabel": "Database name",
+            "databasePasswordLabel": "Database password",
+            "databasePortLabel": "Database port",
+            "anonymizeDataLabel": "Anonymize data",
+            "deactivateScheduledTasksLabel": "Deactivate scheduled tasks",
+            "setInMaintenanceLabel": "Set in maintenance"
+        },
+        "create": {
+            "title": "New staging environment",
+            "name": "Name",
+            "start": "Start",
+            "processStarted": "Process started!",
+            "success": "Environment created successfully!",
+            "error": "Error occured. Environment was not created!",
+            "stepsTitle": "Synchronization",
+            "syncFiles": "Copy files",
+            "syncDatabase": "Clone database",
+            "updateEnv": "Update settings",
+            "prepare": "Preparation",
+            "stepsContent": {
+                "preparation": "In the preparation step the system proves if everything is correct to create a new staging environment.",
+                "syncFiles": "In this step all files will be copied in the appropriate sub folder, so that Shopware 6 has everything it needs to run smoothly.",
+                "cloneDatabase": "The database is a crucial part of a running system. All tables will be cloned and filled with the content of the main system.",
+                "updateSettings": "At the end some settings needs to be updated on the lately created staging database.",
+                "finished": "Congratulations! Your staging environemnt is up and running!"
+            }
+        }
+    }
+}

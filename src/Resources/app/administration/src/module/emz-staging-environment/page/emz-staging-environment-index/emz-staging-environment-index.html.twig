@@ -1,0 +1,25 @@
+{% block emz_staging_environment_index %}
+    <sw-page class="emz-staging-environment-index">
+        <template slot="smart-bar-actions">
+            <sw-button
+                variant="primary"
+                :routerLink="{ name: 'emz.staging.environment.create' }"
+            >
+                {{ $t('emz-staging-environment.list.addEnvironmentButton') }}
+            </sw-button>
+        </template>
+        <template #content>
+            {% block emz_staging_environment_list_content %}
+                <sw-entity-listing
+                    v-if="environments"
+                    :items="environments"
+                    :repository="repository"
+                    :showSelection="false"
+                    :columns="columns"
+                    detailRoute="emz.staging.environment.detail"
+                >
+                </sw-entity-listing>
+            {% endblock %}
+        </template>
+    </sw-page>
+{% endblock %} 

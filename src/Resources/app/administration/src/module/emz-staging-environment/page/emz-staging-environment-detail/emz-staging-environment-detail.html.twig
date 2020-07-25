@@ -1,0 +1,204 @@
+{% block emz_staging_environment_detail %}
+    <sw-page class="emz-staging-environment-detail">
+        <template slot="smart-bar-header">
+            <h2>
+                {{ $t('emz-staging-environment.general.mainMenuItemGeneral') }}
+                    <sw-icon name="small-arrow-medium-right" small></sw-icon>
+                {{ $t('emz-staging-environment.detail.title') }}
+            </h2>
+        </template>
+
+        <template slot="smart-bar-actions">
+            <sw-button
+                :routerLink="{ name: 'emz.staging.environment.index' }"
+            >
+                {{ $t('emz-staging-environment.detail.cancelButtonText') }}
+            </sw-button>
+            <sw-button-process
+                variant="primary"
+                @click="onClickSave"
+                :isLoading="isLoading"
+                :processSuccess="processSuccess.createNewStagingEnvironment"
+                @process-finish="resetButton"
+            >
+                {{ $t('emz-staging-environment.detail.saveButtonText') }}
+            </sw-button-process>
+        </template>
+        
+        <template #content>
+            <sw-card-view>
+                <sw-card
+                    v-if="readyToSync"
+                    :title="$t('emz-staging-environment.create.stepsTitle')"
+                >
+                    <sw-container columns="1fr 1fr">
+                        <sw-card-section divider="right">
+                            <sw-step-display :itemIndex="stepIndex"
+                                :itemVariant="stepVariant"
+                                :initialItemVariants="stepInitialItemVariants">
+                                <sw-step-item>
+                                    {{ $t('emz-staging-environment.create.prepare') }}
+                                </sw-step-item>
+                                <sw-step-item>
+                                    {{ $t('emz-staging-environment.create.syncFiles') }}
+                                </sw-step-item>
+                                <sw-step-item>
+                                    {{ $t('emz-staging-environment.create.syncDatabase') }}
+                                </sw-step-item>
+                                <sw-step-item>
+                                    {{ $t('emz-staging-environment.create.updateEnv') }}
+                                </sw-step-item>
+                            </sw-step-display>
+                        </sw-card-section>
+                        <sw-card-section>
+                            <div v-if="processes.createNewStagingEnvironment" class="emz-staging-environment-content-loader">
+                                <sw-loader 
+                                    size="50px"
+                                >
+                                </sw-loader>
+                            </div>
+                            <p>{{stepContent}}</p>
+                        </sw-card-section>
+                    </sw-container>
+
+                    <sw-container columns="1fr 1fr">
+                        <sw-card-section divider="right">
+                            <sw-label variant="success" size="default" appearance="default" :caps="true">
+                                <strong>Last sync was:</strong> 01.01.1970 08:08
+                            </sw-label>
+                        </sw-card-section>
+                        <sw-card-section class="text-right">
+                            <sw-button-process variant="ghost"
+                                :isLoading="processes.createNewStagingEnvironment"
+                                :processSuccess="processSuccess.createNewStagingEnvironment"
+                                @process-finish="resetButton"
+                                @click="createNewStatingEnvironment"
+                            >
+                                {{ $t('emz-staging-environment.create.start') }}
+                            </sw-button-process>
+                        </sw-card-section>
+                    </sw-container>
+                </sw-card>
+                
+                <sw-card
+                    v-if="environment"
+                    :title="$t('emz-staging-environment.detail.environmentCardTitle')"
+                >
+                    <sw-container columns="1fr 1fr" gap="32px">
+                        <sw-text-field
+                            :label="$t('emz-staging-environment.detail.name')"
+                            :placeholder="$t('emz-staging-environment.detail.name')"
+                            v-model="environment.environmentName"
+                            required
+                        >
+                        </sw-text-field>
+                        
+                        <sw-text-field
+                                :label="$t('emz-staging-environment.detail.folderNameLabel')"
+                                :placeholder="$t('emz-staging-environment.detail.folderNameLabel')"
+                                v-model="environment.folderName"
+                                validation="required"
+                            >
+                        </sw-text-field>
+                    </sw-container>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.excludedFoldersLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.excludedFoldersLabel')"
+                        v-model="environment.excludedFolders"
+                    >
+                    </sw-text-field>
+
+                    <sw-textarea-field
+                        :label="$t('emz-staging-environment.detail.commentLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.commentLabel')"
+                        v-model="environment.comment"
+                    >
+                    </sw-textarea-field>
+                </sw-card>
+
+                <sw-card
+                    v-if="environment"
+                    :isLoading="isLoading"
+                    :title="$t('emz-staging-environment.detail.databaseCardTitle')"
+                >
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databaseHostLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databaseHostLabel')"
+                        v-model="environment.databaseHost"
+                        validation="required"
+                    >
+                    </sw-text-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databaseUserLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databaseUserLabel')"
+                        v-model="environment.databaseUser"
+                        validation="required"
+                    >
+                    </sw-text-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databaseNameLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databaseNameLabel')"
+                        v-model="environment.databaseName"
+                        validation="required"
+                    >
+                    </sw-text-field>
+
+                    <sw-password-field
+                        :label="$t('emz-staging-environment.detail.databasePasswordLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databasePasswordLabel')"
+                        v-model="environment.databasePassword"
+                        validation="required"
+                    >
+                    </sw-password-field>
+
+                    <sw-text-field
+                        :label="$t('emz-staging-environment.detail.databasePortLabel')"
+                        :placeholder="$t('emz-staging-environment.detail.databasePortLabel')"
+                        v-model="environment.databasePort"
+                        validation="required"
+                    >
+                    </sw-text-field>
+                </sw-card>
+
+                <sw-card
+                    v-if="environment"
+                    :isLoading="isLoading"
+                    :title="$t('emz-staging-environment.detail.settingsCardTitle')"
+                >
+                    <sw-checkbox-field
+                        :label="$t('emz-staging-environment.detail.anonymizeDataLabel')"
+                        v-model="environment.anonymizeData"
+                    >
+                    </sw-checkbox-field>
+
+                    <sw-checkbox-field
+                        :label="$t('emz-staging-environment.detail.deactivateScheduledTasksLabel')"
+                        v-model="environment.deactivateScheduledTasks"
+                    >
+                    </sw-checkbox-field>
+
+                    <sw-checkbox-field
+                        :label="$t('emz-staging-environment.detail.setInMaintenanceLabel')"
+                        v-model="environment.setInMaintenance"
+                    >
+                    </sw-checkbox-field>
+                </sw-card>
+
+                {# <sw-card
+                    :title="$t('emz-staging-environment.detail.title')"    
+                >
+                    <sw-entity-single-select
+                        required
+                        entity="emz_pse_profile"
+                        label="Profile"
+                        labelProperty="profileName"
+                        v-model="selectedProfile">
+                    </sw-entity-single-select>
+                </sw-card> #}
+            </sw-card-view>
+        </template>
+    </sw-page>
+{% endblock %}

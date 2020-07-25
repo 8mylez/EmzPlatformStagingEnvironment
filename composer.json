@@ -1,18 +1,25 @@
 {
-  "name": "swag/plugin-skeleton",
-  "description": "Skeleton plugin",
+  "name": "emz/staging-environment",
+  "description": "This plugin let's you create and manage multiple staging environments in no time!",
   "type": "shopware-platform-plugin",
-  "license": "MIT",
+  "license": "proprietary",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "8mylez GmbH"
+    }
+  ],
   "autoload": {
     "psr-4": {
-      "EmzPlatformStagingEnvironment\\": "src/"
+      "Emz\\StagingEnvironment\\": "src/"
     }
   },
   "extra": {
-    "shopware-plugin-class": "EmzPlatformStagingEnvironment\\EmzPlatformStagingEnvironment",
+    "shopware-plugin-class": "Emz\\StagingEnvironment\\EmzPlatformStagingEnvironment",
+    "copyright": "(c) by 8mylez GmbH",
     "label": {
-      "de-DE": "Skeleton plugin",
-      "en-GB": "Skeleton plugin"
+      "de-DE": "Staging Umgebung",
+      "en-GB": "Staging environment"
     }
   }
 }

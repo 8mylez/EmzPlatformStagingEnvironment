@@ -1,0 +1,61 @@
+{
+    "emz-staging-environment": {
+        "general": {
+            "mainMenuItemGeneral": "Staging",
+            "mainMenuItemEnvironments": "Umgebungen",
+            "mainMenuItemLogs": "Protokoll",
+            "mainMenuItemProfiles": "Profile",
+            "descriptionTextModule": "Verwalte deine Staging Umgebungen hier"
+        },
+        "list": {
+            "columnProfileName": "Name",
+            "columnEnvironmentName": "Name",
+            "columnComment": "Kommentar",
+            "addButtonText": "Profil erstellen",
+            "addEnvironmentButton": "Staging Umgebung erstellen"
+        },
+        "detail": {
+            "title": "Staging Umgebung",
+            "name": "Name",
+            "environmentCardTitle": "Umgebung",
+            "errorTitle": "Fehler beim Speichern des Profils",
+            "cancelButtonText": "Abbrechen",
+            "saveButtonText": "Speichern",
+            "profileCardTitle": "Profil",
+            "databaseCardTitle": "Datenbank",
+            "settingsCardTitle": "Einstellungen",
+            "profileNameLabel": "Profil Name",
+            "folderNameLabel": "Verzeichnis Name",
+            "excludedFoldersLabel": "Ausgeschlossene Verzeichnisse",
+            "commentLabel": "Kommentar",
+            "databaseHostLabel": "Datenbank Host",
+            "databaseUserLabel": "Datenbank Benutzer",
+            "databaseNameLabel": "Datenbank Name",
+            "databasePasswordLabel": "Datenbank Passwort",
+            "databasePortLabel": "Datenbank Port",
+            "anonymizeDataLabel": "Daten anonymisieren",
+            "deactivateScheduledTasksLabel": "Geplante Aufgaben deaktivieren",
+            "setInMaintenanceLabel": "In Wartungsmodus setzen"
+        },
+        "create": {
+            "title": "Neue Staging Umgebung",
+            "name": "Name",
+            "start": "Start",
+            "processStarted": "Erstellung gestartet!",
+            "success": "Umgebung erfolgreich erstellt!",
+            "error": "Es ist ein Fehler aufgetreten!",
+            "stepsTitle": "Synchronisierung",
+            "syncFiles": "Dateien kopieren",
+            "syncDatabase": "Datenbank klonen",
+            "updateEnv": "Einstellungen vornehmen",
+            "prepare": "Vorbereitung",
+            "stepsContent": {
+                "preparation": "In der Vorbereitung wird geprüft ob das System bereit für die Anlage einer Staging Umgebung ist.",
+                "syncFiles": "In diesem Schritt werden alle wichtigen Dateien in den entsprechenden Unterordner kopiert, sodass Shopware 6 alles hat was es braucht.",
+                "cloneDatabase": "Die Datenbank ist ein wichtiger Bestandteil eines lauffähigen Shops. Alle Tabellen und Inhalte werden geklont und bereitgestellt.",
+                "updateSettings": "Zum Schluss müssen diverse Einstellungen auf die Staging Umgebung angepasst werden, sodass diese auch zurecht kommt.",
+                "finished": "Herzlichen Glückwunsch! Die Staging Umgebung wurde erfolgreich angelegt und steht bereit!"
+            }
+        }
+    }
+}
