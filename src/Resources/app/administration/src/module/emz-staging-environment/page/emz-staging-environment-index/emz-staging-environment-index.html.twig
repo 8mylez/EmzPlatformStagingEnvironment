@@ -18,6 +18,20 @@
                     :columns="columns"
                     detailRoute="emz.staging.environment.detail"
                 >
+                    <template #column-folderName="{ item, compact }" >
+                        {% block emz_staging_environment_list_content_columns_foldername_label %}
+                            <div>
+                                <a href="#">
+                                    <sw-icon name="default-action-circle-download" color="#1abc9c"></sw-icon>
+                                    Storefront
+                                </a>
+                                <a href="#">
+                                    <sw-icon name="default-action-circle-download" color="#1abc9c"></sw-icon>
+                                    Administration
+                                </a>
+                            </div>
+                        {% endblock %}
+                    </template>
                 </sw-entity-listing>
             {% endblock %}
         </template>

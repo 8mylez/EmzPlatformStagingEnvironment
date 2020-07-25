@@ -11,6 +11,7 @@
             "columnProfileName": "Name",
             "columnEnvironmentName": "Name",
             "columnComment": "Kommentar",
+            "columnAccessLinks": "Zugriff",
             "addButtonText": "Profil erstellen",
             "addEnvironmentButton": "Staging Umgebung erstellen"
         },

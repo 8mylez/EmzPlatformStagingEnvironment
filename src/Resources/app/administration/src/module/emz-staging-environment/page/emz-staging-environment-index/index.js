@@ -30,6 +30,8 @@ Component.register('emz-staging-environment-index', {
             .search(new Criteria(), Shopware.Context.api)
             .then(result => {
                 this.environments = result;
+
+                console.log('this.environments', this.environments);
             });
     },
 
@@ -47,6 +49,12 @@ Component.register('emz-staging-environment-index', {
                 property: 'comment',
                 dataIndex: 'comment',
                 label: this.$t('emz-staging-environment.list.columnComment'),
+                inlineEdit: 'string',
+                allowResize: true,
+            }, {
+                property: 'folderName',
+                dataIndex: 'folderName',
+                label: this.$t('emz-staging-environment.list.columnAccessLinks'),
                 inlineEdit: 'string',
                 allowResize: true,
             }];
