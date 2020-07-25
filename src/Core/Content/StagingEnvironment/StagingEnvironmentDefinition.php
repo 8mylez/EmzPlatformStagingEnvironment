@@ -63,7 +63,7 @@ class StagingEnvironmentDefinition extends EntityDefinition
             (new StringField('environment_name', 'environmentName'))->setFlags(new Required()),
             new StringField('profile_name', 'profileName'),
             (new StringField('folder_name', 'folderName'))->setFlags(new Required()),
-            new JsonField('excluded_folders', 'excludedFolders'),
+            new StringField('excluded_folders', 'excludedFolders'),
             new LongTextWithHtmlField('comment', 'comment'),
             (new StringField('database_name', 'databaseName'))->setFlags(new Required()),
             (new StringField('database_user', 'databaseUser'))->setFlags(new Required()),
