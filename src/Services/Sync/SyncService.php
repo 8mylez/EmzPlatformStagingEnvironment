@@ -28,6 +28,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\Uuid\Uuid;
 
 class SyncService implements SyncServiceInterface
 {
@@ -37,26 +39,38 @@ class SyncService implements SyncServiceInterface
     /** @var Filesystem */
     private $fileSystem;
 
+    /** @var EntityRepositoryInterface */
+    private $environmentRepository;
+
+    /** @var EntityRepositoryInterface */
+    private $environmentLogRepository;
+
     public function __construct(
         string $projectDir,
-        Filesystem $fileSystem
+        Filesystem $fileSystem,
+        EntityRepositoryInterface $environmentRepository,
+        EntityRepositoryInterface $environmentLogRepository
     ){
         $this->projectDir = $projectDir;
         $this->fileSystem = $fileSystem;
+        $this->environmentLogRepository = $environmentLogRepository;
     }
 
     /**
      * Copies all folders related to shopware 6 in the provided subfolder
      * 
-     * @param string $folderName
+     * @param string $environmentId
      * 
      * @return bool
      */
-    public function syncCore(string $folderName): bool
+    public function syncCore(string $environemntId): bool
     {
         $config = [
             'folderName' => 'emzstaging',
         ];
+
+        //get environment
+        
         
         $config['folderName'] = str_replace('/', '', $folderName);
         
@@ -111,6 +125,18 @@ class SyncService implements SyncServiceInterface
                 $this->fileSystem->copy($this->projectDir.'/'.$file, $this->projectDir.'/'.$config['folderName'].'/'.$file);
             }
         }
+
+        
+
+        $this->environmentLogRepository->create(
+            [
+                [
+                    'id' => $logId,
+
+                ],
+            ],
+            $context
+        );
 
         return true;
     }

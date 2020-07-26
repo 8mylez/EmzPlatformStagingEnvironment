@@ -57,6 +57,18 @@ class Migration1585413812StagingEnvironment extends MigrationStep
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
+
+        $connection->executeQuery('
+            CREATE TABLE IF NOT EXISTS `emz_pse_log` (
+                `id` BINARY(16) NOT NULL,
+                `environemnt_id` BINARY(16) NOT NULL,
+                `state` VARCHAR(255) NOT NULL,
+                `created_at` DATETIME(3) NOT NULL,
+                PRIMARY KEY (`id`),
+                CONSTRAINT `fk.emz_pse_log.environment_id`
+                    FOREIGN KEY (`environment_id`) REFERENCES `emz_pse_environment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ');
     }
 
     public function updateDestructive(Connection $connection): void

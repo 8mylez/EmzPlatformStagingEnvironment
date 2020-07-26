@@ -9,9 +9,15 @@
             <tag name="shopware.entity.definition" entity="emz_pse_environment" />
         </service>
 
+        <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogDefinition">
+            <tag name="shopware.entity.definition" entity="emz_pse_log" />
+        </service>
+
         <service id="Emz\StagingEnvironment\Services\Sync\SyncService">
             <argument>%kernel.project_dir%</argument>
             <argument type="service" id="Symfony\Component\Filesystem\Filesystem" />
+            <argument type="service" id="emz_pse_environment.repository" />
+            <argument type="service" id="emz_pse_log.repository" />
         </service>
 
         <service id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService">

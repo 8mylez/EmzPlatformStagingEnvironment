@@ -66,7 +66,7 @@ class StagingEnvironmentController extends AbstractController
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/sync_files", name="api.action.emz_pse.environment.sync_files", methods={"POST"})
      */
-    public function syncFiles(Request $request): JsonResponse
+    public function syncFiles(Request $request, Context $context): JsonResponse
     {
         $folderName = $request->get('folderName');
 

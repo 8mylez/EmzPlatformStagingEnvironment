@@ -30,8 +30,6 @@ Component.register('emz-staging-environment-index', {
             .search(new Criteria(), Shopware.Context.api)
             .then(result => {
                 this.environments = result;
-
-                console.log('this.environments', this.environments);
             });
     },
 

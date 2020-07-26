@@ -87,18 +87,12 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
             $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table['Tables_in_shopware'] . '`')->fetch();
 
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table['Tables_in_shopware'] . '`;SET FOREIGN_KEY_CHECKS=1;');
-
-            // echo "Table was dropped: " . $create['Table'] . "\n";
-
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;' . $create['Create Table'] . ';SET FOREIGN_KEY_CHECKS=1;');
-
-            // echo "Table was created: " . $create['Table'] . "\n";
 
             $data = [];
             $data = $this->connection->executeQuery('SELECT * FROM `' . $table['Tables_in_shopware'] . '`')->fetchAll();
 
             if (!empty($data)) {
-
                 foreach($data as $d) {
                     $columns = [];
                     $values = [];
@@ -111,15 +105,9 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
                     }
 
                     $sqlInsert = 'SET FOREIGN_KEY_CHECKS=0;INSERT INTO `' . $table['Tables_in_shopware'] . '` (' . implode(", ", $columns) . ') VALUES ( ' . implode(', ', $set) . ' );SET FOREIGN_KEY_CHECKS=1;';
-
                     $stagingConnection->executeUpdate($sqlInsert, $values);
-                }
-
-                // echo "Imported Data for: " . $table['Tables_in_shopware'] . "\n";
-                
+                }                
             }
-
-            // echo "\n";
         }
 
         return true;
