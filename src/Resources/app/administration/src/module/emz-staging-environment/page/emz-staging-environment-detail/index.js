@@ -119,11 +119,7 @@ Component.register('emz-staging-environment-detail', {
                 this.currentStep++;
 
                 this.stagingEnvironmentApiService.cloneDatabase({
-                    databaseHost: this.environment.databaseHost,
-                    databaseUser: this.environment.databaseUser,
-                    databaseName: this.environment.databaseName,
-                    databasePassword: this.environment.databasePassword,
-                    databasePort: this.environment.databasePort
+                    environmentId: this.environment.id
                 }).then(() => {
 
                     this.createNotificationSuccess({
@@ -134,12 +130,7 @@ Component.register('emz-staging-environment-detail', {
                     this.currentStep++;
 
                     this.stagingEnvironmentApiService.updateSettings({
-                        folderName: this.environment.folderName,
-                        databaseHost: this.environment.databaseHost,
-                        databaseUser: this.environment.databaseUser,
-                        databaseName: this.environment.databaseName,
-                        databasePassword: this.environment.databasePassword,
-                        databasePort: this.environment.databasePort
+                        environmentId: this.environment.id
                     }).then(() => {
                         this.processes.createNewStagingEnvironment = false;
 

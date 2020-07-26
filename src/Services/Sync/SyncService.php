@@ -61,6 +61,7 @@ class SyncService implements SyncServiceInterface
      * Copies all folders related to shopware 6 in the provided subfolder
      * 
      * @param string $environmentId
+     * @param Context $context
      * 
      * @return bool
      */

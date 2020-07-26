@@ -86,15 +86,15 @@ class StagingEnvironmentController extends AbstractController
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/clone_database", name="api.action.emz_pse.environment.clone_database", methods={"POST"})
      */
-    public function cloneDatabase(Request $request): JsonResponse
+    public function cloneDatabase(Request $request, Context $context): JsonResponse
     {
-        $databaseName = $request->get('databaseName');
-        $databaseUser = $request->get('databaseUser');
-        $databasePassword = $request->get('databasePassword');
-        $databaseHost = $request->get('databaseHost');
-        $databasePort = $request->get('databasePort');
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
         
-        if ($this->databaseSyncService->syncDatabase($databaseName, $databaseUser, $databasePassword, $databaseHost, $databasePort)) {
+        if ($this->databaseSyncService->syncDatabase($environmentId, $context)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Database cloned!"
@@ -105,25 +105,28 @@ class StagingEnvironmentController extends AbstractController
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/update_settings", name="api.action.emz_pse.environment.update_settings", methods={"POST"})
      */
-    public function updateSettings(Request $request): JsonResponse
+    public function updateSettings(Request $request, Context $context): JsonResponse
     {
-        $config = [];
-        $config['folderName'] = $request->get('folderName');
-        $config['databaseName'] = $request->get('databaseName');
-        $config['databaseUser'] = $request->get('databaseUser');
-        $config['databasePassword'] = $request->get('databasePassword');
-        $config['databaseHost'] = $request->get('databaseHost');
-        $config['databasePort'] = $request->get('databasePort');
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
 
         $done = true;
-        $done = $this->configUpdaterService->setSalesChannelDomains($config);
-        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($config);
-        $done = $this->configUpdaterService->createEnvFile($config);
+        $done = $this->configUpdaterService->setSalesChannelDomains($environmentId, $context);
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($environmentId, $context);
+        $done = $this->configUpdaterService->createEnvFile($environmentId, $context);
 
         if ($done) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Updated settings!"
+            ]);
+        } else {
+            return new JsonResponse([
+                "status" => false,
+                "message" => "Error updating settings!"
             ]);
         }
     }

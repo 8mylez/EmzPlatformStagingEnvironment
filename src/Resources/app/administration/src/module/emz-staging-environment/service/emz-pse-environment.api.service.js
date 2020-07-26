@@ -15,49 +15,21 @@ class StagingEnvironmentApiService extends ApiService {
         return this.httpClient.post('/_action/emz_pse/environment/sync_files', payload, { headers });
     }
 
-    cloneDatabase({ 
-            databaseHost, 
-            databaseUser,
-            databaseName,
-            databasePassword,
-            databasePort 
-        }, 
-        additionalParams = {}, 
-        additionalHeaders = {}
-    )
+    cloneDatabase({ environmentId }, additionalParams = {}, additionalHeaders = {})
     {
         const headers = this.getBasicHeaders();
         const payload = {
-            databaseHost,
-            databaseUser,
-            databaseName,
-            databasePassword,
-            databasePort
+            environmentId
         };
 
         return this.httpClient.post('/_action/emz_pse/environment/clone_database', payload, { headers });
     }
 
-    updateSettings({
-            folderName,
-            databaseHost, 
-            databaseUser,
-            databaseName,
-            databasePassword,
-            databasePort 
-        }, 
-        additionalParams = {},
-        additionalHeaders = {}
-    ) 
+    updateSettings({ environmentId }, additionalParams = {}, additionalHeaders = {}) 
     {
         const headers = this.getBasicHeaders();
         const payload = {
-            folderName,
-            databaseHost, 
-            databaseUser,
-            databaseName,
-            databasePassword,
-            databasePort
+            environmentId
         };
 
         return this.httpClient.post('/_action/emz_pse/environment/update_settings', payload, { headers });
