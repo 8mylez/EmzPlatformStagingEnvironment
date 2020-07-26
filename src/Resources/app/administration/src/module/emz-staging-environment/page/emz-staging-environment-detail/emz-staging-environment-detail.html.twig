@@ -63,8 +63,8 @@
 
                     <sw-container columns="1fr 1fr">
                         <sw-card-section divider="right">
-                            <sw-label variant="success" size="default" appearance="default" :caps="true">
-                                <strong>Last sync was:</strong> 01.01.1970 08:08
+                            <sw-label v-if="lastSync" variant="success" size="default" appearance="default" :caps="true">
+                                <strong>Last Synchronization was:</strong> {{ lastSync }}
                             </sw-label>
                         </sw-card-section>
                         <sw-card-section class="text-right">

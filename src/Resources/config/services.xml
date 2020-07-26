@@ -33,6 +33,10 @@
             <argument type="service" id="emz_pse_log.repository" />
         </service>
 
+        <service id="Emz\StagingEnvironment\Services\Log\LogService">
+            <argument type="service" id="emz_pse_log.repository" />
+        </service>
+
         <service id="Emz\StagingEnvironment\Command\DatabaseSyncCommand">
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
             <tag name="console.command" />
@@ -52,6 +56,7 @@
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Log\LogService" />
         </service>
     </services>
 </container>

@@ -30,6 +30,7 @@ use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
 use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
+use Emz\StagingEnvironment\Services\Log\LogServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Shopware\Core\Framework\Context;
 
@@ -53,15 +54,22 @@ class StagingEnvironmentController extends AbstractController
      */
     private $configUpdaterService;
 
+    /**
+     * @var LogServiceInterface
+     */
+    private $logService;
+
     public function __construct(
         SyncServiceInterface $syncService,
         DatabaseSyncServiceInterface $databaseSyncService,
-        ConfigUpdaterServiceInterface $configUpdaterService
+        ConfigUpdaterServiceInterface $configUpdaterService,
+        LogServiceInterface $logService
     )
     {
         $this->syncService = $syncService;
         $this->databaseSyncService = $databaseSyncService;
         $this->configUpdaterService = $configUpdaterService;
+        $this->logService = $logService;
     }
 
     /**
@@ -127,6 +135,32 @@ class StagingEnvironmentController extends AbstractController
             return new JsonResponse([
                 "status" => false,
                 "message" => "Error updating settings!"
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/get_last_sync", name="api.action.emz_pse.environment.get_last_sync", methods={"POST"})
+     */
+    public function getLastSync(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        $lastSync = $this->logService->getLastSync($environmentId, $context);
+
+        if (!$lastSync) {
+            return new JsonResponse([
+                "status" => false,
+                "message" => "There is no successful sync."
+            ]);
+        } else {
+            return new JsonResponse([
+                "status" => true,
+                "lastSync" => $lastSync
             ]);
         }
     }

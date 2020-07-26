@@ -38,7 +38,8 @@ Component.register('emz-staging-environment-detail', {
                 createNewStagingEnvironment: false
             },
             stepVariant: "info",
-            currentStep: 1
+            currentStep: 1,
+            lastSync: null,
         }
     },
 
@@ -84,6 +85,8 @@ Component.register('emz-staging-environment-detail', {
                 .then(entity => {
                     this.environment = entity;
                     this.readyToSync = true;
+
+                    this.getLastSync();
                 });
         },
         onClickSave() {
@@ -166,6 +169,21 @@ Component.register('emz-staging-environment-detail', {
         reset() {
             this.processes.createNewStagingEnvironment = false;
             this.currentStep = 1;
+        },
+        getLastSync() {
+            console.log('this.environment.id', this.environment.id);
+
+            if (this.environment && this.environment.id) {
+                let lastSync = this.stagingEnvironmentApiService.getLastSync({
+                    environmentId: this.environment.id
+                });
+    
+                lastSync = '20.07.2020';
+    
+                if (lastSync.length > 0) {
+                    this.lastSync = 'hello';
+                }
+            }
         }
     }
 }); 

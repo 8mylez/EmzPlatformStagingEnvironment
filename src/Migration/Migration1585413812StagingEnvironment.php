@@ -64,6 +64,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
                 `environment_id` BINARY(16) NOT NULL,
                 `state` VARCHAR(255) NOT NULL,
                 `created_at` DATETIME(3) NOT NULL,
+                `updated_at` DATETIME(3) NULL,
                 PRIMARY KEY (`id`),
                 CONSTRAINT `fk.emz_pse_log.environment_id`
                     FOREIGN KEY (`environment_id`) REFERENCES `emz_pse_environment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

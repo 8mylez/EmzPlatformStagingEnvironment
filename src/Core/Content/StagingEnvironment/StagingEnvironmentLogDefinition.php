@@ -66,7 +66,8 @@ class StagingEnvironmentLogDefinition extends EntityDefinition
             (new FkField('environment_id', 'environmentId', StagingEnvironmentDefinition::class))->addFlags(new Required()),
             new ManyToOneAssociationField('environemtn', 'environment_id', StagingEnvironmentDefinition::class, 'id', false),
             new StringField('state', 'state'),
-            new CreatedAtField()
+            new CreatedAtField(),
+            new UpdatedAtField()
         ]);
     }
 }

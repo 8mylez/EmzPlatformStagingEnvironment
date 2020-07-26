@@ -34,6 +34,16 @@ class StagingEnvironmentApiService extends ApiService {
 
         return this.httpClient.post('/_action/emz_pse/environment/update_settings', payload, { headers });
     }
+
+    getLastSync({ environmentId }, additionalParams = {}, additionalHeaders = {})
+    {
+        const headers = this.getBasicHeaders();
+        const payload = {
+            environmentId
+        };
+
+        return this.httpClient.post('/_action/emz_pse/environment/get_last_sync', payload, { headers });
+    }
 }
 
 export default StagingEnvironmentApiService;
