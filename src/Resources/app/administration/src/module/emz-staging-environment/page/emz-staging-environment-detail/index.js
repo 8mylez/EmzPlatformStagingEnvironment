@@ -109,7 +109,7 @@ Component.register('emz-staging-environment-detail', {
             this.currentStep = 2;
 
             return this.stagingEnvironmentApiService.syncFiles({
-                folderName: this.environment.folderName
+                environmentId: this.environment.id
             }).then(() => {
                 this.createNotificationSuccess({
                     title: this.$t('global.default.success'),

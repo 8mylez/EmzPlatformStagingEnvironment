@@ -65,4 +65,14 @@ class StagingEnvironmentLogEntity extends Entity
     {
         $this->environment = $environment;
     }
+
+    public function getState(): string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): void
+    {
+        $this->state = $state;
+    }
 }

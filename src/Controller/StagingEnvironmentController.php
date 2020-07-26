@@ -31,6 +31,7 @@ use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
 use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Shopware\Core\Framework\Context;
 
 /**
  * @RouteScope(scopes={"api"}) 
@@ -68,9 +69,13 @@ class StagingEnvironmentController extends AbstractController
      */
     public function syncFiles(Request $request, Context $context): JsonResponse
     {
-        $folderName = $request->get('folderName');
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
 
-        if ($this->syncService->syncCore($folderName)) {
+        $environmentId = $request->get('environmentId');
+
+        if ($this->syncService->syncCore($environmentId, $context)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Synced all files!"

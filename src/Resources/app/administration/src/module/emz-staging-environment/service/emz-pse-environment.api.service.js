@@ -6,10 +6,10 @@ class StagingEnvironmentApiService extends ApiService {
         this.name = 'stagingEnvironmentApiService';
     }
 
-    syncFiles({ folderName }, additionalParams = {}, additionalHeaders = {}) {
+    syncFiles({ environmentId }, additionalParams = {}, additionalHeaders = {}) {
         const headers = this.getBasicHeaders({});
         const payload = {
-            folderName
+            environmentId
         };
         
         return this.httpClient.post('/_action/emz_pse/environment/sync_files', payload, { headers });

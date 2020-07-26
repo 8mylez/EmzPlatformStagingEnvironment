@@ -61,7 +61,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
         $connection->executeQuery('
             CREATE TABLE IF NOT EXISTS `emz_pse_log` (
                 `id` BINARY(16) NOT NULL,
-                `environemnt_id` BINARY(16) NOT NULL,
+                `environment_id` BINARY(16) NOT NULL,
                 `state` VARCHAR(255) NOT NULL,
                 `created_at` DATETIME(3) NOT NULL,
                 PRIMARY KEY (`id`),

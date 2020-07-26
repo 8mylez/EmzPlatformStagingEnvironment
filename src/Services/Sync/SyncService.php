@@ -27,7 +27,7 @@ use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
 
@@ -53,6 +53,7 @@ class SyncService implements SyncServiceInterface
     ){
         $this->projectDir = $projectDir;
         $this->fileSystem = $fileSystem;
+        $this->environmentRepository = $environmentRepository;
         $this->environmentLogRepository = $environmentLogRepository;
     }
 
@@ -63,16 +64,22 @@ class SyncService implements SyncServiceInterface
      * 
      * @return bool
      */
-    public function syncCore(string $environemntId): bool
+    public function syncCore(string $environmentId, Context $context): bool
     {
-        $config = [
-            'folderName' => 'emzstaging',
-        ];
+        /** @var StagingEnvironmentEntity */
+        $environment = $this->environmentRepository
+            ->search(new Criteria([$environmentId]), $context)
+            ->get($environmentId);
 
-        //get environment
+        if (!$environment instanceof StagingEnvironmentEntity) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment with id %s not found environmentId missing', $environmentId));
+        }
         
-        
-        $config['folderName'] = str_replace('/', '', $folderName);
+        if (!$environment->getFolderName()) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment hase no folder saved.'));
+        }
+
+        $config['folderName'] = str_replace('/', '', $environment->getFolderName());
         
         $foldersToCopy = [
             'bin',
@@ -104,10 +111,6 @@ class SyncService implements SyncServiceInterface
             'var/cache/plugins.json'
         ];
 
-        if (empty($config['folderName'])) {
-            return false;
-        }
-
         foreach($foldersToCopy as $folderToCopy) {
             if($this->fileSystem->exists($this->projectDir.'/'.$folderToCopy)) {
                 $this->fileSystem->mirror($this->projectDir.'/'.$folderToCopy, $this->projectDir.'/'.$config['folderName'].'/'.$folderToCopy);
@@ -126,13 +129,12 @@ class SyncService implements SyncServiceInterface
             }
         }
 
-        
-
         $this->environmentLogRepository->create(
             [
                 [
-                    'id' => $logId,
-
+                    'id' => Uuid::randomHex(),
+                    'environmentId' => $environmentId,
+                    'state' => 'sync_success'
                 ],
             ],
             $context

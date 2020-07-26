@@ -37,6 +37,8 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextWithHtmlField;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogEntity;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogCollection;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentDefinition;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 
 class StagingEnvironmentLogDefinition extends EntityDefinition
 {
