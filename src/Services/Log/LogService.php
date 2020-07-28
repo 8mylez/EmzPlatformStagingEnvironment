@@ -31,6 +31,8 @@ use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLog
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Aggregation\Bucket\TermsAggregation;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 
 class LogService implements LogServiceInterface
 {
@@ -56,18 +58,18 @@ class LogService implements LogServiceInterface
         $environmentLogCriteria = new Criteria();
         $environmentLogCriteria->addFilter(new EqualsFilter('environmentId', $environmentId));
         $environmentLogCriteria->addFilter(new EqualsFilter('environmentId', $environmentId));
+        $environmentLogCriteria->addFilter(new EqualsFilter('state', 'settings_env_success'));
+        $environmentLogCriteria->addSorting(new FieldSorting('createdAt', FieldSorting::DESCENDING));
 
         /** @var StagingEnvironmentLogEntity */
-        $environmentLogs = $this->environmentLogRepository
+        $log = $this->environmentLogRepository
             ->search($environmentLogCriteria, $context)
-            ->getEntities();
+            ->first();
 
-        if (!$environmentLogs) {
-            return false;
+        if ($log) {
+            return $log->getCreatedAt()->format('d.m.Y H:i:s');
+        } else {
+            return '';
         }
-
-        $lastSync = '2020-07-26 21:25:59.4';
-
-        return $lastSync;
     }
 }

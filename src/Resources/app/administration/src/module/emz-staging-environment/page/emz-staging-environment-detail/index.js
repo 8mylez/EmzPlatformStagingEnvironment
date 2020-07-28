@@ -144,11 +144,29 @@ Component.register('emz-staging-environment-detail', {
 
                         this.currentStep++;
 
+                    }).catch(() => {
+                
+                        this.reset();
+        
+                        this.createNotificationError({
+                            title: this.$t('global.default.error'),
+                            message: this.$t('emz-staging-environment.create.error')
+                        });
                     }).finally(() => {
                         this.processes.createNewStagingEnvironment = false;
                         this.currentStep = 5;
+
+                        this.getLastSync();                        
                     });
-                });
+                }).catch(() => {
+                
+                    this.reset();
+    
+                    this.createNotificationError({
+                        title: this.$t('global.default.error'),
+                        message: this.$t('emz-staging-environment.create.error')
+                    });
+                });;
 
             }).catch(() => {
                 
@@ -171,18 +189,14 @@ Component.register('emz-staging-environment-detail', {
             this.currentStep = 1;
         },
         getLastSync() {
-            console.log('this.environment.id', this.environment.id);
-
             if (this.environment && this.environment.id) {
-                let lastSync = this.stagingEnvironmentApiService.getLastSync({
+                this.stagingEnvironmentApiService.getLastSync({
                     environmentId: this.environment.id
+                }).then(log => {
+                    if (log && log.data && log.data.lastSync) {
+                        this.lastSync = log.data.lastSync;
+                    }
                 });
-    
-                lastSync = '20.07.2020';
-    
-                if (lastSync.length > 0) {
-                    this.lastSync = 'hello';
-                }
             }
         }
     }

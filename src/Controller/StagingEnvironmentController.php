@@ -152,15 +152,15 @@ class StagingEnvironmentController extends AbstractController
 
         $lastSync = $this->logService->getLastSync($environmentId, $context);
 
-        if (!$lastSync) {
-            return new JsonResponse([
-                "status" => false,
-                "message" => "There is no successful sync."
-            ]);
-        } else {
+        if (!empty($lastSync)) {
             return new JsonResponse([
                 "status" => true,
                 "lastSync" => $lastSync
+            ]);
+        } else {
+            return new JsonResponse([
+                "status" => false,
+                "message" => "There is no successful sync."
             ]);
         }
     }
