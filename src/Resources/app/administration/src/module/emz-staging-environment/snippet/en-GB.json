@@ -51,6 +51,7 @@
             "syncDatabase": "Clone database",
             "updateEnv": "Update settings",
             "prepare": "Preparation",
+            "lastSyncLabel": "Last Synchronization:",
             "stepsContent": {
                 "preparation": "In the preparation step the system proves if everything is correct to create a new staging environment.",
                 "syncFiles": "In this step all files will be copied in the appropriate sub folder, so that Shopware 6 has everything it needs to run smoothly.",

@@ -81,21 +81,6 @@ class StagingEnvironmentEntity extends Entity
     protected $databasePort;
 
     /**
-     * @var bool
-     */
-    protected $catchEmails;
-
-    /**
-     * @var bool
-     */
-    protected $anonymizeData;
-
-    /**
-     * @var bool
-     */
-    protected $deactivateScheduledTasks;
-
-    /**
      * @var \DateTimeInterface|null
      */
     protected $createdAt;
@@ -198,36 +183,6 @@ class StagingEnvironmentEntity extends Entity
     public function setDatabasePort(?string $databasePort): void
     {
         $this->databasePort = $databasePort;
-    }
-
-    public function getCatchEmails(): bool
-    {
-        return $this->catchEmails;
-    }
-
-    public function setCatchEmails(bool $catchEmails): void
-    {
-        $this->catchEmails = $catchEmails;
-    }
-
-    public function getAnonymizeData(): bool
-    {
-        return $this->anonymizeData;
-    }
-
-    public function setAnonymizeData(bool $anonymizeData): void
-    {
-        $this->anonymizeData = $anonymizeData;
-    }
-
-    public function getDeactivateScheduledTasks(): bool
-    {
-        return $this->deactivateScheduledTasks;
-    }
-
-    public function setDeactivateScheduledTasks(bool $deactivateScheduledTasks): void
-    {
-        $this->deactivateScheduledTasks = $deactivateScheduledTasks;
     }
 
     public function getSetInMaintenance(): bool

@@ -51,6 +51,7 @@
             "syncDatabase": "Datenbank klonen",
             "updateEnv": "Einstellungen vornehmen",
             "prepare": "Vorbereitung",
+            "lastSyncLabel": "Letzte Synchronisierung:",
             "stepsContent": {
                 "preparation": "In der Vorbereitung wird geprüft ob das System bereit für die Anlage einer Staging Umgebung ist.",
                 "syncFiles": "In diesem Schritt werden alle wichtigen Dateien in den entsprechenden Unterordner kopiert, sodass Shopware 6 alles hat was es braucht.",

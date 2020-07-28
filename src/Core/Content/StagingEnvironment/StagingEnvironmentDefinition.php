@@ -70,9 +70,6 @@ class StagingEnvironmentDefinition extends EntityDefinition
             (new StringField('database_host', 'databaseHost'))->setFlags(new Required()),
             (new StringField('database_password', 'databasePassword'))->setFlags(new Required()),
             new StringField('database_port', 'databasePort'),
-            new BoolField('catch_emails', 'catchEmails'),
-            new BoolField('anonymize_data', 'anonymizeData'),
-            new BoolField('deactivate_scheduled_tasks', 'deactivateScheduledTasks'),
             new BoolField('set_in_maintenance', 'setInMaintenance'),
             new UpdatedAtField(),
             new CreatedAtField()

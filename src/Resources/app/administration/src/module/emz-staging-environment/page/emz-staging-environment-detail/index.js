@@ -26,10 +26,7 @@ Component.register('emz-staging-environment-detail', {
         return {
             environment: null,
             repositoryEnvironment: null,
-            repositoryProfile: null,
-            profiles: null,
-            selectedProfile: null,
-            isLoading: false,
+            isLoading: true,
             readyToSync: false,
             processes: {
                 createNewStagingEnvironment: false,
@@ -85,16 +82,19 @@ Component.register('emz-staging-environment-detail', {
                 .then(entity => {
                     this.environment = entity;
                     this.readyToSync = true;
-
+                    this.isLoading = false;
                     this.getLastSync();
                 });
         },
         onClickSave() {
+            this.isLoading = true;
+
             this.repositoryEnvironment
                 .save(this.environment, Context.api)
                 .then(() => {
                     this.getEnvironment();
-
+                    this.isLoading = false;
+                    this.getLastSync();
                 }).catch(exception => {
                     this.createNotificationError({
                         title: this.$t('emz-staging-environment.detail.errorTitle'),
@@ -143,11 +143,8 @@ Component.register('emz-staging-environment-detail', {
                         });
 
                         this.currentStep++;
-
                     }).catch(() => {
-                
                         this.reset();
-        
                         this.createNotificationError({
                             title: this.$t('global.default.error'),
                             message: this.$t('emz-staging-environment.create.error')
@@ -159,25 +156,19 @@ Component.register('emz-staging-environment-detail', {
                         this.getLastSync();                        
                     });
                 }).catch(() => {
-                
                     this.reset();
-    
                     this.createNotificationError({
                         title: this.$t('global.default.error'),
                         message: this.$t('emz-staging-environment.create.error')
                     });
-                });;
-
+                });
             }).catch(() => {
-                
                 this.reset();
-
                 this.createNotificationError({
                     title: this.$t('global.default.error'),
                     message: this.$t('emz-staging-environment.create.error')
                 });
             });
-
         },
         resetButton() {
             this.processSuccess = {
