@@ -132,6 +132,10 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
             throw new \InvalidArgumentException(sprintf('Staging Environment with id %s not found environmentId missing', $environmentId));
         }
 
+        if (!$environment->getSetInMaintenance()) {
+            return true;
+        }
+
         $stagingConnectionParams = $this->getStagingConnectionParams($environment);
         
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
@@ -149,7 +153,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
                 [
                     'id' => Uuid::randomHex(),
                     'environmentId' => $environmentId,
-                    'state' => 'settings_maintainence_mode_success'
+                    'state' => 'settings_maintenance_mode_success'
                 ],
             ],
             $context
