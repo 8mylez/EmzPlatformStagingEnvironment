@@ -111,15 +111,16 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
         $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
+        $tablesInKey = "Tables_in_{$environment->getDatabaseName()}";
 
         foreach($tables as $table) {
-            $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table['Tables_in_shopware'] . '`')->fetch();
+            $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table[$tablesInKey] . '`')->fetch();
 
-            $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table['Tables_in_shopware'] . '`;SET FOREIGN_KEY_CHECKS=1;');
+            $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table[$tablesInKey] . '`;SET FOREIGN_KEY_CHECKS=1;');
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;' . $create['Create Table'] . ';SET FOREIGN_KEY_CHECKS=1;');
 
             $data = [];
-            $data = $this->connection->executeQuery('SELECT * FROM `' . $table['Tables_in_shopware'] . '`')->fetchAll();
+            $data = $this->connection->executeQuery('SELECT * FROM `' . $table[$tablesInKey] . '`')->fetchAll();
 
             if (!empty($data)) {
                 foreach($data as $d) {
@@ -133,7 +134,7 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
                         $set[] = '?';
                     }
 
-                    $sqlInsert = 'SET FOREIGN_KEY_CHECKS=0;INSERT INTO `' . $table['Tables_in_shopware'] . '` (' . implode(", ", $columns) . ') VALUES ( ' . implode(', ', $set) . ' );SET FOREIGN_KEY_CHECKS=1;';
+                    $sqlInsert = 'SET FOREIGN_KEY_CHECKS=0;INSERT INTO `' . $table[$tablesInKey] . '` (' . implode(", ", $columns) . ') VALUES ( ' . implode(', ', $set) . ' );SET FOREIGN_KEY_CHECKS=1;';
                     $stagingConnection->executeUpdate($sqlInsert, $values);
                 }                
             }
