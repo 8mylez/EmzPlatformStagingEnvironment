@@ -30,7 +30,10 @@ use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
 use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
+use Emz\StagingEnvironment\Services\Log\LogServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Shopware\Core\Framework\Context;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
 
 /**
  * @RouteScope(scopes={"api"}) 
@@ -52,25 +55,36 @@ class StagingEnvironmentController extends AbstractController
      */
     private $configUpdaterService;
 
+    /**
+     * @var LogServiceInterface
+     */
+    private $logService;
+
     public function __construct(
         SyncServiceInterface $syncService,
         DatabaseSyncServiceInterface $databaseSyncService,
-        ConfigUpdaterServiceInterface $configUpdaterService
+        ConfigUpdaterServiceInterface $configUpdaterService,
+        LogServiceInterface $logService
     )
     {
         $this->syncService = $syncService;
         $this->databaseSyncService = $databaseSyncService;
         $this->configUpdaterService = $configUpdaterService;
+        $this->logService = $logService;
     }
 
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/sync_files", name="api.action.emz_pse.environment.sync_files", methods={"POST"})
      */
-    public function syncFiles(Request $request): JsonResponse
+    public function syncFiles(Request $request, Context $context): JsonResponse
     {
-        $folderName = $request->get('folderName');
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
 
-        if ($this->syncService->syncCore($folderName)) {
+        $environmentId = $request->get('environmentId');
+
+        if ($this->syncService->syncCore($environmentId, $context)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Synced all files!"
@@ -81,15 +95,15 @@ class StagingEnvironmentController extends AbstractController
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/clone_database", name="api.action.emz_pse.environment.clone_database", methods={"POST"})
      */
-    public function cloneDatabase(Request $request): JsonResponse
+    public function cloneDatabase(Request $request, Context $context): JsonResponse
     {
-        $databaseName = $request->get('databaseName');
-        $databaseUser = $request->get('databaseUser');
-        $databasePassword = $request->get('databasePassword');
-        $databaseHost = $request->get('databaseHost');
-        $databasePort = $request->get('databasePort');
-        
-        if ($this->databaseSyncService->syncDatabase($databaseName, $databaseUser, $databasePassword, $databaseHost, $databasePort)) {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->databaseSyncService->syncDatabase($environmentId, $context)) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Database cloned!"
@@ -100,25 +114,54 @@ class StagingEnvironmentController extends AbstractController
     /**
      * @Route("/api/v{version}/_action/emz_pse/environment/update_settings", name="api.action.emz_pse.environment.update_settings", methods={"POST"})
      */
-    public function updateSettings(Request $request): JsonResponse
+    public function updateSettings(Request $request, Context $context): JsonResponse
     {
-        $config = [];
-        $config['folderName'] = $request->get('folderName');
-        $config['databaseName'] = $request->get('databaseName');
-        $config['databaseUser'] = $request->get('databaseUser');
-        $config['databasePassword'] = $request->get('databasePassword');
-        $config['databaseHost'] = $request->get('databaseHost');
-        $config['databasePort'] = $request->get('databasePort');
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
 
         $done = true;
-        $done = $this->configUpdaterService->setSalesChannelDomains($config);
-        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($config);
-        $done = $this->configUpdaterService->createEnvFile($config);
+        $done = $this->configUpdaterService->setSalesChannelDomains($environmentId, $context);
+        $done = $this->configUpdaterService->setSalesChannelsInMaintenance($environmentId, $context);
+        $done = $this->configUpdaterService->createEnvFile($environmentId, $context);
 
         if ($done) {
             return new JsonResponse([
                 "status" => true,
                 "message" => "Updated settings!"
+            ]);
+        } else {
+            return new JsonResponse([
+                "status" => false,
+                "message" => "Error updating settings!"
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/get_last_sync", name="api.action.emz_pse.environment.get_last_sync", methods={"POST"})
+     */
+    public function getLastSync(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        $lastSync = $this->logService->getLastSync($environmentId, $context);
+
+        if (!empty($lastSync)) {
+            return new JsonResponse([
+                "status" => true,
+                "lastSync" => $lastSync
+            ]);
+        } else {
+            return new JsonResponse([
+                "status" => false,
+                "message" => "There is no successful sync."
             ]);
         }
     }

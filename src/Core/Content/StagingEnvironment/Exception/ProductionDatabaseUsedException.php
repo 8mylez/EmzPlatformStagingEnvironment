@@ -21,25 +21,23 @@
 
 declare(strict_types=1);
 
-namespace Emz\StagingEnvironment;
+namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception;
 
-use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Doctrine\DBAL\Connection;
+use Shopware\Core\Framework\ShopwareHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
-class EmzPlatformStagingEnvironment extends Plugin
+class ProductionDatabaseUsedException extends ShopwareHttpException
 {
-    public function uninstall(UninstallContext $context): void
+    public function __construct(string $databaseName)
     {
-        parent::uninstall($context);
+        parent::__construct(
+            'Selected Database "{{ databaseName }}" is current production database.',
+            ['databaseName' => $databaseName]
+        );
+    }
 
-        if ($context->keepUserData()) {
-            return;
-        }
-
-        $connection = $this->container->get(Connection::class);
-
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_log`');
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_environment`');
+    public function getErrorCode(): string
+    {
+        return 'EMZSTAGINGENVIRONMENT__PRODUCTION_DATABASE_USED';
     }
 }

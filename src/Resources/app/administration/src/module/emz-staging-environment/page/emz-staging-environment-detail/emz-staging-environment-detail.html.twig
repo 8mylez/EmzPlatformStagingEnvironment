@@ -63,8 +63,8 @@
 
                     <sw-container columns="1fr 1fr">
                         <sw-card-section divider="right">
-                            <sw-label variant="success" size="default" appearance="default" :caps="true">
-                                <strong>Last sync was:</strong> 01.01.1970 08:08
+                            <sw-label v-if="lastSync" variant="success" size="default" appearance="default" :caps="true">
+                                <strong>{{$t('emz-staging-environment.create.lastSyncLabel')}}</strong> {{ lastSync }}
                             </sw-label>
                         </sw-card-section>
                         <sw-card-section class="text-right">
@@ -106,6 +106,7 @@
                         :label="$t('emz-staging-environment.detail.excludedFoldersLabel')"
                         :placeholder="$t('emz-staging-environment.detail.excludedFoldersLabel')"
                         v-model="environment.excludedFolders"
+                        :helpText="$t('emz-staging-environment.detail.excludedFoldersHelpText')"
                     >
                     </sw-text-field>
 
@@ -169,35 +170,11 @@
                     :title="$t('emz-staging-environment.detail.settingsCardTitle')"
                 >
                     <sw-checkbox-field
-                        :label="$t('emz-staging-environment.detail.anonymizeDataLabel')"
-                        v-model="environment.anonymizeData"
-                    >
-                    </sw-checkbox-field>
-
-                    <sw-checkbox-field
-                        :label="$t('emz-staging-environment.detail.deactivateScheduledTasksLabel')"
-                        v-model="environment.deactivateScheduledTasks"
-                    >
-                    </sw-checkbox-field>
-
-                    <sw-checkbox-field
                         :label="$t('emz-staging-environment.detail.setInMaintenanceLabel')"
                         v-model="environment.setInMaintenance"
                     >
                     </sw-checkbox-field>
                 </sw-card>
-
-                {# <sw-card
-                    :title="$t('emz-staging-environment.detail.title')"    
-                >
-                    <sw-entity-single-select
-                        required
-                        entity="emz_pse_profile"
-                        label="Profile"
-                        labelProperty="profileName"
-                        v-model="selectedProfile">
-                    </sw-entity-single-select>
-                </sw-card> #}
             </sw-card-view>
         </template>
     </sw-page>

@@ -24,21 +24,21 @@ declare(strict_types=1);
 namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogEntity;
 
 /**
- * @method void add(StagingEnvironmentProfileEntity $entity)
- * @method void set(string $key, StagingEnvironmentProfileEntity $entity)
- * @method StagingEnvironmentProfileEntity[] getIterator()
- * @method StagingEnvironmentProfileEntity[] getElements()
- * @method StagingEnvironmentProfileEntity|null get(string $key)
- * @method StagingEnvironmentProfileEntity|null first()
- * @method StagingEnvironmentProfileEntity|null last()
+ * @method void add(StagingEnvironmentEntity $entity)
+ * @method void set(string $key, StagingEnvironmentEntity $entity)
+ * @method StagingEnvironmentLogEntity[] getIterator()
+ * @method StagingEnvironmentLogEntity[] getElements()
+ * @method StagingEnvironmentLogEntity|null get(string $key)
+ * @method StagingEnvironmentLogEntity|null first()
+ * @method StagingEnvironmentLogEntity|null last()
  */
-class StagingEnvironmentProfileCollection extends EntityCollection
+class StagingEnvironmentLogCollection extends EntityCollection
 {
     protected function getExpectedClass(): string
     {
-        return StagingEnvironmentProfileEntity::class;
+        return StagingEnvironmentLogEntity::class;
     }
 }

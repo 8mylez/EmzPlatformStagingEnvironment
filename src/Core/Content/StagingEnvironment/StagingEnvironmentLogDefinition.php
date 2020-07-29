@@ -34,12 +34,15 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextWithHtmlField;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentCollection;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogEntity;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogCollection;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentDefinition;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 
-class StagingEnvironmentDefinition extends EntityDefinition
+class StagingEnvironmentLogDefinition extends EntityDefinition
 {
-    public const ENTITY_NAME = 'emz_pse_environment';
+    public const ENTITY_NAME = 'emz_pse_log';
 
     public function getEntityName(): string
     {
@@ -48,31 +51,23 @@ class StagingEnvironmentDefinition extends EntityDefinition
 
     public function getCollectionClass(): string
     {
-        return StagingEnvironmentCollection::class;
+        return StagingEnvironmentLogCollection::class;
     }
 
     public function getEntityClass(): string
     {
-        return StagingEnvironmentEntity::class;
+        return StagingEnvironmentLogEntity::class;
     }
 
     protected function defineFields(): FieldCollection
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->setFlags(new PrimaryKey(), new Required()),
-            (new StringField('environment_name', 'environmentName'))->setFlags(new Required()),
-            new StringField('profile_name', 'profileName'),
-            (new StringField('folder_name', 'folderName'))->setFlags(new Required()),
-            new StringField('excluded_folders', 'excludedFolders'),
-            new LongTextWithHtmlField('comment', 'comment'),
-            (new StringField('database_name', 'databaseName'))->setFlags(new Required()),
-            (new StringField('database_user', 'databaseUser'))->setFlags(new Required()),
-            (new StringField('database_host', 'databaseHost'))->setFlags(new Required()),
-            (new StringField('database_password', 'databasePassword'))->setFlags(new Required()),
-            new StringField('database_port', 'databasePort'),
-            new BoolField('set_in_maintenance', 'setInMaintenance'),
-            new UpdatedAtField(),
-            new CreatedAtField()
+            (new FkField('environment_id', 'environmentId', StagingEnvironmentDefinition::class))->addFlags(new Required()),
+            new ManyToOneAssociationField('environemtn', 'environment_id', StagingEnvironmentDefinition::class, 'id', false),
+            new StringField('state', 'state'),
+            new CreatedAtField(),
+            new UpdatedAtField()
         ]);
     }
 }

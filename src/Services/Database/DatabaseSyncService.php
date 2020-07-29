@@ -28,7 +28,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentProfileEntity;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\Uuid\Uuid;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
 
 class DatabaseSyncService implements DatabaseSyncServiceInterface
 {
@@ -37,47 +40,73 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
      */
     private $connection;
 
+    /** @var EntityRepositoryInterface */
+    private $environmentRepository;
+
+    /** @var EntityRepositoryInterface */
+    private $environmentLogRepository;
+
     public function __construct(
-        Connection $connection
+        Connection $connection,
+        EntityRepositoryInterface $environmentRepository,
+        EntityRepositoryInterface $environmentLogRepository
     ){
         $this->connection = $connection;
+        $this->environmentRepository = $environmentRepository;
+        $this->environmentLogRepository = $environmentLogRepository;
     }
 
     /**
      * Clones the database with all table strucutes and values
      * 
-     * @param string $databaseName
-     * @param string $databaseUser
-     * @param string $databasePassword
-     * @param string $databaseHost
-     * @param string $databasePort
+     * @param string $environmentId
+     * @param Context $context
      * 
      * @return bool
      */
-    public function syncDatabase(
-        string $databaseName,
-        string $databaseUser,
-        string $databasePassword,
-        string $databaseHost,
-        string $databasePort
-    ): bool
+    public function syncDatabase(string $environmentId, Context $context): bool
     {
-        $stagingConnectionParams = [
-            'dbname' => 'staging',
-            'user' => 'user',
-            'password' => 'password',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql'
-        ];
+        /** @var StagingEnvironmentEntity */
+        $environment = $this->environmentRepository
+            ->search(new Criteria([$environmentId]), $context)
+            ->get($environmentId);
+
+        if (!$environment instanceof StagingEnvironmentEntity) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment with id %s not found environmentId missing', $environmentId));
+        }
+        
+        if (!$environment->getDatabaseName()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database name'));
+        }
+
+        if (!$environment->getDatabaseUser()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database user'));
+        }
+
+        if (!$environment->getDatabasePassword()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database password'));
+        }
+
+        if (!$environment->getDatabaseHost()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database host'));
+        }
+
+        if (!$environment->getDatabasePort()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database port'));
+        }
         
         $stagingConnectionParams = [
-            'dbname' => $databaseName,
-            'user' => $databaseUser,
-            'password' => $databasePassword,
-            'host' => $databaseHost,
-            'port' => $databasePort,
+            'dbname' => $environment->getDatabaseName(),
+            'user' => $environment->getDatabaseUser(),
+            'password' => $environment->getDatabasePassword(),
+            'host' => $environment->getDatabaseHost(),
+            'port' => $environment->getDatabasePort(),
             'driver' => 'pdo_mysql'
         ];
+
+        if ($this->connection->getDatabase() === $environment->getDatabaseName()) {
+            throw new ProductionDatabaseUsedException($environment->getDatabaseName());
+        }
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
@@ -87,18 +116,12 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
             $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table['Tables_in_shopware'] . '`')->fetch();
 
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table['Tables_in_shopware'] . '`;SET FOREIGN_KEY_CHECKS=1;');
-
-            // echo "Table was dropped: " . $create['Table'] . "\n";
-
             $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;' . $create['Create Table'] . ';SET FOREIGN_KEY_CHECKS=1;');
-
-            // echo "Table was created: " . $create['Table'] . "\n";
 
             $data = [];
             $data = $this->connection->executeQuery('SELECT * FROM `' . $table['Tables_in_shopware'] . '`')->fetchAll();
 
             if (!empty($data)) {
-
                 foreach($data as $d) {
                     $columns = [];
                     $values = [];
@@ -111,16 +134,21 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
                     }
 
                     $sqlInsert = 'SET FOREIGN_KEY_CHECKS=0;INSERT INTO `' . $table['Tables_in_shopware'] . '` (' . implode(", ", $columns) . ') VALUES ( ' . implode(', ', $set) . ' );SET FOREIGN_KEY_CHECKS=1;';
-
                     $stagingConnection->executeUpdate($sqlInsert, $values);
-                }
-
-                // echo "Imported Data for: " . $table['Tables_in_shopware'] . "\n";
-                
+                }                
             }
-
-            // echo "\n";
         }
+
+        $this->environmentLogRepository->create(
+            [
+                [
+                    'id' => Uuid::randomHex(),
+                    'environmentId' => $environmentId,
+                    'state' => 'database_success'
+                ],
+            ],
+            $context
+        );
 
         return true;
     }

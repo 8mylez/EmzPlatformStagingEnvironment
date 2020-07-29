@@ -26,10 +26,7 @@ Component.register('emz-staging-environment-detail', {
         return {
             environment: null,
             repositoryEnvironment: null,
-            repositoryProfile: null,
-            profiles: null,
-            selectedProfile: null,
-            isLoading: false,
+            isLoading: true,
             readyToSync: false,
             processes: {
                 createNewStagingEnvironment: false,
@@ -38,7 +35,8 @@ Component.register('emz-staging-environment-detail', {
                 createNewStagingEnvironment: false
             },
             stepVariant: "info",
-            currentStep: 1
+            currentStep: 1,
+            lastSync: null,
         }
     },
 
@@ -84,14 +82,19 @@ Component.register('emz-staging-environment-detail', {
                 .then(entity => {
                     this.environment = entity;
                     this.readyToSync = true;
+                    this.isLoading = false;
+                    this.getLastSync();
                 });
         },
         onClickSave() {
+            this.isLoading = true;
+
             this.repositoryEnvironment
                 .save(this.environment, Context.api)
                 .then(() => {
                     this.getEnvironment();
-
+                    this.isLoading = false;
+                    this.getLastSync();
                 }).catch(exception => {
                     this.createNotificationError({
                         title: this.$t('emz-staging-environment.detail.errorTitle'),
@@ -109,7 +112,7 @@ Component.register('emz-staging-environment-detail', {
             this.currentStep = 2;
 
             return this.stagingEnvironmentApiService.syncFiles({
-                folderName: this.environment.folderName
+                environmentId: this.environment.id
             }).then(() => {
                 this.createNotificationSuccess({
                     title: this.$t('global.default.success'),
@@ -119,12 +122,16 @@ Component.register('emz-staging-environment-detail', {
                 this.currentStep++;
 
                 this.stagingEnvironmentApiService.cloneDatabase({
-                    databaseHost: this.environment.databaseHost,
-                    databaseUser: this.environment.databaseUser,
-                    databaseName: this.environment.databaseName,
-                    databasePassword: this.environment.databasePassword,
-                    databasePort: this.environment.databasePort
-                }).then(() => {
+                    environmentId: this.environment.id
+                }).then(response => {
+                    if (response.data.status == false) {
+                        this.reset();
+                        this.createNotificationError({
+                            title: this.$t('global.default.error'),
+                            message: response.data.message
+                        });
+                        return;
+                    }
 
                     this.createNotificationSuccess({
                         title: this.$t('global.default.success'),
@@ -134,12 +141,7 @@ Component.register('emz-staging-environment-detail', {
                     this.currentStep++;
 
                     this.stagingEnvironmentApiService.updateSettings({
-                        folderName: this.environment.folderName,
-                        databaseHost: this.environment.databaseHost,
-                        databaseUser: this.environment.databaseUser,
-                        databaseName: this.environment.databaseName,
-                        databasePassword: this.environment.databasePassword,
-                        databasePort: this.environment.databasePort
+                        environmentId: this.environment.id
                     }).then(() => {
                         this.processes.createNewStagingEnvironment = false;
 
@@ -149,23 +151,35 @@ Component.register('emz-staging-environment-detail', {
                         });
 
                         this.currentStep++;
-
+                    }).catch(() => {
+                        this.reset();
+                        this.createNotificationError({
+                            title: this.$t('global.default.error'),
+                            message: this.$t('emz-staging-environment.create.error')
+                        });
                     }).finally(() => {
                         this.processes.createNewStagingEnvironment = false;
                         this.currentStep = 5;
+
+                        this.getLastSync();                        
                     });
+                }).catch(({response}) => {
+                    response.data.errors.forEach((singleError) => {
+                        this.createNotificationError({
+                            title: this.$t('global.default.error'),
+                            message: `${singleError.detail}`
+                        });
+                    });
+
+                    this.reset();
                 });
-
             }).catch(() => {
-                
                 this.reset();
-
                 this.createNotificationError({
                     title: this.$t('global.default.error'),
                     message: this.$t('emz-staging-environment.create.error')
                 });
             });
-
         },
         resetButton() {
             this.processSuccess = {
@@ -175,6 +189,17 @@ Component.register('emz-staging-environment-detail', {
         reset() {
             this.processes.createNewStagingEnvironment = false;
             this.currentStep = 1;
+        },
+        getLastSync() {
+            if (this.environment && this.environment.id) {
+                this.stagingEnvironmentApiService.getLastSync({
+                    environmentId: this.environment.id
+                }).then(log => {
+                    if (log && log.data && log.data.lastSync) {
+                        this.lastSync = log.data.lastSync;
+                    }
+                });
+            }
         }
     }
 }); 
