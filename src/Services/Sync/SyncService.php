@@ -125,7 +125,7 @@ class SyncService implements SyncServiceInterface
         }
 
         foreach($filesToCopy as $file) {
-            if($this->fileSystem->exists($file)) {
+            if($this->fileSystem->exists($this->projectDir.'/'.$file)) {
                 $this->fileSystem->copy($this->projectDir.'/'.$file, $this->projectDir.'/'.$config['folderName'].'/'.$file);
             }
         }
