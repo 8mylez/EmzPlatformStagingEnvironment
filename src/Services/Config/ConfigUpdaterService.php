@@ -92,7 +92,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         $salesChannelUrls = $stagingConnection->executeQuery('SELECT id as id, url FROM sales_channel_domain')->fetchAll();
 
         foreach ($salesChannelUrls as $salesChannelUrl) {
-            $salesChannelUrl['url'] = rtrim($salesChannelUrl['url'], '/') . '/' . $config['folderName'];
+            $salesChannelUrl['url'] = rtrim($salesChannelUrl['url'], '/') . '/' . $config['folderName'] . '/';
 
             $stagingConnection->executeUpdate('UPDATE sales_channel_domain SET url = :url WHERE id = :id', 
                 ['url' => $salesChannelUrl['url'], 'id' => $salesChannelUrl['id']]
