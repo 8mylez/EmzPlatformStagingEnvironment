@@ -4,6 +4,8 @@ Component.extend('emz-staging-environment-create', 'emz-staging-environment-deta
     methods: {
         getEnvironment() {
             this.environment = this.repositoryEnvironment.create(Context.api);
+
+            this.isLoading = false;
         },
         
         onClickSave() {
