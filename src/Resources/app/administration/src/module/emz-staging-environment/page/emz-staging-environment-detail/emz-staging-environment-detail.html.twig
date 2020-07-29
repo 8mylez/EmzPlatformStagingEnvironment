@@ -82,6 +82,7 @@
                 
                 <sw-card
                     v-if="environment"
+                    :isLoading="isLoading"
                     :title="$t('emz-staging-environment.detail.environmentCardTitle')"
                 >
                     <sw-container columns="1fr 1fr" gap="32px">
