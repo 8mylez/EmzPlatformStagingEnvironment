@@ -123,7 +123,15 @@ Component.register('emz-staging-environment-detail', {
 
                 this.stagingEnvironmentApiService.cloneDatabase({
                     environmentId: this.environment.id
-                }).then(() => {
+                }).then(response => {
+                    if (response.data.status == false) {
+                        this.reset();
+                        this.createNotificationError({
+                            title: this.$t('global.default.error'),
+                            message: response.data.message
+                        });
+                        return;
+                    }
 
                     this.createNotificationSuccess({
                         title: this.$t('global.default.success'),
@@ -155,12 +163,15 @@ Component.register('emz-staging-environment-detail', {
 
                         this.getLastSync();                        
                     });
-                }).catch(() => {
-                    this.reset();
-                    this.createNotificationError({
-                        title: this.$t('global.default.error'),
-                        message: this.$t('emz-staging-environment.create.error')
+                }).catch(({response}) => {
+                    response.data.errors.forEach((singleError) => {
+                        this.createNotificationError({
+                            title: this.$t('global.default.error'),
+                            message: `${singleError.detail}`
+                        });
                     });
+
+                    this.reset();
                 });
             }).catch(() => {
                 this.reset();

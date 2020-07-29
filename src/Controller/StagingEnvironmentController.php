@@ -33,6 +33,7 @@ use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
 use Emz\StagingEnvironment\Services\Log\LogServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Shopware\Core\Framework\Context;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
 
 /**
  * @RouteScope(scopes={"api"}) 
@@ -101,7 +102,7 @@ class StagingEnvironmentController extends AbstractController
         }
 
         $environmentId = $request->get('environmentId');
-        
+
         if ($this->databaseSyncService->syncDatabase($environmentId, $context)) {
             return new JsonResponse([
                 "status" => true,

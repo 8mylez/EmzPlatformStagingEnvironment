@@ -31,6 +31,7 @@ use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
 
 class DatabaseSyncService implements DatabaseSyncServiceInterface
 {
@@ -102,6 +103,10 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
             'port' => $environment->getDatabasePort(),
             'driver' => 'pdo_mysql'
         ];
+
+        if ($this->connection->getDatabase() === $environment->getDatabaseName()) {
+            throw new ProductionDatabaseUsedException($environment->getDatabaseName());
+        }
 
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
