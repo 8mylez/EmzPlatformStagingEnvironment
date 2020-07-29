@@ -111,7 +111,7 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
         
         $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
-        $tablesInKey = "Tables_in_{$environment->getDatabaseName()}";
+        $tablesInKey = "Tables_in_{$this->connection->getDatabase()}";
 
         foreach($tables as $table) {
             $create = $this->connection->executeQuery('SHOW CREATE TABLE `' . $table[$tablesInKey] . '`')->fetch();
