@@ -18,23 +18,6 @@
                     :columns="columns"
                     detailRoute="emz.staging.environment.detail"
                 >
-                    <template #column-folderName="{ item, compact }" >
-                        {% block emz_staging_environment_list_content_columns_foldername_label %}
-                            <div>
-                                {# <a v-for="salesChannel in salesChannels" :key="salesChannel.id" href="salesChannel">
-
-                                </a> #}
-                                <a href="#">
-                                    Storefront: {{item.folderName}}
-                                    <sw-icon name="default-action-external" small color="#009bd9"></sw-icon>
-                                </a>
-                                <a href="#">
-                                    Administration: {{item.folderName}}/admin
-                                    <sw-icon name="default-action-external" small color="#009bd9"></sw-icon>
-                                </a>
-                            </div>
-                        {% endblock %}
-                    </template>
                 </sw-entity-listing>
             {% endblock %}
         </template>

@@ -49,12 +49,6 @@ Component.register('emz-staging-environment-index', {
                 label: this.$t('emz-staging-environment.list.columnComment'),
                 inlineEdit: 'string',
                 allowResize: true,
-            }, {
-                property: 'folderName',
-                dataIndex: 'folderName',
-                label: this.$t('emz-staging-environment.list.columnAccessLinks'),
-                inlineEdit: 'string',
-                allowResize: true,
             }];
         }
     },
