@@ -30,6 +30,7 @@ use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Emz\StagingEnvironment\Services\Sync\ExcludeFoldersIterator;
 
 class SyncService implements SyncServiceInterface
 {
@@ -114,7 +115,33 @@ class SyncService implements SyncServiceInterface
 
         foreach($foldersToCopy as $folderToCopy) {
             if($this->fileSystem->exists($this->projectDir.'/'.$folderToCopy)) {
-                $this->fileSystem->mirror($this->projectDir.'/'.$folderToCopy, $this->projectDir.'/'.$config['folderName'].'/'.$folderToCopy);
+
+                $directoryIterator = new \RecursiveDirectoryIterator(
+                    $this->projectDir.'/'.$folderToCopy, 
+                    \FilesystemIterator::SKIP_DOTS
+                );
+
+                $excludedFolders = [];
+                if (!empty($environment->getExcludedFolders())) {
+                    $excludedFolders = explode(',', $environment->getExcludedFolders());
+                }
+                
+                $excludedFoldersExtended = array_map(function($excludeFolder) {
+                    return $this->projectDir . '/' . trim($excludeFolder);
+                }, $excludedFolders);
+
+                $excludedFoldersIterator = new ExcludeFoldersIterator($directoryIterator, $excludedFoldersExtended);
+
+                $iterator = new \RecursiveIteratorIterator(
+                    $excludedFoldersIterator,
+                    \RecursiveIteratorIterator::SELF_FIRST
+                );
+
+                $this->fileSystem->mirror(
+                    $this->projectDir.'/'.$folderToCopy,
+                    $this->projectDir.'/'.$config['folderName'].'/'.$folderToCopy,
+                    $iterator    
+                );
             }
         }
 

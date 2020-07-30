@@ -46,7 +46,7 @@ class StagingEnvironmentEntity extends Entity
     protected $folderName;
 
     /**
-     * @var array|null
+     * @var string|null
      */
     protected $excludedFolders;
 
@@ -115,12 +115,12 @@ class StagingEnvironmentEntity extends Entity
         $this->folderName = $folderName;
     }
 
-    public function getExcludedFolders(): ?array
+    public function getExcludedFolders(): ?string
     {
         return $this->excludedFolders;
     }
 
-    public function setExcludedFolders(?array $excludedFolders): void
+    public function setExcludedFolders(?string $excludedFolders): void
     {
         $this->excludedFolders = $excludedFolders;
     }
