@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  * Copyright (c) 8mylez GmbH. All rights reserved.
@@ -21,25 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Emz\StagingEnvironment;
+namespace Emz\StagingEnvironment\Services\Sync;
 
-use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Doctrine\DBAL\Connection;
+class ExcludeFoldersIterator extends \RecursiveFilterIterator {
+ 
+    /** @var array */
+    private $excludedFolders = [];
 
-class EmzPlatformStagingEnvironment extends Plugin
-{
-    public function uninstall(UninstallContext $context): void
+    public function __construct(
+        \RecursiveDirectoryIterator $recursiveDirectoryIterator, 
+        array $excludedFolders
+    )
+    {   
+        $this->excludedFolders = $excludedFolders;
+        parent::__construct($recursiveDirectoryIterator);
+    }
+
+    public function accept()
     {
-        parent::uninstall($context);
+        return !in_array($this->current()->getPath(), $this->excludedFolders);
+    }
 
-        if ($context->keepUserData()) {
-            return;
-        }
-
-        $connection = $this->container->get(Connection::class);
-
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_log`');
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_environment`');
+    public function getChildren()
+    {
+        return new self($this->getInnerIterator()->getChildren(), $this->excludedFolders);
     }
 }

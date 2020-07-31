@@ -46,7 +46,12 @@ class StagingEnvironmentEntity extends Entity
     protected $folderName;
 
     /**
-     * @var array|null
+     * @var string
+     */
+    protected $subFolder;
+
+    /**
+     * @var string|null
      */
     protected $excludedFolders;
 
@@ -79,21 +84,6 @@ class StagingEnvironmentEntity extends Entity
      * @var string|null
      */
     protected $databasePort;
-
-    /**
-     * @var bool
-     */
-    protected $catchEmails;
-
-    /**
-     * @var bool
-     */
-    protected $anonymizeData;
-
-    /**
-     * @var bool
-     */
-    protected $deactivateScheduledTasks;
 
     /**
      * @var \DateTimeInterface|null
@@ -130,12 +120,22 @@ class StagingEnvironmentEntity extends Entity
         $this->folderName = $folderName;
     }
 
-    public function getExcludedFolders(): ?array
+    public function getSubFolder(): ?string
+    {
+        return $this->subFolder;
+    }
+
+    public function setSubFolder(?string $subFolder): void
+    {
+        $this->subFolder = $subFolder;
+    }
+
+    public function getExcludedFolders(): ?string
     {
         return $this->excludedFolders;
     }
 
-    public function setExcludedFolders(?array $excludedFolders): void
+    public function setExcludedFolders(?string $excludedFolders): void
     {
         $this->excludedFolders = $excludedFolders;
     }
@@ -198,36 +198,6 @@ class StagingEnvironmentEntity extends Entity
     public function setDatabasePort(?string $databasePort): void
     {
         $this->databasePort = $databasePort;
-    }
-
-    public function getCatchEmails(): bool
-    {
-        return $this->catchEmails;
-    }
-
-    public function setCatchEmails(bool $catchEmails): void
-    {
-        $this->catchEmails = $catchEmails;
-    }
-
-    public function getAnonymizeData(): bool
-    {
-        return $this->anonymizeData;
-    }
-
-    public function setAnonymizeData(bool $anonymizeData): void
-    {
-        $this->anonymizeData = $anonymizeData;
-    }
-
-    public function getDeactivateScheduledTasks(): bool
-    {
-        return $this->deactivateScheduledTasks;
-    }
-
-    public function setDeactivateScheduledTasks(bool $deactivateScheduledTasks): void
-    {
-        $this->deactivateScheduledTasks = $deactivateScheduledTasks;
     }
 
     public function getSetInMaintenance(): bool

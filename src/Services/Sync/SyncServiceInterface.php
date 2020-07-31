@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Services\Sync;
 
+use Shopware\Core\Framework\Context;
+
 interface SyncServiceInterface
 {
-    public function syncCore(string $folderName): bool;
+    public function syncCore(string $environmentId, Context $context): bool;
 }

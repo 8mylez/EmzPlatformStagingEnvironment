@@ -1,14 +1,29 @@
-import template from './emz-staging-environment-create.html.twig';
-import './emz-staging-environment-create.scss';
+const { Component, Context } = Shopware;
 
-const { Component } = Shopware;
+Component.extend('emz-staging-environment-create', 'emz-staging-environment-detail', {
+    methods: {
+        getEnvironment() {
+            this.environment = this.repositoryEnvironment.create(Context.api);
 
-Component.register('emz-staging-environment-create', {
-    template,
+            this.isLoading = false;
+        },
+        
+        onClickSave() {
+            this.isLoading = true;
 
-    data() {
-        return {
-            createSelection: 'fresh',
-        }
+            this.repositoryEnvironment
+                .save(this.environment, Context.api)
+                .then(() => {
+                    this.isLoading = false;
+                    this.$router.push({ name: 'emz.staging.environment.detail', params: { id: this.environment.id } });
+                }).catch(exception => {
+                    this.isLoading = false;
+
+                    this.createNotificationError({
+                        title: this.$t('emz-staging-environment.detail.errorTitle'),
+                        message: exception
+                    });
+                });
+        },
     }
 });

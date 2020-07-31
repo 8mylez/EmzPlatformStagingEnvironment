@@ -21,25 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Emz\StagingEnvironment;
+namespace Emz\StagingEnvironment\Services\Log;
 
-use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Doctrine\DBAL\Connection;
+use Shopware\Core\Framework\Context;
 
-class EmzPlatformStagingEnvironment extends Plugin
+interface LogServiceInterface
 {
-    public function uninstall(UninstallContext $context): void
-    {
-        parent::uninstall($context);
-
-        if ($context->keepUserData()) {
-            return;
-        }
-
-        $connection = $this->container->get(Connection::class);
-
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_log`');
-        $connection->executeQuery('DROP TABLE IF EXISTS `emz_pse_environment`');
-    }
+    public function getLastSync(string $environmentId, Context $context): string;
 }

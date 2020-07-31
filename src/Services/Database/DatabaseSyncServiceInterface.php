@@ -23,13 +23,9 @@ declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Services\Database;
 
+use Shopware\Core\Framework\Context;
+
 interface DatabaseSyncServiceInterface
 {
-    public function syncDatabase(
-        string $databaseName,
-        string $databaseUser,
-        string $databasePassword,
-        string $databaseHost,
-        string $databasePort
-    ): bool;
+    public function syncDatabase(string $environmentId, Context $context): bool;
 }

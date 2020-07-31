@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Services\Config;
 
+use Shopware\Core\Framework\Context;
+
 interface ConfigUpdaterServiceInterface
 {
-    public function setSalesChannelDomains(array $config): bool;
+    public function setSalesChannelDomains(string $environmentId, Context $context): bool;
 
-    public function setSalesChannelsInMaintenance(array $config): bool;
+    public function setSalesChannelsInMaintenance(string $environmentId, Context $context): bool;
 
-    public function createEnvFile(array $config): bool;
+    public function createEnvFile(string $environmentId, Context $context): bool;
 }
