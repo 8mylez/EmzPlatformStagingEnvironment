@@ -136,6 +136,10 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
                     $salesChannelUrl['url'] = implode('/', $modifiedUrlParts);
                 }     
             }
+
+            $stagingConnection->executeUpdate('UPDATE sales_channel_domain SET url = :url WHERE id = :id', 
+                ['url' => $salesChannelUrl['url'], 'id' => $salesChannelUrl['id']]
+            );
         }
 
         $this->environmentLogRepository->create(
