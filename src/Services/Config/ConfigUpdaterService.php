@@ -37,9 +37,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
     /** @var string */
     private $projectDir;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
     /** @var EntityRepositoryInterface */
@@ -80,7 +78,7 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         }
         
         if (!$environment->getFolderName()) {
-            throw new \InvalidArgumentException(sprintf('Staging Environment hase no folder saved.'));
+            throw new \InvalidArgumentException(sprintf('Staging Environment has no folder saved.'));
         }
 
         $stagingConnectionParams = $this->getStagingConnectionParams($environment);
@@ -92,11 +90,52 @@ class ConfigUpdaterService implements ConfigUpdaterServiceInterface
         $salesChannelUrls = $stagingConnection->executeQuery('SELECT id as id, url FROM sales_channel_domain')->fetchAll();
 
         foreach ($salesChannelUrls as $salesChannelUrl) {
-            $salesChannelUrl['url'] = rtrim($salesChannelUrl['url'], '/') . '/' . $config['folderName'] . '/';
+            if (empty($environment->getSubFolder())) {
+                $urlParts = explode('/', $salesChannelUrl['url']);             
+                $modifiedUrlParts = [];
+                
+                foreach ($urlParts as $i => $urlPart) {
+                    $modifiedUrlParts[] = $urlPart;
 
-            $stagingConnection->executeUpdate('UPDATE sales_channel_domain SET url = :url WHERE id = :id', 
-                ['url' => $salesChannelUrl['url'], 'id' => $salesChannelUrl['id']]
-            );
+                    if ($i == 2) {
+                        $modifiedUrlParts[] = $config['folderName'];
+                    }
+                }
+                
+                $salesChannelUrl['url'] = implode('/', $modifiedUrlParts);
+            } else {
+                $subFolder = rtrim($environment->getSubFolder(), '/');
+
+                if (strpos($salesChannelUrl['url'], $subFolder) !== false) {
+                    $beforeSubFolder = substr(
+                        $salesChannelUrl['url'], 
+                        0, 
+                        strpos($salesChannelUrl['url'], $subFolder)
+                    );
+
+                    $afterSubFolder = str_replace(
+                        $subFolder, '', 
+                        substr(
+                            $salesChannelUrl['url'], 
+                            strpos($salesChannelUrl['url'], $subFolder)
+                        )
+                    );
+
+                    $salesChannelUrl['url'] = $beforeSubFolder . $subFolder . '/' . $config['folderName'] . $afterSubFolder;
+                } else {
+                    $urlParts = explode('/', $salesChannelUrl['url']);
+                    $modifiedUrlParts = [];
+                    foreach ($urlParts as $i => $urlPart) {
+                        $modifiedUrlParts[] = $urlPart;
+    
+                        if ($i == 2) {
+                            $modifiedUrlParts[] = $config['folderName'];
+                        }
+                    }
+                    
+                    $salesChannelUrl['url'] = implode('/', $modifiedUrlParts);
+                }     
+            }
         }
 
         $this->environmentLogRepository->create(

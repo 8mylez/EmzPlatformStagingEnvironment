@@ -41,6 +41,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
                 `environment_name` VARCHAR(255) NOT NULL,
                 `profile_name` VARCHAR(255) NOT NULL,
                 `folder_name` VARCHAR(255) NOT NULL,
+                `sub_folder` VARCHAR(255) NULL,
                 `excluded_folders` LONGTEXT NULL,
                 `comment` LONGTEXT NULL,
                 `database_name` VARCHAR(255) NOT NULL,
