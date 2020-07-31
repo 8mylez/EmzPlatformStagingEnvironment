@@ -1,6 +1,6 @@
 {
   "name": "emz/staging-environment",
-  "description": "This plugin let's you create and manage multiple staging environments in no time!",
+  "description": "Plugin to create and manage multiple staging environments in no time!",
   "type": "shopware-platform-plugin",
   "license": "proprietary",
   "version": "1.0.0",
@@ -14,12 +14,28 @@
       "Emz\\StagingEnvironment\\": "src/"
     }
   },
+  "require": {
+    "shopware/core": "6.2.*"
+  },
   "extra": {
     "shopware-plugin-class": "Emz\\StagingEnvironment\\EmzPlatformStagingEnvironment",
+    "plugin-icon": "src/Resources/config/plugin.png",
     "copyright": "(c) by 8mylez GmbH",
     "label": {
       "de-DE": "Staging Umgebung",
       "en-GB": "Staging environment"
+    },
+    "description": {
+      "de-DE": "Plugin um mehrere Staging Umgebungen zu erstellen und zu verwalten.",
+      "en-GB": "Plugin to create and manage multiple staging environments in no time!"
+    },
+    "manufacturerLink": {
+      "de-DE": "https://store.shopware.com/8mylez.html",
+      "en-GB": "https://store.shopware.com/en/8mylez.html"
+    },
+    "supportLink": {
+      "de-DE": "https://8mylez.com",
+      "en-GB": "https://8mylez.com"
     }
   }
 }
