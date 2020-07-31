@@ -87,7 +87,6 @@ class SyncService implements SyncServiceInterface
             'bin',
             'custom',
             'src',
-            'var',
             'files',
             'config',
             'public',
