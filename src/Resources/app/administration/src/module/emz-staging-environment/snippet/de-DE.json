@@ -27,6 +27,8 @@
             "settingsCardTitle": "Einstellungen",
             "profileNameLabel": "Profil Name",
             "folderNameLabel": "Verzeichnis Name",
+            "subfolderLabel": "Unterverzeichnis",
+            "subfolderHelptext": "Falls Sie Shopware in einem Unterverzeichnis installiert haben, ist es wichtig diesen hier anzugeben, sodass die Domains der Saleschannel korrekt erweitert werden können.",
             "excludedFoldersLabel": "Ausgeschlossene Verzeichnisse",
             "excludedFoldersHelpText": "Bitte kommagetrennt angeben, z.B. media, documents/files, mein/privater/ordner",
             "commentLabel": "Kommentar",

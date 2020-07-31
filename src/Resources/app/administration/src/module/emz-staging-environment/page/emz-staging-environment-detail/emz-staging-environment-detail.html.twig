@@ -85,7 +85,7 @@
                     :isLoading="isLoading"
                     :title="$t('emz-staging-environment.detail.environmentCardTitle')"
                 >
-                    <sw-container columns="1fr 1fr" gap="32px">
+                    <sw-container columns="1fr 1fr 1fr" gap="32px">
                         <sw-text-field
                             :label="$t('emz-staging-environment.detail.name')"
                             :placeholder="$t('emz-staging-environment.detail.name')"
@@ -94,6 +94,14 @@
                         >
                         </sw-text-field>
                         
+                        <sw-text-field
+                                :label="$t('emz-staging-environment.detail.subfolderLabel')"
+                                :placeholder="$t('emz-staging-environment.detail.subfolderLabel')"
+                                v-model="environment.subFolder"
+                                :helpText="$t('emz-staging-environment.detail.subfolderHelptext')"
+                            >
+                        </sw-text-field>
+
                         <sw-text-field
                                 :label="$t('emz-staging-environment.detail.folderNameLabel')"
                                 :placeholder="$t('emz-staging-environment.detail.folderNameLabel')"

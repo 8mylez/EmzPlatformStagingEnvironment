@@ -27,6 +27,8 @@
             "settingsCardTitle": "Settings",
             "profileNameLabel": "Profile name",
             "folderNameLabel": "Directory name",
+            "subfolderLabel": "Sub folder",
+            "subfolderHelptext": "If you are running Shopware in a sub directory you need to add it here, so that the domains for the sales channeles are set correct!",
             "excludedFoldersLabel": "Excluded directories",
             "excludedFoldersHelpText": "Please add comma separated, e.g. media, documents/files, my/private/folder",
             "commentLabel": "Comment",

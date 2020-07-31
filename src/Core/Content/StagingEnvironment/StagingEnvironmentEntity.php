@@ -46,6 +46,11 @@ class StagingEnvironmentEntity extends Entity
     protected $folderName;
 
     /**
+     * @var string
+     */
+    protected $subFolder;
+
+    /**
      * @var string|null
      */
     protected $excludedFolders;
@@ -113,6 +118,16 @@ class StagingEnvironmentEntity extends Entity
     public function setFolderName(string $folderName): void
     {
         $this->folderName = $folderName;
+    }
+
+    public function getSubFolder(): ?string
+    {
+        return $this->subFolder;
+    }
+
+    public function setSubFolder(?string $subFolder): void
+    {
+        $this->subFolder = $subFolder;
     }
 
     public function getExcludedFolders(): ?string
