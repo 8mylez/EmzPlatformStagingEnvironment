@@ -33,7 +33,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextWithHtmlField;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentCollection;
 
@@ -64,7 +63,7 @@ class StagingEnvironmentDefinition extends EntityDefinition
             (new StringField('folder_name', 'folderName'))->setFlags(new Required()),
             new StringField('sub_folder', 'subFolder'),
             new StringField('excluded_folders', 'excludedFolders'),
-            new LongTextWithHtmlField('comment', 'comment'),
+            (new LongTextField('comment', 'comment'))->addFlags(new AllowHtml()),
             (new StringField('database_name', 'databaseName'))->setFlags(new Required()),
             (new StringField('database_user', 'databaseUser'))->setFlags(new Required()),
             (new StringField('database_host', 'databaseHost'))->setFlags(new Required()),

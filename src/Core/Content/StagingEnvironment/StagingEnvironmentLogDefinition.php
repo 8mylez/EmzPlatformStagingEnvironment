@@ -33,7 +33,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextWithHtmlField;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogEntity;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentLogCollection;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentDefinition;
