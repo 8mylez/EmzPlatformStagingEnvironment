@@ -61,7 +61,6 @@ class StagingEnvironmentDefinition extends EntityDefinition
         return new FieldCollection([
             (new IdField('id', 'id'))->setFlags(new PrimaryKey(), new Required()),
             (new StringField('environment_name', 'environmentName'))->setFlags(new Required()),
-            new StringField('profile_name', 'profileName'),
             (new StringField('folder_name', 'folderName'))->setFlags(new Required()),
             new StringField('sub_folder', 'subFolder'),
             new StringField('excluded_folders', 'excludedFolders'),

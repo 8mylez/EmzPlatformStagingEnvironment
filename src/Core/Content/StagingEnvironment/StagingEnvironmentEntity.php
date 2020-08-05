@@ -38,11 +38,6 @@ class StagingEnvironmentEntity extends Entity
     /**
      * @var string
      */
-    protected $profileName;
-
-    /**
-     * @var string
-     */
     protected $folderName;
 
     /**
@@ -99,16 +94,6 @@ class StagingEnvironmentEntity extends Entity
      * @var bool
      */
     protected $setInMaintenance;
-
-    public function getProfileName(): string
-    {
-        return $this->profileName;
-    }
-
-    public function setProfileName(string $profileName): void
-    {
-        $this->profileName = $profileName;
-    }
 
     public function getFolderName(): string
     {

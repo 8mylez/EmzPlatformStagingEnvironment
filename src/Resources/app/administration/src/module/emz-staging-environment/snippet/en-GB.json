@@ -4,28 +4,22 @@
             "mainMenuItemGeneral": "Staging environments",
             "mainMenuItemEnvironments": "Environments",
             "mainMenuItemLogs": "Logs",
-            "mainMenuItemProfiles": "Profiles",
             "descriptionTextModule": "Manage your staging environments here"
         },
         "list": {
-            "columnProfileName": "Name",
             "columnEnvironmentName": "Name",
             "columnComment": "Comment",
             "columnAccessLinks": "Access",
-            "addButtonText": "Create profile",
             "addEnvironmentButton": "Create new staging environment"
         },
         "detail": {
             "title": "Staging environment",
             "name": "Name",
             "environmentCardTitle": "Environment",
-            "errorTitle": "Error saving the profile",
             "cancelButtonText": "Cancel",
             "saveButtonText": "Save",
-            "profileCardTitle": "Profile",
             "databaseCardTitle": "Database",
             "settingsCardTitle": "Settings",
-            "profileNameLabel": "Profile name",
             "folderNameLabel": "Directory name",
             "subfolderLabel": "Sub folder",
             "subfolderHelptext": "If you are running Shopware in a sub directory you need to add it here, so that the domains for the sales channeles are set correct!",
