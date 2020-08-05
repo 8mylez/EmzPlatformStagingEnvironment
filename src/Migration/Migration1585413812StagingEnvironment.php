@@ -39,7 +39,6 @@ class Migration1585413812StagingEnvironment extends MigrationStep
             CREATE TABLE IF NOT EXISTS `emz_pse_environment` (
                 `id` BINARY(16) NOT NULL,
                 `environment_name` VARCHAR(255) NOT NULL,
-                `profile_name` VARCHAR(255) NOT NULL,
                 `folder_name` VARCHAR(255) NOT NULL,
                 `sub_folder` VARCHAR(255) NULL,
                 `excluded_folders` LONGTEXT NULL,
