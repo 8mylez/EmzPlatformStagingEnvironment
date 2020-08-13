@@ -165,4 +165,42 @@ class StagingEnvironmentController extends AbstractController
             ]);
         }
     }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clear_database", name="api.action.emz_pse.environment.clear_database", methods={"POST"})
+     */
+    public function clearDatabase(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->databaseSyncService->clearDatabase($environmentId, $context)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Cleared database!"
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clear_files", name="api.action.emz_pse.environment.clear_files", methods={"POST"})
+     */
+    public function clearFiles(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->syncService->clearFiles($environmentId, $context)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Cleared files!"
+            ]);
+        }
+    }
 }

@@ -28,4 +28,6 @@ use Shopware\Core\Framework\Context;
 interface DatabaseSyncServiceInterface
 {
     public function syncDatabase(string $environmentId, Context $context): bool;
+
+    public function clearDatabase(string $environmentId, Context $context): bool;
 }

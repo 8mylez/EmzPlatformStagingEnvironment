@@ -34,7 +34,16 @@
             "databasePortLabel": "Datenbank Port",
             "anonymizeDataLabel": "Daten anonymisieren",
             "deactivateScheduledTasksLabel": "Geplante Aufgaben deaktivieren",
-            "setInMaintenanceLabel": "In Wartungsmodus setzen"
+            "setInMaintenanceLabel": "In Wartungsmodus setzen",
+            "clearCardTitle": "Zurücksetzen",
+            "clearFiles": "Dateien entfernen",
+            "clearDatabase": "Datenbank leeren",
+            "clearDatabaseInfoText": "Die konfigurierte Staging Datenbank wird komplett geleert. Alle Inhalte werden unwiderruflich gelöscht.",
+            "clearDatabaseConfirmLabel": "Ja, bitte die Datenbank vollständig löschen.",
+            "clearFilesInfoText": "Die Dateien der konfigurierten Staging werden gelöscht. Dieser Vorgang ist nicht umkehrbar.",
+            "clearFilesConfirmLabel": "Ja, bitte die Dateien vollständig löschen.",
+            "clearFilesHeadline": "Dateien",
+            "clearDatabaseHeadline": "Datenbank"
         },
         "create": {
             "title": "Neue Staging Umgebung",

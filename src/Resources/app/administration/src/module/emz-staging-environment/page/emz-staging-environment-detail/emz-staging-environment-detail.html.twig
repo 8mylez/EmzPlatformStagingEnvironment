@@ -185,6 +185,45 @@
                     >
                     </sw-checkbox-field>
                 </sw-card>
+
+                <sw-card
+                    v-if="environment"
+                    :isLoading="isLoading"
+                    :title="$t('emz-staging-environment.detail.clearCardTitle')"
+                >
+                    <sw-container columns="1fr 1fr">
+                        <sw-card-section divider="right">
+                            <h3>{{ $t('emz-staging-environment.detail.clearDatabaseHeadline') }}</h3>
+                            <sw-alert variant="warning">{{ $t('emz-staging-environment.detail.clearDatabaseInfoText') }}</sw-alert>
+
+                            <sw-checkbox-field :label="$t('emz-staging-environment.detail.clearDatabaseConfirmLabel')" v-model="clearDatabaseConfirmation"></sw-checkbox-field>
+
+                            <sw-button-process variant="danger"
+                                {# :isLoading="processes.createNewStagingEnvironment" #}
+                                :processSuccess="processSuccess.clearDatabase"
+                                {# @process-finish="resetButton" #}
+                                @click="clearDatabase"
+                            >
+                                {{ $t('emz-staging-environment.detail.clearDatabase') }}
+                            </sw-button-process>
+                        </sw-card-section>
+                        <sw-card-section>
+                            <h3>{{ $t('emz-staging-environment.detail.clearFilesHeadline') }}</h3>
+                            <sw-alert variant="warning">{{ $t('emz-staging-environment.detail.clearFilesInfoText') }}</sw-alert>
+
+                            <sw-checkbox-field :label="$t('emz-staging-environment.detail.clearFilesConfirmLabel')" v-model="clearFilesConfirmation"></sw-checkbox-field>
+
+                            <sw-button-process variant="danger"
+                                {# :isLoading="processes.createNewStagingEnvironment" #}
+                                :processSuccess="processSuccess.clearFiles"
+                                {# @process-finish="resetButton" #}
+                                @click="clearFiles"
+                            >
+                                {{ $t('emz-staging-environment.detail.clearFiles') }}
+                            </sw-button-process>
+                        </sw-card-section>
+                    </sw-container>
+                </sw-card>
             </sw-card-view>
         </template>
     </sw-page>

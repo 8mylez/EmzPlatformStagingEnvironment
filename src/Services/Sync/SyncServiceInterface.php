@@ -28,4 +28,6 @@ use Shopware\Core\Framework\Context;
 interface SyncServiceInterface
 {
     public function syncCore(string $environmentId, Context $context): bool;
+
+    public function clearFiles(string $environmentId, Context $context): bool;
 }
