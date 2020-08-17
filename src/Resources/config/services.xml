@@ -37,26 +37,17 @@
             <argument type="service" id="emz_pse_log.repository" />
         </service>
 
-        <service id="Emz\StagingEnvironment\Command\DatabaseSyncCommand">
-            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
-            <tag name="console.command" />
-        </service>
-
-        <service id="Emz\StagingEnvironment\Command\SyncCommand">
-            <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
-            <tag name="console.command" />
-        </service>
-
-        <service id="Emz\StagingEnvironment\Command\ConfigUpdaterCommand">
-            <argument type="service" id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService" />
-            <tag name="console.command" />
-        </service>
-
         <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Log\LogService" />
+        </service>
+
+        <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer\StagingEnvironmentRepositoryDecorator" decorates="emz_pse_environment.repository">
+            <argument type="service" id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer\StagingEnvironmentRepositoryDecorator.inner" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
         </service>
     </services>
 </container>
