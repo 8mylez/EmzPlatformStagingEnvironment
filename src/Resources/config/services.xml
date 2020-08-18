@@ -37,6 +37,11 @@
             <argument type="service" id="emz_pse_log.repository" />
         </service>
 
+        <service id="Emz\StagingEnvironment\Services\Check\CheckService">
+            <argument>%kernel.project_dir%</argument>
+            <argument type="service" id="Doctrine\DBAL\Connection" />
+        </service>
+
         <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
@@ -46,8 +51,7 @@
 
         <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer\StagingEnvironmentRepositoryDecorator" decorates="emz_pse_environment.repository">
             <argument type="service" id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer\StagingEnvironmentRepositoryDecorator.inner" />
-            <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
-            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Check\CheckService" />
         </service>
     </services>
 </container>

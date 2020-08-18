@@ -24,10 +24,11 @@ declare(strict_types=1);
 namespace Emz\StagingEnvironment\Services\Check;
 
 use Shopware\Core\Framework\Context;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 
 interface CheckServiceInterface
 {
-    public function isFolderEmpty(string $environmentId, Context $context): bool;
+    public function isFolderEmpty(StagingEnvironmentEntity $environment, Context $context): bool;
 
-    public function isDatabaseEmpty(string $environmentId, Context $context): bool;
+    public function isDatabaseEmpty(StagingEnvironmentEntity $environment, Context $context): bool;
 }
