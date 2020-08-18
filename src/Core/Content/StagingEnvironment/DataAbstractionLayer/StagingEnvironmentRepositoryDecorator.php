@@ -32,8 +32,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\IdSearchResult;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\StagingDataNotClearedException;
-use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
-use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 
 class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
 {
@@ -42,25 +41,9 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
      */
     private $innerRepository;
 
-    /**
-     * @var SyncServiceInterface
-     */
-    private $syncService;
-
-    /**
-     * @var DatabaseSyncServiceInterface
-     */
-    private $databaseSyncService;
-
-    public function __construct(
-        EntityRepositoryInterface $innerRepository,
-        SyncServiceInterface $syncService,
-        DatabaseSyncServiceInterface $databaseSyncService
-    )
+    public function __construct(EntityRepositoryInterface $innerRepository)
     {
         $this->innerRepository = $innerRepository;
-        $this->syncService = $syncService;
-        $this->databaseSyncService = $databaseSyncService;
     }
 
     /**
@@ -68,6 +51,7 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
      */
     public function delete(array $ids, Context $context): EntityWrittenContainerEvent
     {
+        /** @var StagingEnvironmentEntity */
         $affectedStagingEnvironments = $this->search(new Criteria(array_column($ids, 'id')), $context);
 
         if ($affectedStagingEnvironments->count() === 0) {
@@ -76,11 +60,11 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
 
         foreach($affectedStagingEnvironments->getEntities() as $entity) {
             if ($entity->getId()) {
-                if (!$this->syncService->isEmpty($entity->getId())) {
+                if (!$this->syncService->isEmpty($entity)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
     
-                if (!$this->databaseSyncService->isEmpty($entity->getId())) {
+                if (!$this->databaseSyncService->isEmpty($entity)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
             }

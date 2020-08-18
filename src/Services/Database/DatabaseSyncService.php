@@ -228,9 +228,4 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
 
         return true;
     }
-
-    public function isEmpty(string $environmentId, Context $context): bool
-    {
-        return false;
-    }
 }

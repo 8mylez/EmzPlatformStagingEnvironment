@@ -30,17 +30,26 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
+use Symfony\Component\Finder\Finder;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 
 class DatabaseSyncService implements CheckServiceInterface
 {
+    /**
+     * @var string
+     */
+    private $projectDir;
+
     /** 
      * @var Connection
      */
     private $connection;
 
     public function __construct(
+        string $projectDir,
         Connection $connection
     ){
+        $this->projectDir = $projectDir;
         $this->connection = $connection;
     }
 
@@ -52,9 +61,16 @@ class DatabaseSyncService implements CheckServiceInterface
      * 
      * @return bool
      */
-    public function isFolderEmpty(string $environmentId, Context $context): bool
+    public function isFolderEmpty(StagingEnvironmentEntity $environment, Context $context): bool
     {
-        return false;
+        if (!$environment->getFolderName()) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment has no folder saved.'));
+        }
+
+        $finder = new Finder();
+        $count = iterator_count($finder->in($this->projectDir . '/' . $environment->getFolderName())->getIterator());
+        
+        return $count === 0;
     }
 
     /**
@@ -65,7 +81,7 @@ class DatabaseSyncService implements CheckServiceInterface
      * 
      * @return bool
      */
-    public function isDatabaseEmpty(string $environmentId, Context $context): bool
+    public function isDatabaseEmpty(StagingEnvironmentEntity $environment, Context $context): bool
     {
         $stagingConnectionParams = [
             'dbname' => $environment->getDatabaseName(),
@@ -83,23 +99,7 @@ class DatabaseSyncService implements CheckServiceInterface
         $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
         $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
-        $tablesInKey = "Tables_in_{$this->connection->getDatabase()}";
-
-        foreach($tables as $table) {
-            $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table[$tablesInKey] . '`;SET FOREIGN_KEY_CHECKS=1;');
-        }
-
-        $this->environmentLogRepository->create(
-            [
-                [
-                    'id' => Uuid::randomHex(),
-                    'environmentId' => $environmentId,
-                    'state' => 'database_cleared'
-                ],
-            ],
-            $context
-        );
-
-        return true;
+        
+        return empty($tables);
     }
 }
