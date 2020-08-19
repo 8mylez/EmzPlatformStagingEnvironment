@@ -34,6 +34,10 @@ use Emz\StagingEnvironment\Services\Log\LogServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
+use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 
 /**
  * @RouteScope(scopes={"api"}) 
@@ -60,17 +64,31 @@ class StagingEnvironmentController extends AbstractController
      */
     private $logService;
 
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $environmentRepository;
+
+    /**
+     * @var CheckServiceInterface
+     */
+    private $checkService;
+
     public function __construct(
         SyncServiceInterface $syncService,
         DatabaseSyncServiceInterface $databaseSyncService,
         ConfigUpdaterServiceInterface $configUpdaterService,
-        LogServiceInterface $logService
+        LogServiceInterface $logService,
+        EntityRepositoryInterface $environmentRepository,
+        CheckServiceInterface $checkService
     )
     {
         $this->syncService = $syncService;
         $this->databaseSyncService = $databaseSyncService;
         $this->configUpdaterService = $configUpdaterService;
         $this->logService = $logService;
+        $this->environmentRepository = $environmentRepository;
+        $this->checkService = $checkService;
     }
 
     /**
@@ -164,6 +182,36 @@ class StagingEnvironmentController extends AbstractController
                 "message" => "There is no successful sync."
             ]);
         }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/get_clearing_state", name="api.action.emz_pse.environment.get_clearing_state", methods={"POST"})
+     */
+    public function getClearingState(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        /** @var StagingEnvironmentEntity */
+        $environment = $this->environmentRepository
+            ->search(new Criteria([$environmentId]), $context)
+            ->get($environmentId);
+
+        $readyToClear = false;
+
+        if ($environment) {
+            if (!$this->checkService->isFolderEmpty($environment, $context) || 
+                !$this->checkService->isDatabaseEmpty($environment, $context)) {
+                    $readyToClear = true;
+            }
+        }
+
+        return new JsonResponse([
+            "status" => $readyToClear,
+        ]);
     }
 
     /**

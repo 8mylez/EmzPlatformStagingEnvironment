@@ -28,6 +28,7 @@ Component.register('emz-staging-environment-detail', {
             repositoryEnvironment: null,
             isLoading: true,
             readyToSync: false,
+            readyToClear: false,
             processes: {
                 createNewStagingEnvironment: false,
             },
@@ -88,6 +89,7 @@ Component.register('emz-staging-environment-detail', {
                     this.readyToSync = true;
                     this.isLoading = false;
                     this.getLastSync();
+                    this.checkClearingState();
                 });
         },
         onClickSave() {
@@ -99,6 +101,7 @@ Component.register('emz-staging-environment-detail', {
                     this.getEnvironment();
                     this.isLoading = false;
                     this.getLastSync();
+                    this.checkClearingState();
                 }).catch(exception => {
                     this.createNotificationError({
                         title: this.$t('emz-staging-environment.detail.errorTitle'),
@@ -165,7 +168,8 @@ Component.register('emz-staging-environment-detail', {
                         this.processes.createNewStagingEnvironment = false;
                         this.currentStep = 5;
 
-                        this.getLastSync();                        
+                        this.getLastSync();
+                        this.checkClearingState();                
                     });
                 }).catch(({response}) => {
                     response.data.errors.forEach((singleError) => {
@@ -205,12 +209,30 @@ Component.register('emz-staging-environment-detail', {
                 });
             }
         },
+        checkClearingState() {
+            if (this.environment && this.environment.id) {
+                this.stagingEnvironmentApiService.getClearingState({
+                    environmentId: this.environment.id
+                }).then(clearingState => {
+                    if (clearingState && clearingState.data && clearingState.data.status) {
+                        this.readyToClear = true;
+                    } else {
+                        this.readyToClear = false;
+                    }
+                });
+            }
+        },
         clearDatabase() {
             if (this.environment && this.environment.id) {
                 this.stagingEnvironmentApiService.clearDatabase({
                     environmentId: this.environment.id
                 }).then(() => {
-                    console.log('CLEARED DATABASE');
+                    this.createNotificationSuccess({
+                        title: this.$t('global.default.success'),
+                        message: 'Clearing database finished'
+                    });
+
+                    this.checkClearingState();
                 });
             }
         },
@@ -219,7 +241,12 @@ Component.register('emz-staging-environment-detail', {
                 this.stagingEnvironmentApiService.clearFiles({
                     environmentId: this.environment.id
                 }).then(() => {
-                    console.log('CLEARED FILES');
+                    this.createNotificationSuccess({
+                        title: this.$t('global.default.success'),
+                        message: 'Removing Files finished'
+                    });
+
+                    this.checkClearingState();
                 });
             }
         }

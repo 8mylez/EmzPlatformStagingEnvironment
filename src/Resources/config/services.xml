@@ -48,6 +48,8 @@
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Config\ConfigUpdaterService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Log\LogService" />
+            <argument type="service" id="emz_pse_environment.repository" />
+            <argument type="service" id="Emz\StagingEnvironment\Services\Check\CheckService" />
         </service>
 
         <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer\StagingEnvironmentRepositoryDecorator" decorates="emz_pse_environment.repository">
