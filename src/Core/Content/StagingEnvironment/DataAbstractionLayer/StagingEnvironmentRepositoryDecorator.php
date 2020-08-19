@@ -33,6 +33,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\IdSearchResult;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\StagingDataNotClearedException;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
+use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
 
 class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
 {
@@ -41,9 +42,18 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
      */
     private $innerRepository;
 
-    public function __construct(EntityRepositoryInterface $innerRepository)
+    /**
+     * @var CheckServiceInterface
+     */
+    private $checkService;
+
+    public function __construct(
+        EntityRepositoryInterface $innerRepository,
+        CheckServiceInterface $checkService
+    )
     {
         $this->innerRepository = $innerRepository;
+        $this->checkService = $checkService;
     }
 
     /**
@@ -60,11 +70,11 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
 
         foreach($affectedStagingEnvironments->getEntities() as $entity) {
             if ($entity->getId()) {
-                if (!$this->syncService->isEmpty($entity)) {
+                if (!$this->checkService->isFolderEmpty($entity)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
     
-                if (!$this->databaseSyncService->isEmpty($entity)) {
+                if (!$this->checkService->isDatabaseEmpty($entity)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
             }
