@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment;
+namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
@@ -69,12 +69,12 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
         }
 
         foreach($affectedStagingEnvironments->getEntities() as $entity) {
-            if ($entity->getId()) {
-                if (!$this->checkService->isFolderEmpty($entity)) {
+            if ($entity) {
+                if (!$this->checkService->isFolderEmpty($entity, $context)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
     
-                if (!$this->checkService->isDatabaseEmpty($entity)) {
+                if (!$this->checkService->isDatabaseEmpty($entity, $context)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
             }

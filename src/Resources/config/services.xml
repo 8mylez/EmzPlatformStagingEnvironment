@@ -40,6 +40,7 @@
         <service id="Emz\StagingEnvironment\Services\Check\CheckService">
             <argument>%kernel.project_dir%</argument>
             <argument type="service" id="Doctrine\DBAL\Connection" />
+            <argument type="service" id="Symfony\Component\Filesystem\Filesystem" />
         </service>
 
         <service id="Emz\StagingEnvironment\Controller\StagingEnvironmentController" public="true">

@@ -17,6 +17,7 @@
                     :showSelection="false"
                     :columns="columns"
                     detailRoute="emz.staging.environment.detail"
+                    @delete-item-failed="onDeleteItemFailed"
                 >
                 </sw-entity-listing>
             {% endblock %}

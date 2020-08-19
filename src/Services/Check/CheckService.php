@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Emz\StagingEnvironment\Services\Check;
 
-use Emz\StagingEnvironment\Services\Database\CheckServiceInterface;
+use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -32,8 +32,9 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
 use Symfony\Component\Finder\Finder;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
+use Symfony\Component\Filesystem\Filesystem;
 
-class DatabaseSyncService implements CheckServiceInterface
+class CheckService implements CheckServiceInterface
 {
     /**
      * @var string
@@ -45,12 +46,19 @@ class DatabaseSyncService implements CheckServiceInterface
      */
     private $connection;
 
+    /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
     public function __construct(
         string $projectDir,
-        Connection $connection
+        Connection $connection,
+        Filesystem $fileSystem
     ){
         $this->projectDir = $projectDir;
         $this->connection = $connection;
+        $this->fileSystem = $fileSystem;
     }
 
     /**
@@ -67,8 +75,13 @@ class DatabaseSyncService implements CheckServiceInterface
             throw new \InvalidArgumentException(sprintf('Staging Environment has no folder saved.'));
         }
 
-        $finder = new Finder();
-        $count = iterator_count($finder->in($this->projectDir . '/' . $environment->getFolderName())->getIterator());
+        $stagingFolder = $this->projectDir . '/' . $environment->getFolderName();
+        $count = 0;
+
+        if ($this->fileSystem->exists($stagingFolder)) {
+            $finder = new Finder();
+            $count = iterator_count($finder->in($stagingFolder)->getIterator());
+        }
         
         return $count === 0;
     }
@@ -96,10 +109,14 @@ class DatabaseSyncService implements CheckServiceInterface
             throw new ProductionDatabaseUsedException($environment->getDatabaseName());
         }
 
-        $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
+        try {
+            $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
 
-        $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
-        
-        return empty($tables);
+            $tables = $stagingConnection->executeQuery('SHOW FULL TABLES;')->fetchAll();
+            
+            return count($tables) === 0;
+        } catch(\Exception $e) {
+            return true;
+        }
     }
 }
