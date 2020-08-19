@@ -11,7 +11,7 @@
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *              /____/              
+ *                 /____/              
  * 
  * Quote: 
  * "Any fool can write code that a computer can understand. 
@@ -28,4 +28,6 @@ use Shopware\Core\Framework\Context;
 interface DatabaseSyncServiceInterface
 {
     public function syncDatabase(string $environmentId, Context $context): bool;
+
+    public function clearDatabase(string $environmentId, Context $context): bool;
 }

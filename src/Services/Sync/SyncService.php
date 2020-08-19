@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Copyright (c) 8mylez GmbH. All rights reserved.
@@ -11,7 +11,7 @@
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *              /____/              
+ *                 /____/              
  * 
  * Quote: 
  * "Any fool can write code that a computer can understand. 
@@ -78,7 +78,7 @@ class SyncService implements SyncServiceInterface
         }
         
         if (!$environment->getFolderName()) {
-            throw new \InvalidArgumentException(sprintf('Staging Environment hase no folder saved.'));
+            throw new \InvalidArgumentException(sprintf('Staging Environment has no folder saved.'));
         }
 
         $config['folderName'] = str_replace('/', '', $environment->getFolderName());
@@ -162,6 +162,47 @@ class SyncService implements SyncServiceInterface
                     'id' => Uuid::randomHex(),
                     'environmentId' => $environmentId,
                     'state' => 'sync_success'
+                ],
+            ],
+            $context
+        );
+
+        return true;
+    }
+
+    /**
+     * Removes all files from staging environment
+     * 
+     * @param string $environmentId
+     * @param Context $context
+     * 
+     * @return bool
+     */
+    public function clearFiles(string $environmentId, Context $context): bool
+    {
+        /** @var StagingEnvironmentEntity */
+        $environment = $this->environmentRepository
+            ->search(new Criteria([$environmentId]), $context)
+            ->get($environmentId);
+
+        if (!$environment instanceof StagingEnvironmentEntity) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment with id %s not found environmentId missing', $environmentId));
+        }
+        
+        if (!$environment->getFolderName()) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment has no folder saved.'));
+        }
+
+        $config['folderName'] = str_replace('/', '', $environment->getFolderName());
+
+        $this->fileSystem->remove($this->projectDir.'/'.$config['folderName']);
+
+        $this->environmentLogRepository->create(
+            [
+                [
+                    'id' => Uuid::randomHex(),
+                    'environmentId' => $environmentId,
+                    'state' => 'files_cleared'
                 ],
             ],
             $context

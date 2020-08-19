@@ -11,7 +11,7 @@
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *              /____/              
+ *                 /____/              
  * 
  * Quote: 
  * "Any fool can write code that a computer can understand. 
@@ -146,6 +146,81 @@ class DatabaseSyncService implements DatabaseSyncServiceInterface
                     'id' => Uuid::randomHex(),
                     'environmentId' => $environmentId,
                     'state' => 'database_success'
+                ],
+            ],
+            $context
+        );
+
+        return true;
+    }
+
+    /**
+     * Clears the database
+     * 
+     * @param string $environmentId
+     * @param Context $context
+     * 
+     * @return bool
+     */
+    public function clearDatabase(string $environmentId, Context $context): bool
+    {
+        /** @var StagingEnvironmentEntity */
+        $environment = $this->environmentRepository
+            ->search(new Criteria([$environmentId]), $context)
+            ->get($environmentId);
+
+        if (!$environment instanceof StagingEnvironmentEntity) {
+            throw new \InvalidArgumentException(sprintf('Staging Environment with id %s not found environmentId missing', $environmentId));
+        }
+        
+        if (!$environment->getDatabaseName()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database name'));
+        }
+
+        if (!$environment->getDatabaseUser()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database user'));
+        }
+
+        if (!$environment->getDatabasePassword()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database password'));
+        }
+
+        if (!$environment->getDatabaseHost()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database host'));
+        }
+
+        if (!$environment->getDatabasePort()) {
+            throw new \InvalidArgumentException(sprintf('Missing configuration: database port'));
+        }
+        
+        $stagingConnectionParams = [
+            'dbname' => $environment->getDatabaseName(),
+            'user' => $environment->getDatabaseUser(),
+            'password' => $environment->getDatabasePassword(),
+            'host' => $environment->getDatabaseHost(),
+            'port' => $environment->getDatabasePort(),
+            'driver' => 'pdo_mysql'
+        ];
+
+        if ($this->connection->getDatabase() === $environment->getDatabaseName()) {
+            throw new ProductionDatabaseUsedException($environment->getDatabaseName());
+        }
+
+        $stagingConnection = DriverManager::getConnection($stagingConnectionParams);
+
+        $tables = $this->connection->executeQuery('SHOW FULL TABLES;')->fetchAll();
+        $tablesInKey = "Tables_in_{$this->connection->getDatabase()}";
+
+        foreach($tables as $table) {
+            $stagingConnection->executeQuery('SET FOREIGN_KEY_CHECKS=0;DROP TABLE IF EXISTS `' . $table[$tablesInKey] . '`;SET FOREIGN_KEY_CHECKS=1;');
+        }
+
+        $this->environmentLogRepository->create(
+            [
+                [
+                    'id' => Uuid::randomHex(),
+                    'environmentId' => $environmentId,
+                    'state' => 'database_cleared'
                 ],
             ],
             $context

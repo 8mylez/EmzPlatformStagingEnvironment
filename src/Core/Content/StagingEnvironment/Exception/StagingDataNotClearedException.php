@@ -21,11 +21,23 @@
 
 declare(strict_types=1);
 
-namespace Emz\StagingEnvironment\Services\Log;
+namespace Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception;
 
-use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\ShopwareHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
-interface LogServiceInterface
+class StagingDataNotClearedException extends ShopwareHttpException
 {
-    public function getLastSync(string $environmentId, Context $context): string;
+    public function __construct(string $environmentName)
+    {
+        parent::__construct(
+            'Can not delete staging environment "{{ environmentName }}", because database and folder are not cleared.',
+            ['environmentName' => $environmentName]
+        );
+    }
+
+    public function getErrorCode(): string
+    {
+        return 'EMZSTAGINGENVIRONMENT__STAGING_DATA_NOT_CLEARED';
+    }
 }

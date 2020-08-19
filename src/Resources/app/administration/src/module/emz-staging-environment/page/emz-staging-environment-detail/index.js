@@ -32,11 +32,15 @@ Component.register('emz-staging-environment-detail', {
                 createNewStagingEnvironment: false,
             },
             processSuccess: {
-                createNewStagingEnvironment: false
+                createNewStagingEnvironment: false,
+                clearDatabase: false,
+                clearFiles: false,
             },
             stepVariant: "info",
             currentStep: 1,
             lastSync: null,
+            clearFilesConfirmation: null,
+            clearDatabaseConfirmation: null
         }
     },
 
@@ -198,6 +202,24 @@ Component.register('emz-staging-environment-detail', {
                     if (log && log.data && log.data.lastSync) {
                         this.lastSync = log.data.lastSync;
                     }
+                });
+            }
+        },
+        clearDatabase() {
+            if (this.environment && this.environment.id) {
+                this.stagingEnvironmentApiService.clearDatabase({
+                    environmentId: this.environment.id
+                }).then(() => {
+                    console.log('CLEARED DATABASE');
+                });
+            }
+        },
+        clearFiles() {
+            if (this.environment && this.environment.id) {
+                this.stagingEnvironmentApiService.clearFiles({
+                    environmentId: this.environment.id
+                }).then(() => {
+                    console.log('CLEARED FILES');
                 });
             }
         }

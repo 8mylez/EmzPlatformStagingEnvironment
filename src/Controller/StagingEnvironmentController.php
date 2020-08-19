@@ -11,7 +11,7 @@
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *              /____/              
+ *                 /____/              
  * 
  * Quote: 
  * "Any fool can write code that a computer can understand. 
@@ -162,6 +162,44 @@ class StagingEnvironmentController extends AbstractController
             return new JsonResponse([
                 "status" => false,
                 "message" => "There is no successful sync."
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clear_database", name="api.action.emz_pse.environment.clear_database", methods={"POST"})
+     */
+    public function clearDatabase(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->databaseSyncService->clearDatabase($environmentId, $context)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Cleared database!"
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clear_files", name="api.action.emz_pse.environment.clear_files", methods={"POST"})
+     */
+    public function clearFiles(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->syncService->clearFiles($environmentId, $context)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Cleared files!"
             ]);
         }
     }
