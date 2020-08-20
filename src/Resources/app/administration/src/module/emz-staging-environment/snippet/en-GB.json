@@ -33,7 +33,16 @@
             "databasePortLabel": "Database port",
             "anonymizeDataLabel": "Anonymize data",
             "deactivateScheduledTasksLabel": "Deactivate scheduled tasks",
-            "setInMaintenanceLabel": "Set in maintenance"
+            "setInMaintenanceLabel": "Set in maintenance",
+            "clearCardTitle": "Reset",
+            "clearFiles": "Remove files",
+            "clearDatabase": "Clear database",
+            "clearDatabaseInfoText": "The configured database will be cleared. All data will be deleted irreversible.",
+            "clearDatabaseConfirmLabel": "Yes, please clear the database irreversible.",
+            "clearFilesInfoText": "The files of the configured staging environment will be deleted. This process is not reversible.",
+            "clearFilesConfirmLabel": "Yes, please delete the files irreversible.",
+            "clearFilesHeadline": "Files",
+            "clearDatabaseHeadline": "Database"
         },
         "create": {
             "title": "New staging environment",

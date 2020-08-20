@@ -11,7 +11,7 @@
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *              /____/              
+ *                 /____/              
  * 
  * Quote: 
  * "Any fool can write code that a computer can understand. 
@@ -34,6 +34,10 @@ use Emz\StagingEnvironment\Services\Log\LogServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Shopware\Core\Framework\Context;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
+use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
+use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 
 /**
  * @RouteScope(scopes={"api"}) 
@@ -60,17 +64,31 @@ class StagingEnvironmentController extends AbstractController
      */
     private $logService;
 
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $environmentRepository;
+
+    /**
+     * @var CheckServiceInterface
+     */
+    private $checkService;
+
     public function __construct(
         SyncServiceInterface $syncService,
         DatabaseSyncServiceInterface $databaseSyncService,
         ConfigUpdaterServiceInterface $configUpdaterService,
-        LogServiceInterface $logService
+        LogServiceInterface $logService,
+        EntityRepositoryInterface $environmentRepository,
+        CheckServiceInterface $checkService
     )
     {
         $this->syncService = $syncService;
         $this->databaseSyncService = $databaseSyncService;
         $this->configUpdaterService = $configUpdaterService;
         $this->logService = $logService;
+        $this->environmentRepository = $environmentRepository;
+        $this->checkService = $checkService;
     }
 
     /**
@@ -162,6 +180,79 @@ class StagingEnvironmentController extends AbstractController
             return new JsonResponse([
                 "status" => false,
                 "message" => "There is no successful sync."
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/get_clearing_state", name="api.action.emz_pse.environment.get_clearing_state", methods={"POST"})
+     */
+    public function getClearingState(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        /** @var StagingEnvironmentEntity */
+        $environment = $this->environmentRepository
+            ->search(new Criteria([$environmentId]), $context)
+            ->get($environmentId);
+
+        $readyToClearDatabase = false;
+        $readyToClearFiles = false;
+
+        if ($environment) {
+            if (!$this->checkService->isDatabaseEmpty($environment, $context)) {
+                $readyToClearDatabase = true;
+            }
+
+            if (!$this->checkService->isFolderEmpty($environment, $context)) {
+                $readyToClearFiles = true;
+            }
+        }
+
+        return new JsonResponse([
+            "statusDatabase" => $readyToClearDatabase,
+            "statusFiles" => $readyToClearFiles,
+        ]);
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clear_database", name="api.action.emz_pse.environment.clear_database", methods={"POST"})
+     */
+    public function clearDatabase(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->databaseSyncService->clearDatabase($environmentId, $context)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Cleared database!"
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/api/v{version}/_action/emz_pse/environment/clear_files", name="api.action.emz_pse.environment.clear_files", methods={"POST"})
+     */
+    public function clearFiles(Request $request, Context $context): JsonResponse
+    {
+        if (!$request->request->has('environmentId')) {
+            throw new \InvalidArgumentException('Parameter environmentId missing');
+        }
+
+        $environmentId = $request->get('environmentId');
+
+        if ($this->syncService->clearFiles($environmentId, $context)) {
+            return new JsonResponse([
+                "status" => true,
+                "message" => "Cleared files!"
             ]);
         }
     }

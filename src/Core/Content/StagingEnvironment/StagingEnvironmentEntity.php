@@ -11,7 +11,7 @@
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *              /____/              
+ *                 /____/              
  * 
  * Quote: 
  * "Any fool can write code that a computer can understand. 
@@ -94,6 +94,16 @@ class StagingEnvironmentEntity extends Entity
      * @var bool
      */
     protected $setInMaintenance;
+
+    public function getEnvironmentName(): string
+    {
+        return $this->environmentName;
+    }
+
+    public function setEnvironmentName(string $environmentName): void
+    {
+        $this->environmentName = $environmentName;
+    }
 
     public function getFolderName(): string
     {

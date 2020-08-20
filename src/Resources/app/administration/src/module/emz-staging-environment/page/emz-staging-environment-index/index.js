@@ -1,10 +1,14 @@
 import template from './emz-staging-environment-index.html.twig';
 
-const { Component, Data } = Shopware;
+const { Component, Data, Mixin } = Shopware;
 const { Criteria } = Data;
 
 Component.register('emz-staging-environment-index', {
     template,
+
+    mixins: [
+        Mixin.getByName('notification')
+    ],
 
     metaInfo() {
         return {
@@ -54,6 +58,13 @@ Component.register('emz-staging-environment-index', {
     },
 
     methods: {
-
+        onDeleteItemFailed(response) {
+            response.errorResponse.response.data.errors.forEach((singleError) => {
+                this.createNotificationError({
+                    title: this.$t('global.default.error'),
+                    message: `${singleError.detail}`
+                });
+            });
+        }
     }
 });

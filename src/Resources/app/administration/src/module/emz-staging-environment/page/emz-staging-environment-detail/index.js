@@ -28,15 +28,23 @@ Component.register('emz-staging-environment-detail', {
             repositoryEnvironment: null,
             isLoading: true,
             readyToSync: false,
+            readyToClearDatabase: false,
+            readyToClearFiles: false,
             processes: {
                 createNewStagingEnvironment: false,
+                clearDatabase: false,
+                clearFiles: false
             },
             processSuccess: {
-                createNewStagingEnvironment: false
+                createNewStagingEnvironment: false,
+                clearDatabase: false,
+                clearFiles: false,
             },
             stepVariant: "info",
             currentStep: 1,
             lastSync: null,
+            clearFilesConfirmation: null,
+            clearDatabaseConfirmation: null
         }
     },
 
@@ -84,6 +92,7 @@ Component.register('emz-staging-environment-detail', {
                     this.readyToSync = true;
                     this.isLoading = false;
                     this.getLastSync();
+                    this.checkClearingState();
                 });
         },
         onClickSave() {
@@ -95,6 +104,7 @@ Component.register('emz-staging-environment-detail', {
                     this.getEnvironment();
                     this.isLoading = false;
                     this.getLastSync();
+                    this.checkClearingState();
                 }).catch(exception => {
                     this.createNotificationError({
                         title: this.$t('emz-staging-environment.detail.errorTitle'),
@@ -161,7 +171,8 @@ Component.register('emz-staging-environment-detail', {
                         this.processes.createNewStagingEnvironment = false;
                         this.currentStep = 5;
 
-                        this.getLastSync();                        
+                        this.getLastSync();
+                        this.checkClearingState();                
                     });
                 }).catch(({response}) => {
                     response.data.errors.forEach((singleError) => {
@@ -198,6 +209,64 @@ Component.register('emz-staging-environment-detail', {
                     if (log && log.data && log.data.lastSync) {
                         this.lastSync = log.data.lastSync;
                     }
+                });
+            }
+        },
+        checkClearingState() {
+            if (this.environment && this.environment.id) {
+                this.stagingEnvironmentApiService.getClearingState({
+                    environmentId: this.environment.id
+                }).then(clearingState => {
+                    if (clearingState && clearingState.data) {
+                        if (clearingState.data.statusDatabase) {
+                            this.readyToClearDatabase = true;
+                        }
+
+                        if (clearingState.data.statusFiles) {
+                            this.readyToClearFiles = true;
+                        }
+                    } else {
+                        this.readyToClearDatabase = false;
+                        this.readyToClearFiles = false;
+                    }
+                });
+            }
+        },
+        clearDatabase() {
+            if (this.environment && this.environment.id) {
+
+                this.processes.clearDatabase = true;
+
+                this.stagingEnvironmentApiService.clearDatabase({
+                    environmentId: this.environment.id
+                }).then(() => {
+                    this.createNotificationSuccess({
+                        title: this.$t('global.default.success'),
+                        message: 'Clearing database finished'
+                    });
+
+                    this.processes.clearDatabase = false;
+
+                    this.checkClearingState();
+                });
+            }
+        },
+        clearFiles() {
+            if (this.environment && this.environment.id) {
+
+                this.processes.clearFiles = true;
+
+                this.stagingEnvironmentApiService.clearFiles({
+                    environmentId: this.environment.id
+                }).then(() => {
+                    this.createNotificationSuccess({
+                        title: this.$t('global.default.success'),
+                        message: 'Removing Files finished'
+                    });
+
+                    this.processes.clearFiles = false;
+
+                    this.checkClearingState();
                 });
             }
         }
