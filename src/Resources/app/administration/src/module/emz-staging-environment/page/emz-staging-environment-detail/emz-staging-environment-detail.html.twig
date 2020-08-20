@@ -187,7 +187,6 @@
                 </sw-card>
 
                 <sw-card
-                    v-if="readyToClear"
                     :isLoading="isLoading"
                     :title="$t('emz-staging-environment.detail.clearCardTitle')"
                 >
@@ -201,6 +200,8 @@
                             <sw-button-process variant="danger"
                                 :processSuccess="processSuccess.clearDatabase"
                                 @click="clearDatabase"
+                                :isLoading="processes.clearDatabase"
+                                :disabled="!readyToClearDatabase"
                             >
                                 {{ $t('emz-staging-environment.detail.clearDatabase') }}
                             </sw-button-process>
@@ -214,6 +215,8 @@
                             <sw-button-process variant="danger"
                                 :processSuccess="processSuccess.clearFiles"
                                 @click="clearFiles"
+                                :isLoading="processes.clearFiles"
+                                :disabled="!readyToClearFiles"
                             >
                                 {{ $t('emz-staging-environment.detail.clearFiles') }}
                             </sw-button-process>
