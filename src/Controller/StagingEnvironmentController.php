@@ -200,17 +200,22 @@ class StagingEnvironmentController extends AbstractController
             ->search(new Criteria([$environmentId]), $context)
             ->get($environmentId);
 
-        $readyToClear = false;
+        $readyToClearDatabase = false;
+        $readyToClearFiles = false;
 
         if ($environment) {
-            if (!$this->checkService->isFolderEmpty($environment, $context) || 
-                !$this->checkService->isDatabaseEmpty($environment, $context)) {
-                    $readyToClear = true;
+            if (!$this->checkService->isDatabaseEmpty($environment, $context)) {
+                $readyToClearDatabase = true;
+            }
+
+            if (!$this->checkService->isFolderEmpty($environment, $context)) {
+                $readyToClearFiles = true;
             }
         }
 
         return new JsonResponse([
-            "status" => $readyToClear,
+            "statusDatabase" => $readyToClearDatabase,
+            "statusFiles" => $readyToClearFiles,
         ]);
     }
 

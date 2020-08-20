@@ -28,9 +28,12 @@ Component.register('emz-staging-environment-detail', {
             repositoryEnvironment: null,
             isLoading: true,
             readyToSync: false,
-            readyToClear: false,
+            readyToClearDatabase: false,
+            readyToClearFiles: false,
             processes: {
                 createNewStagingEnvironment: false,
+                clearDatabase: false,
+                clearFiles: false
             },
             processSuccess: {
                 createNewStagingEnvironment: false,
@@ -214,16 +217,26 @@ Component.register('emz-staging-environment-detail', {
                 this.stagingEnvironmentApiService.getClearingState({
                     environmentId: this.environment.id
                 }).then(clearingState => {
-                    if (clearingState && clearingState.data && clearingState.data.status) {
-                        this.readyToClear = true;
+                    if (clearingState && clearingState.data) {
+                        if (clearingState.data.statusDatabase) {
+                            this.readyToClearDatabase = true;
+                        }
+
+                        if (clearingState.data.statusFiles) {
+                            this.readyToClearFiles = true;
+                        }
                     } else {
-                        this.readyToClear = false;
+                        this.readyToClearDatabase = false;
+                        this.readyToClearFiles = false;
                     }
                 });
             }
         },
         clearDatabase() {
             if (this.environment && this.environment.id) {
+
+                this.processes.clearDatabase = true;
+
                 this.stagingEnvironmentApiService.clearDatabase({
                     environmentId: this.environment.id
                 }).then(() => {
@@ -232,12 +245,17 @@ Component.register('emz-staging-environment-detail', {
                         message: 'Clearing database finished'
                     });
 
+                    this.processes.clearDatabase = false;
+
                     this.checkClearingState();
                 });
             }
         },
         clearFiles() {
             if (this.environment && this.environment.id) {
+
+                this.processes.clearFiles = true;
+
                 this.stagingEnvironmentApiService.clearFiles({
                     environmentId: this.environment.id
                 }).then(() => {
@@ -245,6 +263,8 @@ Component.register('emz-staging-environment-detail', {
                         title: this.$t('global.default.success'),
                         message: 'Removing Files finished'
                     });
+
+                    this.processes.clearFiles = false;
 
                     this.checkClearingState();
                 });
