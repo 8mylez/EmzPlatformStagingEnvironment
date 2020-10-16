@@ -18,9 +18,10 @@
             "environmentCardTitle": "Environment",
             "cancelButtonText": "Cancel",
             "saveButtonText": "Save",
-            "databaseCardTitle": "Database",
+            "databaseCardTitle": "Database for staging environment",
             "settingsCardTitle": "Settings",
             "folderNameLabel": "Directory name",
+            "folderNameHelptext": "Will be created automatically",
             "subfolderLabel": "Sub folder",
             "subfolderHelptext": "If you are running Shopware in a sub directory you need to add it here, so that the domains for the sales channeles are set correct!",
             "excludedFoldersLabel": "Excluded directories",
@@ -62,7 +63,7 @@
                 "syncFiles": "In this step all files will be copied in the appropriate sub folder, so that Shopware 6 has everything it needs to run smoothly.",
                 "cloneDatabase": "The database is a crucial part of a running system. All tables will be cloned and filled with the content of the main system.",
                 "updateSettings": "At the end some settings needs to be updated on the lately created staging database.",
-                "finished": "Congratulations! Your staging environemnt is up and running!"
+                "finished": "Congratulations! Your staging environemnt is up and running! Clicking on 'Start' again resets the process!"
             }
         }
     }

@@ -19,9 +19,10 @@
             "errorTitle": "Fehler beim Speichern",
             "cancelButtonText": "Abbrechen",
             "saveButtonText": "Speichern",
-            "databaseCardTitle": "Datenbank",
+            "databaseCardTitle": "Neue Datenbank für Staging-Umgebung",
             "settingsCardTitle": "Einstellungen",
             "folderNameLabel": "Verzeichnis Name",
+            "folderNameHelptext": "Wird automatisch erzeugt",
             "subfolderLabel": "Unterverzeichnis",
             "subfolderHelptext": "Falls Sie Shopware in einem Unterverzeichnis installiert haben, ist es wichtig diesen hier anzugeben, sodass die Domains der Saleschannel korrekt erweitert werden können.",
             "excludedFoldersLabel": "Ausgeschlossene Verzeichnisse",
@@ -63,7 +64,7 @@
                 "syncFiles": "In diesem Schritt werden alle wichtigen Dateien in den entsprechenden Unterordner kopiert, sodass Shopware 6 alles hat was es braucht.",
                 "cloneDatabase": "Die Datenbank ist ein wichtiger Bestandteil eines lauffähigen Shops. Alle Tabellen und Inhalte werden geklont und bereitgestellt.",
                 "updateSettings": "Zum Schluss müssen diverse Einstellungen auf die Staging Umgebung angepasst werden, sodass diese auch zurecht kommt.",
-                "finished": "Herzlichen Glückwunsch! Die Staging Umgebung wurde erfolgreich angelegt und steht bereit!"
+                "finished": "Herzlichen Glückwunsch! Die Staging Umgebung wurde erfolgreich angelegt und steht bereit! Ein erneuter Klick auf 'Start' startet den Prozess erneut"
             }
         }
     }
