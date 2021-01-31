@@ -6,16 +6,16 @@
  * You must not copy, modify, distribute, make publicly available, or execute
  * its contents or parts thereof without express permission by the copyright
  * holder, unless otherwise permitted by law.
- * 
+ *
  *    ( __ )____ ___  __  __/ /__  ____
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *                 /____/              
- * 
- * Quote: 
- * "Any fool can write code that a computer can understand. 
- * Good programmers write code that humans can understand." 
+ *                 /____/
+ *
+ * Quote:
+ * "Any fool can write code that a computer can understand.
+ * Good programmers write code that humans can understand."
  * – Martin Fowler
  */
 
@@ -33,14 +33,13 @@ use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
 use Emz\StagingEnvironment\Services\Log\LogServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Shopware\Core\Framework\Context;
-use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\ProductionDatabaseUsedException;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 
 /**
- * @RouteScope(scopes={"api"}) 
+ * @RouteScope(scopes={"api"})
  */
 class StagingEnvironmentController extends AbstractController
 {
