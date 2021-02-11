@@ -68,5 +68,13 @@
 
             <tag name="console.command"/>
         </service>
+
+        <service id="Emz\StagingEnvironment\Command\SyncFilesCommand">
+            <argument type="service" id="emz_pse_environment.repository"/>
+            <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
+            <argument type="service" id="Emz\StagingEnvironment\Command\StagingCommandHelper" />
+
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
