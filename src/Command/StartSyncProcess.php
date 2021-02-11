@@ -36,6 +36,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Emz\StagingEnvironment\Services\Sync\SyncServiceInterface;
 use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
 use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
+use Emz\StagingEnvironment\Command\StagingCommandHelperInterface;
 
 class StartSyncProcess extends Command
 {
@@ -56,6 +57,9 @@ class StartSyncProcess extends Command
     /** @var ConfigUpdaterServiceInterface */
     private $configUpdaterService;
 
+    /** @var StagingCommandHelperInterface */
+    private $stagingCommandHelper;
+
     /**
      * @var Context
      */
@@ -65,7 +69,8 @@ class StartSyncProcess extends Command
         EntityRepositoryInterface $stagingEnvironmentRepository,
         SyncServiceInterface $syncService,
         DatabaseSyncServiceInterface $databaseSyncService,
-        ConfigUpdaterServiceInterface $configUpdaterService
+        ConfigUpdaterServiceInterface $configUpdaterService,
+        StagingCommandHelperInterface $stagingCommandHelper
     )
     {
         parent::__construct();
@@ -74,6 +79,8 @@ class StartSyncProcess extends Command
         $this->syncService = $syncService;
         $this->databaseSyncService = $databaseSyncService;
         $this->configUpdaterService = $configUpdaterService;
+        $this->stagingCommandHelper = $stagingCommandHelper;
+
         $this->context = Context::createDefaultContext();
     }
 
@@ -89,10 +96,10 @@ class StartSyncProcess extends Command
             throw new \RuntimeException('No staging environment available');
         }
 
-        $question = new ChoiceQuestion('Please select a staging environment:', $this->getStagingEnvironmentChoices($stagingEnvironments));
+        $question = new ChoiceQuestion('Please select a staging environment:', $this->stagingCommandHelper->getStagingEnvironmentChoices($stagingEnvironments));
         $answer = $helper->ask($input, $output, $question);
 
-        $stagingEnvironment = $this->parseStagingEnvironmentAnswer($answer, $stagingEnvironments);
+        $stagingEnvironment = $this->stagingCommandHelper->parseStagingEnvironmentAnswer($answer, $stagingEnvironments);
         if ($stagingEnvironment === null) {
             return 1;
         }
@@ -135,39 +142,5 @@ class StartSyncProcess extends Command
         $this->io->success('Staging was created successfully! Have fun!');
 
         return 0;
-    }
-
-    private function getStagingEnvironmentChoices(StagingEnvironmentCollection $stagingEnvironments): array
-    {
-        $choices = [];
-
-        foreach($stagingEnvironments as $stagingEnvironment) {
-            $choiceString = $stagingEnvironment->getEnvironmentName();
-
-            if (!empty($stagingEnvironment->getComment())) {
-                $choiceString .= ' | ' . $stagingEnvironment->getComment();
-            }
-
-            $choiceString .= ' | ' . $stagingEnvironment->getId();
-
-            $choices[] = $choiceString;
-        }
-
-        return $choices;
-    }
-
-    private function parseStagingEnvironmentAnswer($answer, StagingEnvironmentCollection $stagingEnvironments): ?StagingEnvironmentEntity
-    {
-        $parts = explode('|', $answer);
-        $stagingEnvironmentId = trim(array_pop($parts));
-        $stagingEnvironment = $stagingEnvironments->get($stagingEnvironmentId);
-
-        if (!$stagingEnvironmentId || !$stagingEnvironment) {
-            $this->io->error('Invalid answer');
-
-            return null;
-        };
-
-        return $stagingEnvironment;
     }
 }
