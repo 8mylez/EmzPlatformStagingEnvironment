@@ -59,7 +59,7 @@
 
         <service id="Emz\StagingEnvironment\Command\StagingCommandHelper" />
 
-        <service id="Emz\StagingEnvironment\Command\StartSyncProcess">
+        <service id="Emz\StagingEnvironment\Command\StartSyncProcessCommand">
             <argument type="service" id="emz_pse_environment.repository"/>
             <argument type="service" id="Emz\StagingEnvironment\Services\Sync\SyncService" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />

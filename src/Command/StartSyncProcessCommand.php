@@ -38,7 +38,7 @@ use Emz\StagingEnvironment\Services\Database\DatabaseSyncServiceInterface;
 use Emz\StagingEnvironment\Services\Config\ConfigUpdaterServiceInterface;
 use Emz\StagingEnvironment\Command\StagingCommandHelperInterface;
 
-class StartSyncProcess extends Command
+class StartSyncProcessCommand extends Command
 {
     protected static $defaultName = 'emzpse:start-sync-process';
 
