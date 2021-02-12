@@ -76,5 +76,13 @@
 
             <tag name="console.command"/>
         </service>
+
+        <service id="Emz\StagingEnvironment\Command\CloneDatabaseCommand">
+            <argument type="service" id="emz_pse_environment.repository"/>
+            <argument type="service" id="Emz\StagingEnvironment\Services\Database\DatabaseSyncService" />
+            <argument type="service" id="Emz\StagingEnvironment\Command\StagingCommandHelper" />
+
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
