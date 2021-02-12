@@ -55,8 +55,6 @@ class StagingCommandHelper implements StagingCommandHelperInterface
         $stagingEnvironment = $stagingEnvironments->get($stagingEnvironmentId);
 
         if (!$stagingEnvironmentId || !$stagingEnvironment) {
-            $this->io->error('Invalid answer');
-
             return null;
         };
 

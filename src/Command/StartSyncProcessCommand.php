@@ -101,6 +101,7 @@ class StartSyncProcessCommand extends Command
 
         $stagingEnvironment = $this->stagingCommandHelper->parseStagingEnvironmentAnswer($answer, $stagingEnvironments);
         if ($stagingEnvironment === null) {
+            $this->io->error('Invalid answer');
             return 1;
         }
 
