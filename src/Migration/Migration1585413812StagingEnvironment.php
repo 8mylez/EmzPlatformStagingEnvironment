@@ -6,16 +6,16 @@
  * You must not copy, modify, distribute, make publicly available, or execute
  * its contents or parts thereof without express permission by the copyright
  * holder, unless otherwise permitted by law.
- * 
+ *
  *    ( __ )____ ___  __  __/ /__  ____
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *                 /____/              
- * 
- * Quote: 
- * "Any fool can write code that a computer can understand. 
- * Good programmers write code that humans can understand." 
+ *                 /____/
+ *
+ * Quote:
+ * "Any fool can write code that a computer can understand.
+ * Good programmers write code that humans can understand."
  * – Martin Fowler
  */
 
@@ -35,7 +35,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        $connection->executeQuery('
+        $connection->executeStatement('
             CREATE TABLE IF NOT EXISTS `emz_pse_environment` (
                 `id` BINARY(16) NOT NULL,
                 `environment_name` VARCHAR(255) NOT NULL,
@@ -55,7 +55,7 @@ class Migration1585413812StagingEnvironment extends MigrationStep
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
 
-        $connection->executeQuery('
+        $connection->executeStatement('
             CREATE TABLE IF NOT EXISTS `emz_pse_log` (
                 `id` BINARY(16) NOT NULL,
                 `environment_id` BINARY(16) NOT NULL,

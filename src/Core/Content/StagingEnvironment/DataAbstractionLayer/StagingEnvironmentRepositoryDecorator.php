@@ -6,16 +6,16 @@
  * You must not copy, modify, distribute, make publicly available, or execute
  * its contents or parts thereof without express permission by the copyright
  * holder, unless otherwise permitted by law.
- * 
+ *
  *    ( __ )____ ___  __  __/ /__  ____
  *   / __  / __ `__ \/ / / / / _ \/_  /
  *  / /_/ / / / / / / /_/ / /  __/ / /_
  *  \____/_/ /_/ /_/\__, /_/\___/ /___/
- *                 /____/              
- * 
- * Quote: 
- * "Any fool can write code that a computer can understand. 
- * Good programmers write code that humans can understand." 
+ *                 /____/
+ *
+ * Quote:
+ * "Any fool can write code that a computer can understand.
+ * Good programmers write code that humans can understand."
  * – Martin Fowler
  */
 
@@ -34,6 +34,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\IdSearchResult;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\Exception\StagingDataNotClearedException;
 use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEntity;
 use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Write\CloneBehavior;
 
 class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
 {
@@ -73,7 +74,7 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
                 if (!$this->checkService->isFolderEmpty($entity, $context)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
-    
+
                 if (!$this->checkService->isDatabaseEmpty($entity, $context)) {
                     throw new StagingDataNotClearedException($entity->getEnvironmentName());
                 }
@@ -93,9 +94,9 @@ class StagingEnvironmentRepositoryDecorator implements EntityRepositoryInterface
         return $this->innerRepository->searchIds($criteria, $context);
     }
 
-    public function clone(string $id, Context $context, ?string $newId = null): EntityWrittenContainerEvent
+    public function clone(string $id, Context $context, ?string $newId = null, ?CloneBehavior $behavior = null): EntityWrittenContainerEvent
     {
-        return $this->innerRepository->clone($id, $context, $newId);
+        return $this->innerRepository->clone($id, $context, $newId, $behavior);
     }
 
     public function search(Criteria $criteria, Context $context): EntitySearchResult
