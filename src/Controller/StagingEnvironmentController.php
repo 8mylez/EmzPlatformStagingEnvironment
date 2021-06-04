@@ -37,6 +37,7 @@ use Emz\StagingEnvironment\Core\Content\StagingEnvironment\StagingEnvironmentEnt
 use Emz\StagingEnvironment\Services\Check\CheckServiceInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Routing\Annotation\Since;
 
 /**
  * @RouteScope(scopes={"api"})
@@ -91,7 +92,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/sync_files", name="api.action.emz_pse.environment.sync_files", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/sync_files", name="api.action.emz_pse.environment.sync_files", methods={"POST"})
      */
     public function syncFiles(Request $request, Context $context): JsonResponse
     {
@@ -110,7 +112,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/clone_database", name="api.action.emz_pse.environment.clone_database", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/clone_database", name="api.action.emz_pse.environment.clone_database", methods={"POST"})
      */
     public function cloneDatabase(Request $request, Context $context): JsonResponse
     {
@@ -129,7 +132,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/update_settings", name="api.action.emz_pse.environment.update_settings", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/update_settings", name="api.action.emz_pse.environment.update_settings", methods={"POST"})
      */
     public function updateSettings(Request $request, Context $context): JsonResponse
     {
@@ -158,7 +162,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/get_last_sync", name="api.action.emz_pse.environment.get_last_sync", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/get_last_sync", name="api.action.emz_pse.environment.get_last_sync", methods={"POST"})
      */
     public function getLastSync(Request $request, Context $context): JsonResponse
     {
@@ -184,7 +189,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/get_clearing_state", name="api.action.emz_pse.environment.get_clearing_state", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/get_clearing_state", name="api.action.emz_pse.environment.get_clearing_state", methods={"POST"})
      */
     public function getClearingState(Request $request, Context $context): JsonResponse
     {
@@ -219,7 +225,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/clear_database", name="api.action.emz_pse.environment.clear_database", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/clear_database", name="api.action.emz_pse.environment.clear_database", methods={"POST"})
      */
     public function clearDatabase(Request $request, Context $context): JsonResponse
     {
@@ -238,7 +245,8 @@ class StagingEnvironmentController extends AbstractController
     }
 
     /**
-     * @Route("/api/v{version}/_action/emz_pse/environment/clear_files", name="api.action.emz_pse.environment.clear_files", methods={"POST"})
+     * @Since("6.4.0.0")
+     * @Route("/api/_action/emz_pse/environment/clear_files", name="api.action.emz_pse.environment.clear_files", methods={"POST"})
      */
     public function clearFiles(Request $request, Context $context): JsonResponse
     {
