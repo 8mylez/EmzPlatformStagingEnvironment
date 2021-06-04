@@ -1,3 +1,6 @@
+# 1.3.0
+- Fix for 6.4
+
 # 1.2.1
 - Split command into smaller steps
 
