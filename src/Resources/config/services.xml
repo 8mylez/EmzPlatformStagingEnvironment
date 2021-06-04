@@ -50,6 +50,10 @@
             <argument type="service" id="Emz\StagingEnvironment\Services\Log\LogService" />
             <argument type="service" id="emz_pse_environment.repository" />
             <argument type="service" id="Emz\StagingEnvironment\Services\Check\CheckService" />
+
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
 
         <service id="Emz\StagingEnvironment\Core\Content\StagingEnvironment\DataAbstractionLayer\StagingEnvironmentRepositoryDecorator" decorates="emz_pse_environment.repository">
