@@ -12,3 +12,4 @@ fi
 mkdir -p EmzPlatformStagingEnvironment
 git archive ${commit} | tar -x -C EmzPlatformStagingEnvironment
 zip -r EmzPlatformStagingEnvironment-${commit}.zip EmzPlatformStagingEnvironment
+rm -rf ./EmzPlatformStagingEnvironment
